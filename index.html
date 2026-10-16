@@ -223,7 +223,8 @@ body{margin:0;background:#0F0D13}
 }
 @media (max-width:520px){ #mc .gcol{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){#mc .vtrack{animation:none}#mc .cur{display:none}}
-#mc .mascot{position:absolute;left:50%;top:58%;width:min(340px,60%);height:auto;pointer-events:none;filter:drop-shadow(0 30px 60px rgba(253,103,37,.35))}
+#mc .mascot{position:absolute;left:50%;bottom:0;height:calc(100% - 96px);width:auto;max-width:100%;pointer-events:none;transform-origin:50% 100%;filter:drop-shadow(0 24px 50px rgba(253,103,37,.28))}
+#mc .mglow{position:absolute;left:50%;bottom:4%;width:80%;height:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(253,103,37,.22),transparent);pointer-events:none}
 </style>
 </head>
 <body>
@@ -246,7 +247,8 @@ body{margin:0;background:#0F0D13}
    </div>
   </div>
   <div class="rig" id="mcRig">
-   <img class="mascot" id="mcMascot" src="assets/logo-icone.png" alt="" aria-hidden="true">
+   <div class="mglow" id="mcGlow"></div>
+   <video class="mascot" id="mcMascot" muted loop playsinline autoplay preload="auto" poster="assets/personagem.webp" aria-label="Magda digitando no notebook"></video>
    <div class="prompt" id="mcPrompt"><div class="who">VOCÊ ESCREVEU</div><span id="mcTyped"></span><span class="caret"></span></div>
    <div class="code" id="mcCode"></div>
    <div class="frame" id="mcFrame">
@@ -480,7 +482,7 @@ var V=[['p','#FD6725','Motion Code'],['q','#7B61FF','Sem editor'],['l','#2BC48A'
 var grid=document.getElementById('mcGrid');
 V.forEach(function(v,i){var m=document.createElement('div');m.className='mini '+v[0];m.style.background='radial-gradient(120% 80% at 50% 0%,'+v[1]+',#1a1020 85%)';m.innerHTML='<b>'+v[2]+'</b><em>'+({p:'9:16',q:'1:1',l:'16:9'})[v[0]]+'</em>';grid.appendChild(m)});
 var minis=grid.children;
-var mascot=document.getElementById('mcMascot'),stage=document.getElementById('mcStage'),typed=document.getElementById('mcTyped'),prompt=document.getElementById('mcPrompt'),frame=document.getElementById('mcFrame'),bar=document.getElementById('mcBar'),sub=document.getElementById('mcSub'),cta=document.getElementById('mcCta'),badge=document.getElementById('mcBadge'),ring=document.getElementById('mcRing'),hint=document.getElementById('mcHint'),caps=document.getElementById('mcCaps').children,progEl=document.getElementById('mcProg'),sticky=document.getElementById('mcSticky');
+var mascot=document.getElementById('mcMascot'),mglow=document.getElementById('mcGlow'),stage=document.getElementById('mcStage'),typed=document.getElementById('mcTyped'),prompt=document.getElementById('mcPrompt'),frame=document.getElementById('mcFrame'),bar=document.getElementById('mcBar'),sub=document.getElementById('mcSub'),cta=document.getElementById('mcCta'),badge=document.getElementById('mcBadge'),ring=document.getElementById('mcRing'),hint=document.getElementById('mcHint'),caps=document.getElementById('mcCaps').children,progEl=document.getElementById('mcProg'),sticky=document.getElementById('mcSticky');
 function cl(v){return v<0?0:v>1?1:v}
 function seg(p,a,b){return cl((p-a)/(b-a))}
 function ease(t){return 1-Math.pow(1-t,3)}
@@ -518,7 +520,7 @@ function render(p){
   var c=p<.24?0:p<.48?1:p<.74?2:3;
   if(c!==lastCap){for(var q=0;q<caps.length;q++)caps[q].classList.toggle('on',q===c);lastCap=c}
   hint.style.opacity=1-seg(p,0,.06);
-  var mo=seg(p,.12,.26);mascot.style.opacity=1-mo;mascot.style.transform='translate(-50%,-50%) translateY('+(Math.sin(performance.now()/700)*10-60*mo)+'px) scale('+(1-.3*mo)+') rotate('+(Math.sin(performance.now()/1100)*4)+'deg)';
+  var mo=seg(p,.12,.26);mascot.style.opacity=1-mo;mascot.style.transform='translateX(-50%) translateY('+(-40*mo)+'px) scale('+(1-.12*mo)+')';mglow.style.opacity=1-mo;mascot.style.visibility=mo>=1?'hidden':'visible';
 }
 function loop(){
   if(shown<0)shown=target;
@@ -562,6 +564,9 @@ var pars=[].slice.call(document.querySelectorAll('#mc [data-par]')),band=documen
 if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=Math.max(-5,Math.min(5,vel*.12));
   pars.forEach(function(el){var r=el.getBoundingClientRect();if(r.bottom<-200||r.top>innerHeight+200)return;var c=r.top+r.height/2-innerHeight/2;el.style.transform='translateY('+(-c*parseFloat(el.dataset.par))+'px) skewY('+(sk*.3)+'deg)'});
   if(band)band.parentNode.style.transform='skewY('+(-sk*.5)+'deg)';requestAnimationFrame(pf)})();
+
+/* personagem: webm com transparência; Safari usa a versão com o fundo do site já aplicado */
+(function(){var v=document.getElementById('mcMascot');var ua=navigator.userAgent;var safari=/Safari/.test(ua)&&!/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua)||/iPhone|iPad|iPod/.test(ua);v.src=safari?'assets/personagem-safari.mp4':'assets/personagem.webm';if(reduce){v.removeAttribute('autoplay');v.pause()}else{var pr=v.play();if(pr&&pr.catch)pr.catch(function(){})}})();
 })();
 </script>
 </body>

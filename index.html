@@ -33,7 +33,7 @@ body{margin:0;background:#0F0D13}
 #mc .btn.sm{padding:10px 16px;font-size:14px}
 #mc .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 /* palco do scroll */
-#mc .stage{height:420vh;position:relative}
+#mc .stage{height:570vh;position:relative}
 #mc .pin{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
 #mc .cap{position:absolute;left:max(20px,calc(50% - 540px));top:50%;transform:translateY(-50%);width:min(380px,40vw);z-index:3}
 #mc .cap .k{font:500 12px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
@@ -42,6 +42,11 @@ body{margin:0;background:#0F0D13}
 #mc .capset{position:relative;min-height:240px}
 #mc .capset>div{position:absolute;inset:0;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
 #mc .capset>div.on{opacity:1;transform:none}
+#mc .capset>div.hook h2{text-transform:uppercase;font-size:clamp(40px,4.6vw,66px);line-height:.92}
+#mc .capset>div.hook h2 em{font-style:normal;color:var(--acc)}
+#mc .capset>div.hook p{font-size:17px}
+#mc .capset>div.hook.on h2{animation:mchook .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes mchook{from{opacity:0;transform:translateY(24px) skewY(3deg);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
 #mc .rig{position:absolute;right:max(20px,calc(50% - 540px));top:50%;transform:translateY(-50%);width:min(520px,52vw);height:min(560px,78vh)}
 #mc .prompt{position:absolute;left:0;right:0;top:0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;font:14px/1.55 "JetBrains Mono",monospace;color:var(--ink2);box-shadow:0 30px 60px -30px #000}
 #mc .prompt .who{font-size:11px;color:var(--mut);letter-spacing:.1em;margin-bottom:6px}
@@ -163,10 +168,12 @@ body{margin:0;background:#0F0D13}
 #mc[data-p="abertura"] [data-perfil~="abertura"],#mc[data-p="conscienciosidade"] [data-perfil~="conscienciosidade"],#mc[data-p="neuroticismo"] [data-perfil~="neuroticismo"]{display:revert}
 /* mobile */
 @media (max-width:820px){
-  #mc .stage{height:360vh}
+  #mc .stage{height:490vh}
   #mc .cap{left:20px;right:20px;top:auto;bottom:7vh;transform:none;width:auto}
   #mc .capset{min-height:170px}
   #mc .cap h2{font-size:46px}
+  #mc .capset>div.hook h2{font-size:36px}
+  #mc .capset>div.hook p{font-size:15px}
   #mc .rig{left:20px;right:20px;width:auto;top:11vh;transform:none;height:50vh}
   #mc .code{width:62%;font-size:10.5px}
   #mc .frame{width:44%}
@@ -332,7 +339,9 @@ body{margin:0;background:#0F0D13}
  <div class="pin">
   <div class="cap">
    <div class="capset" id="mcCaps">
-    <div class="on"><div class="k">Take 1 · Roteiro</div><h2>Você descreve a cena.</h2><p>Em português, do jeito que você explicaria para alguém da sua equipe.</p></div>
+    <div class="on hook"><div class="k">Workshop ao vivo · 29/10</div><h2>Mais vídeos. <em>Menos tempo editando.</em></h2><p>Produza mais conteúdos motion com IA e ganhe tempo para atender novos clientes.</p></div>
+    <div class="hook"><div class="k">Referências + IA</div><h2>Viu um motion incrível e quer criar <em>algo parecido?</em></h2><p>Aprenda a usar referências para desenvolver animações com IA e a sua identidade visual.</p></div>
+    <div><div class="k">Take 1 · Roteiro</div><h2>Você descreve a cena.</h2><p>Em português, do jeito que você explicaria para alguém da sua equipe.</p></div>
     <div><div class="k">Take 2 · Código</div><h2>O Claude escreve cada quadro.</h2><p>Em código. Por isso cada letra, cor e logo saem exatos.</p></div>
     <div><div class="k">O resultado</div><h2>Motion pronto, com a sua marca.</h2><p>Sem timeline, sem After Effects, sem texto distorcido.</p></div>
     <div><div class="k">Take 3 · Render</div><h2>Um vira nove.</h2><p>Três formatos, três chamadas. O mesmo molde, nove criativos para testar.</p></div>
@@ -659,8 +668,8 @@ var target=0,shown=-1,lastCap=-1,lastTyped=-1,lastLines=-1;
 function measure(){var r=stage.getBoundingClientRect();var tot=stage.offsetHeight-innerHeight;target=reduce?1:cl(-r.top/tot);
   var d=document.documentElement;progEl.style.width=(scrollY/(d.scrollHeight-innerHeight)*100)+'%';
   sticky.classList.toggle('show',r.bottom<innerHeight*.4)}
-function render(p){
-  var mob=innerWidth<=820;
+function render(P){
+  var mob=innerWidth<=820,H=.26,p=seg(P,H,1);
   /* take 1: digitar (0 a .22) */
   var tp=seg(p,0,.2),n=Math.round(PROMPT.length*(.32+.68*tp));
   if(n!==lastTyped){typed.textContent=PROMPT.slice(0,n);lastTyped=n}
@@ -686,9 +695,9 @@ function render(p){
   /* take 3: grade (.74 a .95) */
   for(var k=0;k<minis.length;k++){var t2=ease(seg(p,.76+k*.018,.86+k*.018));minis[k].style.opacity=t2;minis[k].style.transform='scale('+(.6+.4*t2)+')'}
   /* legendas */
-  var c=p<.24?0:p<.48?1:p<.74?2:3;
+  var c=P<H*.5?0:P<H?1:p<.24?2:p<.48?3:p<.74?4:5;
   if(c!==lastCap){for(var q=0;q<caps.length;q++)caps[q].classList.toggle('on',q===c);lastCap=c}
-  hint.style.opacity=1-seg(p,0,.06);
+  hint.style.opacity=1-seg(P,0,.04);
   var mo=seg(p,.12,.26);mascot.style.opacity=1-mo;mascot.style.transform='translateX(-50%) translateY('+(-40*mo)+'px) scale('+(1-.12*mo)+')';mglow.style.opacity=1-mo;mascot.style.visibility=mo>=1?'hidden':'visible';
 }
 function loop(){

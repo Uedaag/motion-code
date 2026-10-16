@@ -255,6 +255,40 @@ body{margin:0;background:#0F0D13}
 #mc .buy .btn[disabled]{opacity:.6;pointer-events:none}
 #mc .buy-note{font-size:12.5px;color:var(--mut);margin:12px 0 0;text-align:center}
 #mc .buy-err{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(214,69,61,.14);color:#ffb4ae;font-size:13.5px}
+
+/* destaque: poucos cliques + referências */
+#mc .clk{padding:110px 0;border-top:1px solid var(--line);position:relative;overflow:hidden}
+#mc .clk h2.big{font:500 clamp(48px,8.4vw,116px)/.9 "Handjet",sans-serif;margin:14px 0 22px;max-width:1040px}
+#mc .clk h2.big em{font-style:normal;color:var(--acc)}
+#mc .clk-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;margin-top:40px}
+#mc .clk-steps{display:grid;gap:14px}
+#mc .clk-st{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;transition:border-color .3s,transform .3s}
+#mc .clk-st.on{border-color:var(--acc);transform:translateX(6px)}
+#mc .clk-st .ic{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:rgba(253,103,37,.12);color:var(--acc);font:600 26px "Handjet",sans-serif}
+#mc .clk-st h4{font:700 17px/1.3 "JetBrains Mono",monospace;letter-spacing:-.02em;margin:2px 0 6px}
+#mc .clk-st p{margin:0;color:var(--ink2);font-size:15px}
+#mc .clk-demo{position:relative;height:520px}
+#mc .clk-phone{position:absolute;right:6%;top:0;width:250px;aspect-ratio:9/16;border-radius:24px;overflow:hidden;border:1px solid #3a3045;box-shadow:0 0 0 6px #0b0a0e,0 40px 80px -30px #000;background:#000}
+#mc .clk-phone video{width:100%;height:100%;object-fit:cover;display:block}
+#mc .ref{position:absolute;left:0;width:150px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--card);box-shadow:0 20px 40px -20px #000;animation:mcref 6s ease-in-out infinite}
+#mc .ref .im{height:96px}
+#mc .ref span{display:block;font:500 11px "JetBrains Mono",monospace;color:var(--ink2);padding:8px 10px}
+#mc .ref.r1{top:20px;animation-delay:0s}#mc .ref.r2{top:190px;left:30px;animation-delay:2s}#mc .ref.r3{top:360px;animation-delay:4s}
+@keyframes mcref{0%,100%{transform:translateX(0) rotate(-3deg)}45%{transform:translateX(60px) rotate(0)}55%{transform:translateX(60px) rotate(0)}}
+#mc .clk-flow{position:absolute;left:150px;right:calc(6% + 250px);top:50%;height:2px;background:repeating-linear-gradient(90deg,var(--acc) 0 8px,transparent 8px 16px);opacity:.6;animation:mcflow 1s linear infinite}
+@keyframes mcflow{to{background-position:16px 0}}
+#mc .clk-click{position:absolute;right:calc(6% + 40px);bottom:-14px;display:flex;gap:8px}
+#mc .clk-click b{font:500 12px "JetBrains Mono",monospace;padding:8px 12px;border-radius:99px;background:var(--acc);color:#140A05}
+#mc .clk-click b.g{background:var(--card);color:var(--ink2);border:1px solid var(--line)}
+@media (max-width:820px){
+  #mc .clk-grid{grid-template-columns:1fr}
+  #mc .clk-demo{height:440px}
+  #mc .clk-phone{width:210px;right:0}
+  #mc .ref{width:120px}#mc .ref .im{height:74px}
+  #mc .ref.r2{top:160px;left:14px}#mc .ref.r3{top:300px}
+  #mc .clk-flow{left:120px;right:210px}
+}
+@media (prefers-reduced-motion:reduce){#mc .ref,#mc .clk-flow{animation:none}}
 </style>
 </head>
 <body>
@@ -309,6 +343,29 @@ body{margin:0;background:#0F0D13}
   <span data-perfil="neuroticismo">Garantia Dupla: suporte no grupo até o seu primeiro vídeo rodar e 7 dias para pedir tudo de volta.</span>
  </div>
  <div class="seals rv"><span class="seal">Ao vivo · 3 horas</span><span class="seal">Replay 72h</span><span class="seal">Garantia 7 dias</span><span class="seal">Em português</span><span class="seal">Windows e Mac</span></div>
+</div></section>
+
+<!-- DESTAQUE: POUCOS CLIQUES + REFERÊNCIAS -->
+<section class="clk" id="cliques"><div class="wrap">
+ <div class="kick rv">O que você vai conseguir fazer</div>
+ <h2 class="big rv">Crie vídeos motion dinâmicos com <em>apenas alguns cliques.</em></h2>
+ <p class="lead rv">Você não começa do zero. Mande uma imagem de referência, um print da sua marca ou um vídeo profissional que você admira, e o Claude recria aquele estilo com o seu texto, as suas cores e o seu logo.</p>
+ <div class="clk-grid">
+  <div class="clk-steps" id="mcClkSteps">
+   <div class="clk-st rv on"><div class="ic">01</div><div><h4>Descreva o que você quer</h4><p>Em português, do seu jeito: "anúncio de 15 segundos, fundo laranja, o preço caindo".</p></div></div>
+   <div class="clk-st rv"><div class="ic">02</div><div><h4>Envie suas referências</h4><p>Imagens, prints de anúncios que você gosta e a identidade da sua marca. Elas viram o guia visual do vídeo.</p></div></div>
+   <div class="clk-st rv"><div class="ic">03</div><div><h4>Recrie vídeos profissionais</h4><p>Viu um motion de agência e pensou "queria um assim"? Use como referência e recrie o estilo com a sua marca.</p></div></div>
+   <div class="clk-st rv"><div class="ic">04</div><div><h4>Gere as versões</h4><p>Com mais um pedido saem os formatos de Reels, feed e YouTube, prontos para subir.</p></div></div>
+  </div>
+  <div class="clk-demo rv" aria-hidden="true">
+   <div class="ref r1"><div class="im" style="background:radial-gradient(120% 90% at 30% 20%,#FFD23F,#0E2A22 75%)"></div><span>referencia-produto.jpg</span></div>
+   <div class="ref r2"><div class="im" style="background:linear-gradient(135deg,#FD6725,#5B3DF5)"></div><span>cores-da-marca.png</span></div>
+   <div class="ref r3"><div class="im" style="background:radial-gradient(100% 80% at 70% 30%,#2BC48A,#121017 80%)"></div><span>video-que-gostei.mp4</span></div>
+   <div class="clk-flow"></div>
+   <div class="clk-phone"><video poster="assets/mc-video-2.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-2.webm" type="video/webm"><source src="assets/mc-video-2.mp4" type="video/mp4"></video></div>
+   <div class="clk-click"><b class="g">referências ✓</b><b>gerar vídeo</b></div>
+  </div>
+ </div>
 </div></section>
 
 <!-- GALERIA: VÍDEOS FEITOS COM O MÉTODO -->
@@ -632,6 +689,10 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
       .catch(function(e){err.textContent=e.message&&e.message!=='Failed to fetch'?e.message:'Não foi possível abrir o pagamento. Verifique sua conexão e tente de novo.';err.style.display='block';go.disabled=false;go.textContent='Pagar com PIX'});
   });
 })();
+
+/* destaque dos passos: acende um por vez */
+(function(){var st=[].slice.call(document.querySelectorAll('#mcClkSteps .clk-st'));if(!st.length||reduce)return;var i=0;
+  setInterval(function(){st[i].classList.remove('on');i=(i+1)%st.length;st[i].classList.add('on')},2200)})();
 })();
 </script>
 </body>

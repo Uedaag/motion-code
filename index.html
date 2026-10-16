@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Motion Code · Workshop ao vivo 12/11</title>
+<link rel="icon" href="assets/favicon.png">
+<meta name="description" content="Crie vídeos motion para os seus anúncios descrevendo a cena em português. O Claude escreve cada quadro com a sua marca. Workshop ao vivo com a Magda, 12/11.">
+<meta property="og:title" content="Motion Code · Workshop ao vivo 12/11">
+<meta property="og:description" content="A IA que gera vídeo erra seu texto. A IA que escreve o vídeo acerta cada letra.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+#mc{--bg:#0F0D13;--bg2:#17141D;--card:#1C1823;--ink:#F3EEE4;--ink2:#CBC3D6;--mut:#8E879A;--line:#2A2632;--acc:#FD6725;--acc2:#7B61FF;--ok:#2BC48A}
+#mc,#mc *{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#0F0D13}
+#mc{background:var(--bg);color:var(--ink);font:17px/1.6 "Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip;position:relative}
+#mc a{color:inherit}
+#mc .mono{font-family:"JetBrains Mono",monospace}
+#mc .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+/* ambiente */
+#mc .amb{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(60vmax 40vmax at 85% -10%,rgba(253,103,37,.13),transparent 60%),radial-gradient(50vmax 40vmax at -10% 110%,rgba(123,97,255,.12),transparent 60%)}
+#mc .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#mc main{position:relative;z-index:2}
+/* barra topo */
+#mc .top{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(var(--bg),rgba(15,13,19,0))}
+#mc .logo{font:500 26px/1 "Handjet",sans-serif;letter-spacing:.01em}
+#mc .logo b{color:var(--acc)}
+#mc .prog{position:fixed;top:0;left:0;height:2px;background:var(--acc);z-index:21;width:0}
+#mc .btn{display:inline-flex;align-items:center;gap:10px;background:var(--acc);color:#140A05;font:700 16px "Instrument Sans",sans-serif;padding:15px 24px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+#mc .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px -8px rgba(253,103,37,.6)}
+#mc .btn.sm{padding:10px 16px;font-size:14px}
+#mc .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+/* palco do scroll */
+#mc .stage{height:420vh;position:relative}
+#mc .pin{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
+#mc .cap{position:absolute;left:max(20px,calc(50% - 540px));top:50%;transform:translateY(-50%);width:min(380px,40vw);z-index:3}
+#mc .cap .k{font:500 12px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+#mc .cap h2{font:500 clamp(42px,5.6vw,72px)/.95 "Handjet",sans-serif;margin:12px 0;letter-spacing:0}
+#mc .cap p{color:var(--ink2);margin:0}
+#mc .capset{position:relative;min-height:240px}
+#mc .capset>div{position:absolute;inset:0;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+#mc .capset>div.on{opacity:1;transform:none}
+#mc .rig{position:absolute;right:max(20px,calc(50% - 540px));top:50%;transform:translateY(-50%);width:min(520px,52vw);height:min(560px,78vh)}
+#mc .prompt{position:absolute;left:0;right:0;top:0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;font:14px/1.55 "JetBrains Mono",monospace;color:var(--ink2);box-shadow:0 30px 60px -30px #000}
+#mc .prompt .who{font-size:11px;color:var(--mut);letter-spacing:.1em;margin-bottom:6px}
+#mc .caret{display:inline-block;width:8px;height:16px;background:var(--acc);vertical-align:-3px;animation:mcb 1s steps(1) infinite}
+@keyframes mcb{50%{opacity:0}}
+#mc .code{position:absolute;left:0;top:0;width:58%;bottom:0;background:#0B0A0E;border:1px solid var(--line);border-radius:16px;padding:16px;font:12.5px/1.75 "JetBrains Mono",monospace;color:#9F98AB;overflow:hidden}
+#mc .code i{font-style:normal;color:var(--acc2)} #mc .code u{text-decoration:none;color:var(--acc)} #mc .code s{text-decoration:none;color:var(--ok)}
+#mc .code div{white-space:nowrap;opacity:0;transform:translateX(-8px);transition:opacity .25s,transform .25s}
+#mc .code div.on{opacity:1;transform:none}
+#mc .frame{position:absolute;right:0;top:50%;width:min(270px,46%);aspect-ratio:9/16;border-radius:22px;overflow:hidden;background:#1A1220;border:1px solid #3a3045;box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 6px #0b0a0e;transform-origin:center}
+#mc .fbg{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 0%,#FD6725 0%,#B2341A 35%,#2A1236 75%,#17101F 100%)}
+#mc .fring{position:absolute;width:150%;aspect-ratio:1;left:-25%;top:30%;border-radius:50%;border:2px solid rgba(255,255,255,.18)}
+#mc .ftitle{position:absolute;left:8%;right:8%;top:24%;font:600 42px/.95 "Handjet",sans-serif;color:#fff;letter-spacing:0}
+#mc .ftitle span{display:inline-block}
+#mc .fbar{position:absolute;left:8%;top:56%;height:6px;width:0;background:#fff;border-radius:3px}
+#mc .fsub{position:absolute;left:8%;right:8%;top:61%;font:500 13px/1.4 "Instrument Sans",sans-serif;color:rgba(255,255,255,.85)}
+#mc .fcta{position:absolute;left:8%;right:8%;bottom:8%;background:#fff;color:#1A0E08;font:700 13px "Instrument Sans",sans-serif;text-align:center;padding:11px;border-radius:10px}
+#mc .fbadge{position:absolute;top:6%;left:8%;font:500 10px "JetBrains Mono",monospace;color:#fff;letter-spacing:.14em;border:1px solid rgba(255,255,255,.5);padding:5px 8px;border-radius:99px}
+#mc .grid9{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:10px;align-items:center;justify-items:center;pointer-events:none}
+#mc .grid9 .mini.p{height:100%;width:auto} #mc .grid9 .mini.q,#mc .grid9 .mini.l{width:100%;max-height:100%}
+#mc .mini{border-radius:12px;overflow:hidden;position:relative;opacity:0;transform:scale(.6);border:1px solid #3a3045}
+#mc .mini b{position:absolute;left:9%;right:9%;top:22%;font:600 20px/1 "Handjet",sans-serif;color:#fff}
+#mc .mini em{position:absolute;left:9%;bottom:9%;font:500 9px "JetBrains Mono",monospace;color:#fff;opacity:.8;font-style:normal}
+#mc .mini.p{aspect-ratio:9/16} #mc .mini.q{aspect-ratio:1} #mc .mini.l{aspect-ratio:16/9}
+#mc .scrollhint{white-space:nowrap;position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font:500 11px "JetBrains Mono",monospace;letter-spacing:.2em;color:var(--mut)}
+/* hero pousado */
+#mc .hero{padding:40px 0 90px}
+#mc .kick{font:500 12px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+#mc h1{font:500 clamp(52px,8.6vw,112px)/.92 "Handjet",sans-serif;letter-spacing:0;margin:16px 0 22px;max-width:1000px}
+#mc h1 em{font-style:normal;color:var(--acc)}
+#mc .hsub{font-size:clamp(17px,1.6vw,20px);color:var(--ink2);max-width:720px;margin:0 0 30px}
+#mc .seals{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+#mc .seal{font:500 12px "JetBrains Mono",monospace;border:1px solid var(--line);padding:9px 12px;border-radius:99px;color:var(--ink2)}
+#mc .gbox{margin-top:26px;display:inline-flex;gap:12px;align-items:center;border:1px solid var(--line);background:var(--card);padding:12px 16px;border-radius:12px;font-size:14px;color:var(--ink2);max-width:640px}
+#mc .gbox svg{flex:none}
+/* seções */
+#mc section.blk{padding:100px 0;border-top:1px solid var(--line)}
+#mc h3.t{font:500 clamp(42px,6vw,76px)/.95 "Handjet",sans-serif;letter-spacing:0;margin:12px 0 22px;max-width:860px}
+#mc .lead{color:var(--ink2);max-width:680px;font-size:18px}
+#mc .rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+#mc .rv.in{opacity:1;transform:none}
+#mc .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:34px}
+#mc .cd{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;position:relative;overflow:hidden}
+#mc .cd .n{font:500 12px "JetBrains Mono",monospace;color:var(--acc)}
+#mc .cd h4{font:700 18px/1.3 "JetBrains Mono",monospace;letter-spacing:-.02em;margin:10px 0 8px}
+#mc .cd p{margin:0;color:var(--ink2);font-size:15.5px}
+#mc .from{color:var(--mut);text-decoration:line-through;text-decoration-color:rgba(253,103,37,.6)}
+/* comparador */
+#mc .cmp{position:relative;margin-top:36px;border-radius:20px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/8;max-height:460px;user-select:none;touch-action:pan-y;cursor:ew-resize;background:#000}
+#mc .cmp .side{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+#mc .cmp .gen{background:radial-gradient(100% 90% at 30% 20%,#5c3b2a,#20141a 70%)}
+#mc .cmp .wri{background:radial-gradient(100% 90% at 70% 20%,#FD6725,#7a2412 50%,#1b1020 100%);clip-path:inset(0 0 0 var(--x,50%))}
+#mc .cmp .word{font:600 clamp(40px,8vw,100px)/1 "Handjet",sans-serif;color:#fff;letter-spacing:0}
+#mc .cmp .gen .word{filter:url(#mcwarp) blur(.6px);color:#f3d9c9;opacity:.92}
+#mc .cmp .lab{position:absolute;bottom:18px;font:500 12px "JetBrains Mono",monospace;letter-spacing:.14em;color:#fff;background:rgba(0,0,0,.45);padding:7px 10px;border-radius:8px}
+#mc .cmp .gen .lab{left:18px} #mc .cmp .wri .lab{right:18px}
+#mc .cmp .handle{position:absolute;top:0;bottom:0;left:var(--x,50%);width:2px;background:#fff;transform:translateX(-1px)}
+#mc .cmp .handle::after{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font-size:18px}
+#mc .quote{font:700 clamp(19px,2.4vw,28px)/1.3 "JetBrains Mono",monospace;letter-spacing:-.02em;margin-top:34px;max-width:900px}
+#mc .quote b{color:var(--acc)}
+/* takes */
+#mc .takes{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:34px}
+#mc .take{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px;position:relative}
+#mc .take .clap{display:inline-flex;gap:8px;align-items:center;font:500 12px "JetBrains Mono",monospace;color:#140A05;background:var(--acc);padding:6px 10px;border-radius:6px}
+#mc .take h4{font:700 21px/1.25 "JetBrains Mono",monospace;letter-spacing:-.02em;margin:16px 0 10px}
+#mc .take p{color:var(--ink2);margin:0}
+#mc .take svg{position:absolute;right:20px;top:20px;opacity:.6}
+#mc .draw path{stroke-dasharray:var(--len,400);stroke-dashoffset:var(--len,400);transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)}
+#mc .rv.in .draw path,#mc .rv.in.draw path{stroke-dashoffset:0}
+/* programa */
+#mc .prog-list{margin-top:34px;border-top:1px solid var(--line)}
+#mc .pl{display:grid;grid-template-columns:70px 1fr 90px;gap:16px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
+#mc .pl .i{font:500 13px "JetBrains Mono",monospace;color:var(--acc)}
+#mc .pl h5{font:700 17px/1.3 "JetBrains Mono",monospace;letter-spacing:-.02em;margin:0 0 4px}
+#mc .pl p{margin:0;color:var(--ink2);font-size:15.5px}
+#mc .pl .d{font:500 13px "JetBrains Mono",monospace;color:var(--mut);text-align:right}
+/* expert */
+#mc .exp{display:grid;grid-template-columns:minmax(220px,360px) 1fr;gap:44px;align-items:center;margin-top:30px}
+#mc .ph{aspect-ratio:4/5;border-radius:22px;background:linear-gradient(160deg,#2A2234,#17131D);border:1px solid var(--line);display:grid;place-items:center;position:relative;overflow:hidden}
+#mc .ph span{font:600 160px "Handjet",sans-serif;color:rgba(253,103,37,.25)}
+#mc .ph small{position:absolute;bottom:14px;font:500 11px "JetBrains Mono",monospace;color:var(--mut)}
+#mc .stats{display:flex;gap:30px;flex-wrap:wrap;margin-top:22px}
+#mc .stats b{display:block;font:600 56px/1 "Handjet",sans-serif;color:var(--acc)}
+#mc .stats span{font-size:14px;color:var(--mut)}
+/* lotes */
+#mc .lotes{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:34px}
+#mc .lote{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;position:relative;transition:opacity .3s}
+#mc .lote .st{font:500 11px "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--mut)}
+#mc .lote .pr{font:600 76px/1 "Handjet",sans-serif;margin:14px 0 6px}
+#mc .lote .pr small{font-size:22px;vertical-align:top;margin-right:4px}
+#mc .lote .ate{color:var(--mut);font-size:14px;margin-bottom:20px}
+#mc .lote.on{border-color:var(--acc);box-shadow:0 0 0 4px rgba(253,103,37,.15)}
+#mc .lote.on .st{color:var(--acc)}
+#mc .lote.off{opacity:.45}
+#mc .lote.off .btn,#mc .lote.next .btn{pointer-events:none;background:var(--line);color:var(--mut)}
+#mc .inc{margin-top:30px;display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+#mc .inc div{display:flex;gap:10px;color:var(--ink2);font-size:15.5px}
+#mc .inc div::before{content:"✓";color:var(--acc);font-weight:700}
+/* faq */
+#mc details{border-bottom:1px solid var(--line);padding:20px 0}
+#mc details:first-of-type{border-top:1px solid var(--line);margin-top:30px}
+#mc summary{cursor:pointer;list-style:none;font:700 16.5px/1.4 "JetBrains Mono",monospace;letter-spacing:-.02em;display:flex;justify-content:space-between;gap:20px}
+#mc summary::-webkit-details-marker{display:none}
+#mc summary::after{content:"+";color:var(--acc);font-family:"JetBrains Mono",monospace;transition:transform .3s}
+#mc details[open] summary::after{transform:rotate(45deg)}
+#mc details p{color:var(--ink2);margin:12px 0 0;max-width:760px}
+/* final */
+#mc .final{text-align:center;padding:130px 0}
+#mc .final h3.t{margin-left:auto;margin-right:auto}
+#mc footer{border-top:1px solid var(--line);padding:30px 0 100px;color:var(--mut);font-size:13px}
+#mc .sticky{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;display:none;align-items:center;justify-content:space-between;gap:10px;background:rgba(28,24,35,.92);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:10px 10px 10px 16px;transform:translateY(120%);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+#mc .sticky.show{transform:none}
+#mc .sticky span{font-size:13px;color:var(--ink2)}
+#mc [data-perfil]{display:none}
+#mc[data-p="abertura"] [data-perfil~="abertura"],#mc[data-p="conscienciosidade"] [data-perfil~="conscienciosidade"],#mc[data-p="neuroticismo"] [data-perfil~="neuroticismo"]{display:revert}
+/* mobile */
+@media (max-width:820px){
+  #mc .stage{height:360vh}
+  #mc .cap{left:20px;right:20px;top:auto;bottom:7vh;transform:none;width:auto}
+  #mc .capset{min-height:170px}
+  #mc .cap h2{font-size:46px}
+  #mc .rig{left:20px;right:20px;width:auto;top:11vh;transform:none;height:50vh}
+  #mc .code{width:62%;font-size:10.5px}
+  #mc .frame{width:44%}
+  #mc .exp{grid-template-columns:1fr}
+  #mc .pl{grid-template-columns:44px 1fr}
+  #mc .pl .d{grid-column:2;text-align:left}
+  #mc .sticky{display:flex}
+  #mc .top .btn{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  #mc .rv{opacity:1;transform:none;transition:none}
+  #mc .caret{animation:none}
+  #mc .stage{height:auto}
+  #mc .pin{position:relative;height:auto;padding:110px 20px 40px;display:block}
+  #mc .cap,#mc .rig{position:relative;left:auto;right:auto;top:auto;transform:none;width:auto;margin:0 auto;max-width:520px}
+  #mc .rig{height:520px;margin-top:20px}
+}
+
+/* logo */
+#mc .logo img{display:block;height:32px;width:auto}
+/* galeria */
+#mc .gal{display:grid;gap:18px;grid-template-columns:1fr 1fr 1.3fr;margin-top:36px;align-items:start}
+#mc .gcol{display:grid;gap:18px}
+#mc .vcard{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;position:relative;will-change:transform}
+#mc .vwrap{position:relative;background:#000}
+#mc .vwrap video{display:block;width:100%;height:auto}
+#mc .snd{position:absolute;right:12px;bottom:12px;display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;background:rgba(15,13,19,.72);backdrop-filter:blur(8px);color:#fff;font:500 12px "JetBrains Mono",monospace;padding:9px 12px;border-radius:99px;transition:background .25s,transform .25s}
+#mc .snd:hover{transform:scale(1.05)}
+#mc .snd.on{background:var(--acc);color:#140A05}
+#mc .snd .bars{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+#mc .snd .bars i{width:2px;background:currentColor;height:4px;border-radius:1px}
+#mc .snd.on .bars i{animation:mceq .8s ease-in-out infinite}
+#mc .snd.on .bars i:nth-child(2){animation-delay:.15s}#mc .snd.on .bars i:nth-child(3){animation-delay:.3s}
+@keyframes mceq{50%{height:12px}}
+#mc .vmeta{padding:14px 16px 16px}
+#mc .vmeta .t{font:500 11px "JetBrains Mono",monospace;letter-spacing:.12em;color:var(--acc);text-transform:uppercase}
+#mc .vmeta p{margin:6px 0 0;color:var(--ink2);font-size:14px;line-height:1.5}
+#mc .vmeta p b{color:var(--ink);font-weight:600}
+#mc .proof{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+/* faixa de vídeos */
+#mc .vband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:22px 0;background:var(--bg2);position:relative;z-index:2}
+#mc .vtrack{display:flex;gap:16px;width:max-content;animation:mcmq 48s linear infinite}
+#mc .vband:hover .vtrack{animation-play-state:paused}
+@keyframes mcmq{to{transform:translateX(-50%)}}
+#mc .vt{height:190px;border-radius:14px;overflow:hidden;flex:none;border:1px solid var(--line);background:#000}
+#mc .vt video{height:100%;width:auto;display:block}
+#mc .vt.txt{display:grid;place-items:center;padding:0 34px;font:600 64px/1 "Handjet",sans-serif;color:var(--ink);background:var(--card)}
+#mc .vt.txt.o{color:#140A05;background:var(--acc)}
+/* cursor */
+#mc .cur{position:fixed;left:0;top:0;width:420px;height:420px;margin:-210px 0 0 -210px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(253,103,37,.16),transparent 62%);opacity:0;transition:opacity .4s}
+#mc .cur.on{opacity:1}
+#mc .btn{will-change:transform}
+@media (max-width:820px){
+  #mc .gal{grid-template-columns:1fr 1fr}
+  #mc .gcol{grid-column:1/-1;grid-template-columns:1fr 1fr;align-items:start}
+  #mc .vt{height:140px} #mc .vt.txt{font-size:46px;padding:0 22px}
+  #mc .vmeta p{font-size:13px}
+}
+@media (max-width:520px){ #mc .gcol{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){#mc .vtrack{animation:none}#mc .cur{display:none}}
+#mc .mascot{position:absolute;left:50%;top:58%;width:min(340px,60%);height:auto;pointer-events:none;filter:drop-shadow(0 30px 60px rgba(253,103,37,.35))}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="mcwarp"><feTurbulence type="fractalNoise" baseFrequency="0.035 0.09" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="22"/></filter></svg>
+<div id="mc" data-p="abertura">
+<div class="amb"></div><div class="cur" id="mcCur"></div><div class="grain"></div>
+<div class="prog" id="mcProg"></div>
+<div class="top"><a href="#" class="logo" aria-label="Motion Code"><img src="assets/logo-horizontal.png" alt="Motion Code" width="170" height="35"></a><a href="#lotes" class="btn sm">Garantir vaga</a></div>
+<main>
+
+<!-- PALCO: os 3 takes acontecendo no scroll -->
+<div class="stage" id="mcStage">
+ <div class="pin">
+  <div class="cap">
+   <div class="capset" id="mcCaps">
+    <div class="on"><div class="k">Take 1 · Roteiro</div><h2>Você descreve a cena.</h2><p>Em português, do jeito que você explicaria para alguém da sua equipe.</p></div>
+    <div><div class="k">Take 2 · Código</div><h2>O Claude escreve cada quadro.</h2><p>Em código. Por isso cada letra, cor e logo saem exatos.</p></div>
+    <div><div class="k">O resultado</div><h2>Motion pronto, com a sua marca.</h2><p>Sem timeline, sem After Effects, sem texto distorcido.</p></div>
+    <div><div class="k">Take 3 · Render</div><h2>Um vira nove.</h2><p>Três formatos, três chamadas. O mesmo molde, nove criativos para testar.</p></div>
+   </div>
+  </div>
+  <div class="rig" id="mcRig">
+   <img class="mascot" id="mcMascot" src="assets/logo-icone.png" alt="" aria-hidden="true">
+   <div class="prompt" id="mcPrompt"><div class="who">VOCÊ ESCREVEU</div><span id="mcTyped"></span><span class="caret"></span></div>
+   <div class="code" id="mcCode"></div>
+   <div class="frame" id="mcFrame">
+    <div class="fbg"></div><div class="fring" id="mcRing"></div>
+    <div class="fbadge" id="mcBadge">WORKSHOP AO VIVO</div>
+    <div class="ftitle" id="mcTitle"></div>
+    <div class="fbar" id="mcBar"></div>
+    <div class="fsub" id="mcSub">Crie motion para anúncios só descrevendo a cena.</div>
+    <div class="fcta" id="mcCta">12/11 · Garanta sua vaga</div>
+   </div>
+   <div class="grid9" id="mcGrid"></div>
+  </div>
+  <div class="scrollhint" id="mcHint">ROLE PARA RODAR O VÍDEO ↓</div>
+ </div>
+</div>
+
+<!-- HERO POUSADO -->
+<section class="hero"><div class="wrap">
+ <div class="kick rv">Workshop ao vivo · quinta, 12 de novembro · 20h</div>
+ <h1 class="rv" data-perfil="abertura">Você já testou tudo de vídeo com IA. Conheça o motion que a IA não gera: <em>ela escreve.</em></h1>
+ <h1 class="rv" data-perfil="conscienciosidade">3 takes, 1 molde, <em>30 criativos.</em> Sua produção de motion com o Claude, sem editor.</h1>
+ <h1 class="rv" data-perfil="neuroticismo">Você só escreve em português. <em>O Claude faz o resto.</em></h1>
+ <p class="hsub rv">Crie vídeos motion para os seus anúncios descrevendo a cena em português. O Claude escreve cada quadro com a sua marca. Sem After Effects. Aprenda o Método 3 Takes ao vivo com a Magda, designer há mais de 15 anos e fundadora da Ueda Agency.</p>
+ <div class="rv"><a href="#lotes" class="btn"><span data-perfil="abertura">Quero ver isso ao vivo</span><span data-perfil="conscienciosidade">Quero o processo completo</span><span data-perfil="neuroticismo">Quero aprender com segurança</span> · <span class="mcPreco">R$ 37</span></a></div>
+ <div class="gbox rv"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FD6725" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+  <span data-perfil="abertura">Garantia de Descoberta: se em 7 dias você achar que não aprendeu um jeito novo de fazer vídeo, devolvemos 100%.</span>
+  <span data-perfil="conscienciosidade">Garantia de Resultado: se você não sair com o primeiro vídeo pronto, fazemos junto no grupo até ele rodar, ou devolvemos em 7 dias.</span>
+  <span data-perfil="neuroticismo">Garantia Dupla: suporte no grupo até o seu primeiro vídeo rodar e 7 dias para pedir tudo de volta.</span>
+ </div>
+ <div class="seals rv"><span class="seal">Ao vivo · 3 horas</span><span class="seal">Replay 72h</span><span class="seal">Garantia 7 dias</span><span class="seal">Em português</span><span class="seal">Windows e Mac</span></div>
+</div></section>
+
+<!-- GALERIA: VÍDEOS FEITOS COM O MÉTODO -->
+<section class="blk" id="feitos"><div class="wrap">
+ <div class="kick rv">Feito com Motion Code</div>
+ <h3 class="t rv">Nenhum desses vídeos foi editado. Todos foram escritos.</h3>
+ <p class="lead rv">Cada vídeo abaixo foi criado com o Método 3 Takes: uma descrição em português, o Claude escrevendo as cenas em código e o render no final. Até a trilha sonora foi gerada em código. Toque em "ouvir com som".</p>
+ <div class="gal">
+  <div class="vcard rv" data-par=".04"><div class="vwrap"><video poster="assets/mc-video-1.jpg" muted loop playsinline preload="metadata"><source src="assets/mc-video-1.webm" type="video/webm"><source src="assets/mc-video-1.mp4" type="video/mp4"></video><button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div><div class="vmeta"><div class="t">Abertura de marca · 9:16</div><p><b>O pedido:</b> "o prompt sendo digitado, 'você descreve' batendo na tela, código passando, nove versões e a logo no fim."</p></div></div>
+  <div class="vcard rv" data-par="-.03"><div class="vwrap"><video poster="assets/mc-video-2.jpg" muted loop playsinline preload="metadata"><source src="assets/mc-video-2.webm" type="video/webm"><source src="assets/mc-video-2.mp4" type="video/mp4"></video><button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div><div class="vmeta"><div class="t">Anúncio de loja · 9:16</div><p><b>O pedido:</b> "Semana do Cliente, produto entrando girando, preço caindo de 189 para 129, selo de 30% e faixa de frete grátis."</p></div></div>
+  <div class="gcol">
+   <div class="vcard rv" data-par=".05"><div class="vwrap"><video poster="assets/mc-video-3.jpg" muted loop playsinline preload="metadata"><source src="assets/mc-video-3.webm" type="video/webm"><source src="assets/mc-video-3.mp4" type="video/mp4"></video><button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div><div class="vmeta"><div class="t">Infoproduto · 1:1</div><p><b>O pedido:</b> "a pergunta sendo digitada e três erros que viram acertos."</p></div></div>
+   <div class="vcard rv" data-par=".02"><div class="vwrap"><video poster="assets/mc-video-4.jpg" muted loop playsinline preload="metadata"><source src="assets/mc-video-4.webm" type="video/webm"><source src="assets/mc-video-4.mp4" type="video/mp4"></video><button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div><div class="vmeta"><div class="t">Gráfico animado · 16:9</div><p><b>O pedido:</b> "vendas por mês com as barras subindo, a linha se desenhando e o crescimento contando."</p></div></div>
+  </div>
+ </div>
+ <div class="proof rv"><span class="seal">4 formatos</span><span class="seal">4 marcas diferentes</span><span class="seal">Trilha feita em código</span><span class="seal">Zero After Effects</span></div>
+ <p class="lead rv" style="font-size:13px;margin-top:14px">As marcas "Loja Aurora" e "Café Norte" são fictícias, criadas para os exemplos.</p>
+</div></section>
+
+<!-- TRANSFORMAÇÃO -->
+<section class="blk"><div class="wrap">
+ <div class="kick rv">O que muda</div>
+ <h3 class="t rv">Vídeo é o que mais vende. Agora para de ser o que mais dá trabalho.</h3>
+ <div class="cards">
+  <div class="cd rv"><div class="n">01</div><h4>Tempo</h4><p><span class="from">Um dia editando 30 segundos.</span><br>Um motion pronto em minutos.</p></div>
+  <div class="cd rv"><div class="n">02</div><h4>Texto</h4><p><span class="from">Letras distorcidas do vídeo IA.</span><br>Cada letra e cor exatas da sua marca.</p></div>
+  <div class="cd rv"><div class="n">03</div><h4>Volume</h4><p><span class="from">Dois criativos por mês.</span><br>Um molde que gera dezenas de versões.</p></div>
+  <div class="cd rv"><div class="n">04</div><h4>Controle</h4><p><span class="from">"Preciso pedir para alguém."</span><br>Você dirige a sua produção.</p></div>
+ </div>
+</div></section>
+
+<!-- FAIXA DE VÍDEOS -->
+<div class="vband" aria-hidden="true"><div class="vtrack" id="mcTrack"><div class="vt"><video poster="assets/mc-video-1.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-1.webm" type="video/webm"><source src="assets/mc-video-1.mp4" type="video/mp4"></video></div><div class="vt txt">TEXTO EXATO</div><div class="vt"><video poster="assets/mc-video-4.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-4.webm" type="video/webm"><source src="assets/mc-video-4.mp4" type="video/mp4"></video></div><div class="vt txt o">SUA MARCA</div><div class="vt"><video poster="assets/mc-video-2.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-2.webm" type="video/webm"><source src="assets/mc-video-2.mp4" type="video/mp4"></video></div><div class="vt txt">1 VIRA 9</div><div class="vt"><video poster="assets/mc-video-3.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-3.webm" type="video/webm"><source src="assets/mc-video-3.mp4" type="video/mp4"></video></div><div class="vt txt o">SEM TIMELINE</div><div class="vt"><video poster="assets/mc-video-1.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-1.webm" type="video/webm"><source src="assets/mc-video-1.mp4" type="video/mp4"></video></div><div class="vt txt">TEXTO EXATO</div><div class="vt"><video poster="assets/mc-video-4.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-4.webm" type="video/webm"><source src="assets/mc-video-4.mp4" type="video/mp4"></video></div><div class="vt txt o">SUA MARCA</div><div class="vt"><video poster="assets/mc-video-2.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-2.webm" type="video/webm"><source src="assets/mc-video-2.mp4" type="video/mp4"></video></div><div class="vt txt">1 VIRA 9</div><div class="vt"><video poster="assets/mc-video-3.jpg" muted loop playsinline preload="none"><source src="assets/mc-video-3.webm" type="video/webm"><source src="assets/mc-video-3.mp4" type="video/mp4"></video></div><div class="vt txt o">SEM TIMELINE</div></div></div>
+
+<!-- COMPARADOR INTERATIVO -->
+<section class="blk"><div class="wrap">
+ <div class="kick rv">A virada</div>
+ <h3 class="t rv">Existem duas IAs de vídeo. Arraste para ver a diferença.</h3>
+ <p class="lead rv">A IA que gera vídeo desenha pixels, por isso erra letras, números e o nome da sua marca. A IA que escreve vídeo monta camadas em código. O texto que você pediu é o texto que aparece.</p>
+ <div class="cmp rv" id="mcCmp" aria-label="Comparação entre vídeo gerado e vídeo escrito">
+  <div class="side gen"><div class="word">PROMOÇÃO DE NATAL</div><div class="lab">VÍDEO GERADO</div></div>
+  <div class="side wri"><div class="word">PROMOÇÃO DE NATAL</div><div class="lab">VÍDEO ESCRITO</div></div>
+  <div class="handle"></div>
+ </div>
+ <p class="quote rv">A IA que gera vídeo erra seu texto. <b>A IA que escreve o vídeo acerta cada letra.</b></p>
+</div></section>
+
+<!-- MÉTODO -->
+<section class="blk"><div class="wrap">
+ <div class="kick rv">O método</div>
+ <h3 class="t rv">Método 3 Takes</h3>
+ <p class="lead rv">Pense num set de filmagem. Você é a diretora. O Claude é a equipe inteira. Cada vídeo sai em três takes.</p>
+ <div class="takes">
+  <div class="take rv draw"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#FD6725" stroke-width="2" stroke-linecap="round"><path style="--len:120" d="M8 12h32M8 22h24M8 32h28M8 42h16"/></svg><span class="clap">TAKE 1</span><h4>Roteiro de Movimento</h4><p>Você descreve a ideia. O Claude organiza cenas, tempos e direção de arte com a sua marca.</p></div>
+  <div class="take rv draw"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#FD6725" stroke-width="2" stroke-linecap="round"><path style="--len:80" d="M16 12L4 24l12 12M32 12l12 12-12 12"/></svg><span class="clap">TAKE 2</span><h4>Código de Cena</h4><p>O Claude escreve a animação. Você assiste o preview e ajusta com frases simples.</p></div>
+  <div class="take rv draw"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#FD6725" stroke-width="2"><path style="--len:200" d="M6 6h14v22H6zM26 6h16v16H26zM26 28h16v14H26zM6 34h14v8H6z"/></svg><span class="clap">TAKE 3</span><h4>Render em Série</h4><p>O vídeo vira molde. Troque formato, headline e chamada e gere várias versões.</p></div>
+ </div>
+</div></section>
+
+<!-- VERDADES -->
+<section class="blk"><div class="wrap">
+ <div class="kick rv">Antes de começar</div>
+ <h3 class="t rv">As primeiras coisas que você precisa entender</h3>
+ <div class="cards">
+  <div class="cd rv"><div class="n">1</div><h4>Vídeo com IA não é uma coisa só</h4><p>Para anúncio, a IA que escreve vence a que gera.</p></div>
+  <div class="cd rv"><div class="n">2</div><h4>Você não precisa programar</h4><p>Precisa saber descrever. O código é problema do Claude.</p></div>
+  <div class="cd rv"><div class="n">3</div><h4>Motion não nasce na timeline</h4><p>Nasce num roteiro claro de cenas.</p></div>
+  <div class="cd rv"><div class="n">4</div><h4>O primeiro é o mais demorado</h4><p>Do segundo em diante, é molde.</p></div>
+ </div>
+</div></section>
+
+<!-- PROGRAMA -->
+<section class="blk" id="programa"><div class="wrap">
+ <div class="kick rv">Programa</div>
+ <h3 class="t rv">Durante o workshop você vai fazer junto</h3>
+ <div class="prog-list">
+  <div class="pl rv"><div class="i">01</div><div><h5>A virada</h5><p>Vídeo gerado x vídeo escrito. O mesmo anúncio feito dos dois jeitos, ao vivo.</p></div><div class="d">20 min</div></div>
+  <div class="pl rv"><div class="i">02</div><div><h5>Preparando o set</h5><p>Claude Code pronto, projeto base e o seu arquivo de marca com cores, fontes e logo.</p></div><div class="d">25 min</div></div>
+  <div class="pl rv"><div class="i">03</div><div><h5>Take 1 · Roteiro de Movimento</h5><p>Como descrever cenas, tempos e estilo. Modelo de roteiro de 15 segundos.</p></div><div class="d">30 min</div></div>
+  <div class="pl rv"><div class="i">04</div><div><h5>Take 2 · Código de Cena</h5><p>O Claude escreve o motion. Revisão pelo preview e ajustes por frase.</p></div><div class="d">35 min</div></div>
+  <div class="pl rv"><div class="i">05</div><div><h5>Take 3 · Render em Série</h5><p>O MP4 pronto e o vídeo transformado em molde com 3 versões.</p></div><div class="d">30 min</div></div>
+  <div class="pl rv"><div class="i">06</div><div><h5>Do vídeo ao anúncio</h5><p>Legenda, formatos para Reels e feed, checklist antes de subir.</p></div><div class="d">15 min</div></div>
+ </div>
+ <p class="lead rv" style="margin-top:26px;font-size:15px">Para fazer junto: computador Windows ou Mac e um plano pago do Claude. Sem o plano, você assiste e aplica depois.</p>
+</div></section>
+
+<!-- PARA QUEM -->
+<section class="blk"><div class="wrap">
+ <div class="kick rv">Para quem é</div>
+ <h3 class="t rv">Faz sentido para você se</h3>
+ <div class="cards">
+  <div class="cd rv"><h4>Você anuncia</h4><p>Expert ou infoprodutor que precisa de mais criativos em vídeo.</p></div>
+  <div class="cd rv"><h4>Você é social media</h4><p>E precisa entregar vídeo para clientes sem virar editor.</p></div>
+  <div class="cd rv"><h4>Você gere tráfego</h4><p>E sofre com a falta de variação de criativo.</p></div>
+  <div class="cd rv"><h4>Você é designer</h4><p>E quer acrescentar motion ao seu pacote.</p></div>
+  <div class="cd rv"><h4>Você paga o Claude</h4><p>E só usa para escrever legenda.</p></div>
+ </div>
+</div></section>
+
+<!-- EXPERT -->
+<section class="blk"><div class="wrap">
+ <div class="kick rv">Quem conduz</div>
+ <div class="exp">
+  <div class="ph rv"><span>M</span><small>foto da Magda aqui</small></div>
+  <div class="rv">
+   <h3 class="t" style="margin-top:0">Magda</h3>
+   <p class="lead">Designer e desenvolvedora há mais de 15 anos e fundadora da Ueda Agency, onde cria identidade visual, sites e páginas de venda para lançamentos. CEO do Prof7 Sistem e criadora de produtos digitais. Nos últimos meses passou a produzir motion para clientes com o Claude, sem abrir o After Effects. O Motion Code abre esse processo inteiro.</p>
+   <div class="stats"><div><b data-to="15" data-suf="+">15+</b><span>anos de design</span></div><div><b data-to="3">3</b><span>takes por vídeo</span></div><div><b>0</b><span>horas de After Effects</span></div></div>
+  </div>
+ </div>
+</div></section>
+
+<!-- LOTES -->
+<section class="blk" id="lotes"><div class="wrap">
+ <div class="kick rv">Ingressos</div>
+ <h3 class="t rv">Garanta sua vaga no Motion Code</h3>
+ <div class="lotes">
+  <div class="lote rv" data-lote="1" data-ate="2026-10-28T23:59:00-03:00"><div class="st">LOTE 1</div><div class="pr"><small>R$</small>37</div><div class="ate">até 28/10 ou 60 vagas</div><a class="btn" data-link="lote1" href="#">Quero o lote 1</a></div>
+  <div class="lote rv" data-lote="2" data-ate="2026-11-12T18:00:00-03:00"><div class="st">LOTE 2</div><div class="pr"><small>R$</small>47</div><div class="ate">até 12/11, 18h</div><a class="btn" data-link="lote2" href="#">Quero o lote 2</a></div>
+ </div>
+ <div class="inc rv"><div>Workshop ao vivo de cerca de 3 horas</div><div>Replay por 72 horas</div><div>Garantia incondicional de 7 dias</div></div>
+ <h4 class="kick rv" style="margin-top:40px">4 bônus inclusos no ingresso</h4>
+ <div class="cards" style="margin-top:16px">
+  <div class="cd rv"><div class="n">BÔNUS 1</div><h4>Skill Motion Code Starter</h4><p>O arquivo de marca e as instruções para todo vídeo já sair no seu padrão.</p></div>
+  <div class="cd rv"><div class="n">BÔNUS 2</div><h4>Guia de Roteiro de Movimento</h4><p>O modelo para descrever cenas, com exemplos de anúncio.</p></div>
+  <div class="cd rv"><div class="n">BÔNUS 3</div><h4>Checklist de criativo</h4><p>O que conferir antes de subir o vídeo no gerenciador.</p></div>
+  <div class="cd rv"><div class="n">BÔNUS 4</div><h4>Grupo de preparação</h4><p>Instalação passo a passo antes do evento, para chegar com tudo pronto.</p></div>
+ </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="blk"><div class="wrap">
+ <div class="kick rv">Dúvidas</div>
+ <h3 class="t rv">Perguntas frequentes</h3>
+ <details class="rv"><summary>Preciso saber programar?</summary><p>Não. Você escreve em português. O Claude escreve o código e você revisa vendo o vídeo.</p></details>
+ <details class="rv"><summary>Preciso pagar o Claude?</summary><p>Para usar o Claude Code, sim, um plano pago. Você pode assistir ao workshop sem ele e assinar depois.</p></details>
+ <details class="rv"><summary>Funciona no Windows?</summary><p>Sim, Windows e Mac. O passo de instalação vai no grupo antes do evento.</p></details>
+ <details class="rv"><summary>Vou sair com um vídeo pronto?</summary><p>Esse é o objetivo: fazer junto o primeiro motion de anúncio durante o workshop.</p></details>
+ <details class="rv"><summary>E se eu não puder assistir ao vivo?</summary><p>O replay fica disponível por 72 horas.</p></details>
+ <details class="rv"><summary>É diferente de usar Kling, Veo ou Sora?</summary><p>Sim. Essas ferramentas geram vídeo realista. Aqui você cria motion gráfico com texto e marca exatos, feito para anúncio.</p></details>
+ <details class="rv"><summary>Já existem skills grátis de vídeo para o Claude. Por que fazer o workshop?</summary><p>A skill é a câmera. O que faz o vídeo parecer de agência é a direção: roteiro, ritmo, marca e o que cortar. É isso que você aprende ao vivo, aplicado ao seu anúncio.</p></details>
+ <details class="rv"><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia para pedir o dinheiro de volta, sem perguntas.</p></details>
+</div></section>
+
+<section class="final"><div class="wrap">
+ <div class="kick rv">Quinta, 12 de novembro, 20h</div>
+ <h3 class="t rv">Você descreve. O Claude escreve. O motion sai com a sua marca.</h3>
+ <div class="rv"><a href="#lotes" class="btn">Garantir minha vaga no Motion Code</a></div>
+</div></section>
+
+<footer><div class="wrap">Motion Code é um workshop da Ueda Agency · uedaagency.com.br · Claude é uma marca da Anthropic. Este workshop não é afiliado à Anthropic.</div></footer>
+</main>
+<div class="sticky" id="mcSticky"><span>Motion Code · 12/11 · <b class="mcPreco">R$ 37</b></span><a href="#lotes" class="btn sm">Garantir vaga</a></div>
+</div>
+
+<script>
+(function(){
+/* ====== COLE AQUI OS LINKS DO CHECKOUT ====== */
+var CHECKOUT = { lote1: "", lote2: "" };
+/* ============================================ */
+var root=document.getElementById('mc');
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* perfil por link: ?perfil=abertura | conscienciosidade | neuroticismo */
+try{var pf=new URLSearchParams(location.search).get('perfil');if(['abertura','conscienciosidade','neuroticismo'].indexOf(pf)>-1)root.setAttribute('data-p',pf);}catch(e){}
+
+/* lotes por data */
+var now=Date.now(),ativo=null;
+document.querySelectorAll('#mc .lote').forEach(function(l){
+  var fim=new Date(l.dataset.ate).getTime(),a=l.querySelector('a'),k=a.dataset.link;
+  if(CHECKOUT[k])a.href=CHECKOUT[k];else a.href='#lotes';
+  if(now>fim){l.classList.add('off');a.textContent='Encerrado';}
+  else if(!ativo){ativo=l;l.classList.add('on');l.querySelector('.st').textContent='LOTE '+l.dataset.lote+' · ABERTO';}
+  else{l.classList.add('next');a.textContent='Em breve';}
+});
+if(ativo){var p='R$ '+ativo.querySelector('.pr').textContent.replace('R$','').trim();document.querySelectorAll('#mc .mcPreco').forEach(function(e){e.textContent=p});
+  var lk=CHECKOUT[ativo.querySelector('a').dataset.link];if(lk)document.querySelectorAll('#mc a[href="#lotes"]').forEach(function(a){a.href=lk})}
+
+/* revelar ao rolar */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('#mc .rv').forEach(function(el){io.observe(el)});
+
+/* comparador */
+var cmp=document.getElementById('mcCmp'),drag=false;
+function setX(cx){var r=cmp.getBoundingClientRect();var x=Math.min(100,Math.max(0,(cx-r.left)/r.width*100));cmp.style.setProperty('--x',x+'%')}
+cmp.addEventListener('pointerdown',function(e){drag=true;setX(e.clientX)});
+window.addEventListener('pointermove',function(e){if(drag)setX(e.clientX)});
+window.addEventListener('pointerup',function(){drag=false});
+cmp.addEventListener('mousemove',function(e){if(e.pointerType!=='touch')setX(e.clientX)});
+
+/* ===== PALCO DO SCROLL ===== */
+var PROMPT='Crie um vídeo vertical de 15s para anúncio. Fundo laranja da marca, o título "Motion Code" entra letra por letra, uma barra se desenha embaixo e o botão aparece no fim.';
+var CODE=['<i>import</i> {useCurrentFrame, spring} <i>from</i> <s>"remotion"</s>;','<i>import</i> marca <i>from</i> <s>"./MARCA"</s>;','','<i>export const</i> <u>Anuncio</u> = () => {','  <i>const</i> f = useCurrentFrame();','  <i>const</i> titulo = <s>"Motion Code"</s>;','  <i>const</i> barra = spring({frame: f - 40});','  <i>return</i> (','    &lt;Fundo cor={marca.laranja}&gt;','      {titulo.split(<s>""</s>).map((l, i) =>','        &lt;Letra atraso={i * 3}&gt;{l}&lt;/Letra&gt;)}','      &lt;Barra largura={barra} /&gt;','      &lt;Botao entra={f &gt; 90}&gt;12/11&lt;/Botao&gt;','    &lt;/Fundo&gt;',');','};','','<s>// render: 1080x1920 · 30fps · 450 frames</s>'];
+var codeEl=document.getElementById('mcCode');
+CODE.forEach(function(c){var d=document.createElement('div');d.innerHTML=c||'&nbsp;';codeEl.appendChild(d)});
+var codeLines=codeEl.children;
+var titleEl=document.getElementById('mcTitle');
+'Motion Code'.split('').forEach(function(ch){var s=document.createElement('span');s.textContent=ch===' '?' ':ch;titleEl.appendChild(s)});
+var letters=titleEl.children;
+var V=[['p','#FD6725','Motion Code'],['q','#7B61FF','Sem editor'],['l','#2BC48A','3 takes'],['q','#FD6725','Texto exato'],['p','#C2410C','Sua marca'],['l','#7B61FF','12/11 ao vivo'],['l','#FD6725','1 vira 9'],['p','#2BC48A','Sem After Effects'],['q','#B45AF5','Motion Code']];
+var grid=document.getElementById('mcGrid');
+V.forEach(function(v,i){var m=document.createElement('div');m.className='mini '+v[0];m.style.background='radial-gradient(120% 80% at 50% 0%,'+v[1]+',#1a1020 85%)';m.innerHTML='<b>'+v[2]+'</b><em>'+({p:'9:16',q:'1:1',l:'16:9'})[v[0]]+'</em>';grid.appendChild(m)});
+var minis=grid.children;
+var mascot=document.getElementById('mcMascot'),stage=document.getElementById('mcStage'),typed=document.getElementById('mcTyped'),prompt=document.getElementById('mcPrompt'),frame=document.getElementById('mcFrame'),bar=document.getElementById('mcBar'),sub=document.getElementById('mcSub'),cta=document.getElementById('mcCta'),badge=document.getElementById('mcBadge'),ring=document.getElementById('mcRing'),hint=document.getElementById('mcHint'),caps=document.getElementById('mcCaps').children,progEl=document.getElementById('mcProg'),sticky=document.getElementById('mcSticky');
+function cl(v){return v<0?0:v>1?1:v}
+function seg(p,a,b){return cl((p-a)/(b-a))}
+function ease(t){return 1-Math.pow(1-t,3)}
+var target=0,shown=-1,lastCap=-1,lastTyped=-1,lastLines=-1;
+function measure(){var r=stage.getBoundingClientRect();var tot=stage.offsetHeight-innerHeight;target=reduce?1:cl(-r.top/tot);
+  var d=document.documentElement;progEl.style.width=(scrollY/(d.scrollHeight-innerHeight)*100)+'%';
+  sticky.classList.toggle('show',r.bottom<innerHeight*.4)}
+function render(p){
+  var mob=innerWidth<=820;
+  /* take 1: digitar (0 a .22) */
+  var tp=seg(p,0,.2),n=Math.round(PROMPT.length*(.32+.68*tp));
+  if(n!==lastTyped){typed.textContent=PROMPT.slice(0,n);lastTyped=n}
+  var pOut=seg(p,.22,.3);
+  prompt.style.opacity=1-pOut;prompt.style.transform='translateY('+(-30*pOut)+'px)';
+  /* take 2: código (.24 a .5) */
+  var cIn=seg(p,.24,.3),cOut=seg(p,.5,.58);
+  codeEl.style.opacity=cIn*(1-cOut);codeEl.style.transform='translateX('+(-20*cOut)+'px)';
+  var ln=Math.floor(codeLines.length*seg(p,.27,.47));
+  if(ln!==lastLines){for(var i=0;i<codeLines.length;i++)codeLines[i].classList.toggle('on',i<ln);lastLines=ln}
+  /* frame: aparece em .3, centraliza .5-.58 */
+  var fIn=ease(seg(p,.28,.36)),fC=ease(seg(p,.5,.6)),gOut=ease(seg(p,.74,.84));
+  var rig=frame.parentNode.getBoundingClientRect();
+  var shiftX=-(rig.width/2-frame.offsetWidth/2)*fC;
+  frame.style.opacity=fIn*(1-gOut);
+  frame.style.transform='translate('+shiftX+'px,-50%) scale('+((.9+.1*fIn)*(1+.08*fC)*(1-.4*gOut))+') rotate('+(-4*(1-fIn))+'deg)';
+  /* animação dentro do frame (.32 a .7) */
+  var a=seg(p,.34,.62);
+  for(var j=0;j<letters.length;j++){var t=ease(seg(a,j*.05,j*.05+.3));letters[j].style.opacity=t;letters[j].style.transform='translateY('+(30*(1-t))+'px) rotate('+(12*(1-t))+'deg)'}
+  bar.style.width=(ease(seg(a,.55,.8))*60)+'%';
+  sub.style.opacity=ease(seg(a,.65,.85));cta.style.opacity=ease(seg(a,.82,1));cta.style.transform='translateY('+(16*(1-ease(seg(a,.82,1))))+'px)';
+  badge.style.opacity=ease(seg(a,0,.2));ring.style.transform='rotate('+(p*120)+'deg) scale('+(1+.2*a)+')';
+  /* take 3: grade (.74 a .95) */
+  for(var k=0;k<minis.length;k++){var t2=ease(seg(p,.76+k*.018,.86+k*.018));minis[k].style.opacity=t2;minis[k].style.transform='scale('+(.6+.4*t2)+')'}
+  /* legendas */
+  var c=p<.24?0:p<.48?1:p<.74?2:3;
+  if(c!==lastCap){for(var q=0;q<caps.length;q++)caps[q].classList.toggle('on',q===c);lastCap=c}
+  hint.style.opacity=1-seg(p,0,.06);
+  var mo=seg(p,.12,.26);mascot.style.opacity=1-mo;mascot.style.transform='translate(-50%,-50%) translateY('+(Math.sin(performance.now()/700)*10-60*mo)+'px) scale('+(1-.3*mo)+') rotate('+(Math.sin(performance.now()/1100)*4)+'deg)';
+}
+function loop(){
+  if(shown<0)shown=target;
+  var d=target-shown;
+  if(Math.abs(d)>.0005){shown+=d*.14}render(shown);
+  requestAnimationFrame(loop);
+}
+addEventListener('scroll',measure,{passive:true});addEventListener('resize',function(){measure();render(shown)});
+measure();render(target);shown=target;loop();
+
+/* ===== EFEITOS ===== */
+var fine=matchMedia('(pointer:fine)').matches;
+/* títulos que decodificam */
+var GLY='!<>-_\\/[]{}=+*^?#01';
+function decode(el){var nodes=[],w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);while(w.nextNode())nodes.push({n:w.currentNode,t:w.currentNode.nodeValue});
+  var t0=null,D=950;function f(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/D),tot=0;nodes.forEach(function(o){var out='';for(var i=0;i<o.t.length;i++){var ch=o.t[i],k=(tot+i)/120;
+    if(ch===' '||ch==='\u00a0'||p>=k+.35)out+=ch;else if(p>k)out+=GLY[(Math.random()*GLY.length)|0];else out+=ch.replace(/\S/,'\u00a0');}o.n.nodeValue=out;tot+=o.t.length});
+    if(p<1)requestAnimationFrame(f);else nodes.forEach(function(o){o.n.nodeValue=o.t})}requestAnimationFrame(f)}
+if(!reduce){var dio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){decode(e.target);dio.unobserve(e.target)}})},{threshold:.4});
+  document.querySelectorAll('#mc h1, #mc h3.t').forEach(function(h){if(h.offsetParent!==null||h.closest('section'))dio.observe(h)})}
+/* contadores */
+var cio=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;cio.unobserve(e.target);var el=e.target,to=+el.dataset.to,suf=el.dataset.suf||'',t0=null;
+  function f(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/1400),v=Math.round(to*(1-Math.pow(1-p,3)));el.textContent=v+suf;if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)})},{threshold:.6});
+document.querySelectorAll('#mc [data-to]').forEach(function(el){if(!reduce){el.textContent='0';cio.observe(el)}});
+/* vídeos: tocam só quando aparecem; som em um por vez */
+var vids=[].slice.call(document.querySelectorAll('#mc video'));
+var vio=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){if(v.preload==='none')v.preload='auto';var pr=v.play();if(pr&&pr.catch)pr.catch(function(){})}else v.pause()})},{threshold:.25});
+vids.forEach(function(v){if(!reduce)vio.observe(v)});
+document.querySelectorAll('#mc .snd').forEach(function(b){b.addEventListener('click',function(){var v=b.parentNode.querySelector('video'),turnOn=v.muted;
+  document.querySelectorAll('#mc .snd').forEach(function(o){var ov=o.parentNode.querySelector('video');ov.muted=true;o.classList.remove('on');o.querySelector('.lb').textContent='Ouvir com som'});
+  if(turnOn){v.muted=false;v.currentTime=0;var pr=v.play();if(pr&&pr.catch)pr.catch(function(){});b.classList.add('on');b.querySelector('.lb').textContent='Som ligado'}})});
+/* cursor e botões magnéticos */
+if(fine&&!reduce){var cur=document.getElementById('mcCur'),mx=-500,my=-500,cx=-500,cy=-500;
+  addEventListener('pointermove',function(e){mx=e.clientX;my=e.clientY;cur.classList.add('on')});
+  document.addEventListener('pointerleave',function(){cur.classList.remove('on')});
+  (function cf(){cx+=(mx-cx)*.12;cy+=(my-cy)*.12;cur.style.transform='translate('+cx+'px,'+cy+'px)';requestAnimationFrame(cf)})();
+  document.querySelectorAll('#mc .btn').forEach(function(b){b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();b.style.transform='translate('+((e.clientX-r.left-r.width/2)*.22)+'px,'+((e.clientY-r.top-r.height/2)*.3)+'px)'});
+    b.addEventListener('pointerleave',function(){b.style.transform=''})})}
+/* profundidade: parallax e inclinação pela velocidade */
+var pars=[].slice.call(document.querySelectorAll('#mc [data-par]')),band=document.getElementById('mcTrack'),lastY=scrollY,vel=0;
+if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=Math.max(-5,Math.min(5,vel*.12));
+  pars.forEach(function(el){var r=el.getBoundingClientRect();if(r.bottom<-200||r.top>innerHeight+200)return;var c=r.top+r.height/2-innerHeight/2;el.style.transform='translateY('+(-c*parseFloat(el.dataset.par))+'px) skewY('+(sk*.3)+'deg)'});
+  if(band)band.parentNode.style.transform='skewY('+(-sk*.5)+'deg)';requestAnimationFrame(pf)})();
+})();
+</script>
+</body>
+</html>

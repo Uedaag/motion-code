@@ -97,7 +97,7 @@ module.exports = async (req, res) => {
       metadata: { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum" },
     };
     const b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) });
-    return res.status(200).json({ url: b.data.url });
+    return res.status(200).json({ url: b.data.url, pedido: pedidoId });
   } catch (e) {
     console.error("[checkout]", e.message);
     return res.status(502).json({ erro: "Não foi possível abrir o pagamento agora. Tente de novo em instantes." });

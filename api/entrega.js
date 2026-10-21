@@ -26,7 +26,8 @@ module.exports = async (req, res) => {
     const r = await fetch(API + "/checkouts/get?externalId=" + encodeURIComponent(p), { headers: { Authorization: "Bearer " + key } });
     let body = null;
     try { body = await r.json(); } catch (e) { /* resposta sem JSON */ }
-    if (r.status === 404) return res.status(404).json({ status: "nao-encontrado" });
+    // a Abacate Pay responde 400 "Billing not found" quando o pedido não existe
+    if (r.status === 404 || /not found/i.test(String(body && body.error))) return res.status(404).json({ status: "nao-encontrado" });
     if (!r.ok || !body || body.success === false || !body.data) throw new Error("HTTP " + r.status + " " + JSON.stringify(body && body.error));
 
     const c = body.data;

@@ -325,7 +325,7 @@ body{margin:0;background:#0F0D13}
 #mcPf button{position:absolute;right:18px;top:18px;width:46px;height:46px;border-radius:50%;border:1px solid #3a3045;background:#1C1823;color:#fff;font-size:22px;cursor:pointer}
 @media (max-width:820px){#mc .pf-it{width:72vw;max-width:290px}#mc .pf-nav{display:none}}
 </style>
-<!-- Meta Pixel Code -->
+<!-- Meta Pixel - Workshop -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -777,10 +777,15 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
   buy.addEventListener('click',function(e){if(e.target===buy||e.target.hasAttribute('data-buy-close'))fechar()});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')fechar()});
   document.querySelectorAll('#mc .lote.on .btn').forEach(function(b){b.addEventListener('click',abrir)});
+  /* pixel: clique em "Garantir vaga" e nos outros botões de compra = InitiateCheckout (uma vez por visita, com o preço do lote aberto) */
+  var iniciou=false;
+  document.querySelectorAll('a[href="#lotes"], #mc .lote .btn').forEach(function(a){a.addEventListener('click',function(){
+    if(iniciou||!window.fbq)return;iniciou=true;fbq('track','InitiateCheckout',{value:base||37,currency:'BRL'})})});
   go.addEventListener('click',function(){
     var bumps=[].slice.call(buy.querySelectorAll('.bump input:checked')).map(function(i){return i.value});
     var t=base*100;bumps.forEach(function(b){t+=PRECO[b]});
-    if(window.fbq)fbq('track','InitiateCheckout',{value:t/100,currency:'BRL',num_items:1+bumps.length});
+    /* pixel: "Pagar com PIX" = AddPaymentInfo com o total escolhido (não repete o InitiateCheckout) */
+    if(window.fbq)fbq('track','AddPaymentInfo',{value:t/100,currency:'BRL',num_items:1+bumps.length});
     go.disabled=true;go.textContent='Abrindo o pagamento...';err.style.display='none';
     fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bumps:bumps})})
       .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})

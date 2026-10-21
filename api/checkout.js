@@ -11,6 +11,7 @@ const LOTES = [
 ];
 
 const BUMPS = {
+  aula:    { externalId: "mc-bump-aula",    name: "Aula Gravada Motion Code",        price: 1990, description: "Gravação completa do workshop para rever quando precisar" },
   moldes:  { externalId: "mc-bump-moldes",  name: "Biblioteca de Moldes de Anúncio", price: 4700, description: "12 moldes de anúncio em motion (9:16, 1:1 e 16:9) prontos para editar" },
   estilos: { externalId: "mc-bump-estilos", name: "Mesa de Estilos Motion Code",     price: 2700, description: "30 estilos visuais com o prompt de cada um" },
 };
@@ -85,12 +86,14 @@ module.exports = async (req, res) => {
     const itens = [{ id: await idDoProduto(lote, key), quantity: 1 }];
     for (const b of escolhidos) itens.push({ id: await idDoProduto(BUMPS[b], key), quantity: 1 });
     const site = origem(req);
+    // O código do pedido volta na página de obrigado, que consulta o pagamento para liberar os bônus comprados
+    const pedidoId = "mc-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
     const corpo = {
       items: itens,
       methods: ["PIX"],
       returnUrl: site + "/#lotes",
-      completionUrl: site + "/obrigado",
-      externalId: "mc-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+      completionUrl: site + "/obrigado?p=" + pedidoId,
+      externalId: pedidoId,
       metadata: { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum" },
     };
     const b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) });

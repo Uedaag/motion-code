@@ -602,6 +602,7 @@ body{margin:0;background:#0F0D13}
  <div class="buy-box">
   <div class="buy-h"><div><div class="kick">Sua inscrição</div><h4 id="mcBuyT">Workshop Motion Code</h4></div><button class="buy-x" type="button" aria-label="Fechar" data-buy-close>✕</button></div>
   <div class="buy-item"><span>Ingresso <b id="mcBuyLote">Lote 1</b> + 4 bônus</span><b id="mcBuyLoteP">R$ 37</b></div>
+  <label class="bump"><input type="checkbox" value="aula"><div><div class="bt">Sim, quero a Aula Gravada <em>+ R$ 19,90</em></div><p>O replay gratuito sai do ar em 72 horas. Com a aula gravada, você guarda o workshop completo e revê cada passo no seu ritmo.</p></div></label>
   <label class="bump"><input type="checkbox" value="moldes"><div><div class="bt">Sim, quero a Biblioteca de Moldes <em>+ R$ 47</em></div><p>12 moldes de anúncio em motion (9:16, 1:1 e 16:9) prontos para trocar o texto e usar. Você já sai do workshop com criativos na mão.</p></div></label>
   <label class="bump"><input type="checkbox" value="estilos"><div><div class="bt">Sim, quero a Mesa de Estilos <em>+ R$ 27</em></div><p>30 estilos visuais com o prompt de cada um, para seus vídeos nunca terem cara de template.</p></div></label>
   <div class="buy-tot"><span>Total</span><b id="mcBuyTot">R$ 37</b></div>
@@ -751,9 +752,10 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
   var buy=document.getElementById('mcBuy'),go=document.getElementById('mcBuyGo'),err=document.getElementById('mcBuyErr'),tot=document.getElementById('mcBuyTot');
   var ativoEl=document.querySelector('#mc .lote.on');
   var base=ativoEl?parseInt(ativoEl.querySelector('.pr').textContent.replace(/\D/g,''),10):0;
-  var PRECO={moldes:47,estilos:27};
+  var PRECO={aula:1990,moldes:4700,estilos:2700}; /* em centavos */
+  function brl(c){return 'R$ '+(c%100?(c/100).toFixed(2).replace('.',','):c/100)}
   if(ativoEl){document.getElementById('mcBuyLote').textContent='Lote '+ativoEl.dataset.lote;document.getElementById('mcBuyLoteP').textContent='R$ '+base}
-  function soma(){var t=base;buy.querySelectorAll('.bump input').forEach(function(i){if(i.checked)t+=PRECO[i.value]});tot.textContent='R$ '+t}
+  function soma(){var t=base*100;buy.querySelectorAll('.bump input').forEach(function(i){if(i.checked)t+=PRECO[i.value]});tot.textContent=brl(t)}
   buy.querySelectorAll('.bump input').forEach(function(i){i.addEventListener('change',soma)});
   function abrir(e){if(e)e.preventDefault();if(!ativoEl){location.hash='lotes';return}err.style.display='none';buy.classList.add('open');buy.setAttribute('aria-hidden','false');setTimeout(function(){go.focus()},50)}
   function fechar(){buy.classList.remove('open');buy.setAttribute('aria-hidden','true')}

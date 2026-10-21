@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mesa de Estilos · Motion Code</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Archivo+Black&family=Space+Grotesk:wght@500;700&family=Anton&family=Inter:wght@400;500;600;800&family=Bangers&family=Rubik:wght@500;800&family=Oswald:wght@500;700&family=Inter+Tight:wght@900&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=DM+Sans:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;700&family=Chakra+Petch:wght@500;700&family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@500;800&family=Syne:wght@800&family=Shrikhand&family=Audiowide&family=VT323&family=Outfit:wght@400;800&family=Baloo+2:wght@500;800&family=Caveat+Brush&family=Nunito:wght@600;800&family=Fredoka:wght@500;700&family=Manrope:wght@500;800&family=Courier+Prime:wght@700&family=Cinzel:wght@700&family=Sora:wght@400;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0D13;--card:#1C1823;--card2:#241F2D;--ink:#F3EEE4;--ink2:#CBC3D6;--mut:#8E879A;--line:#2A2632;--acc:#FD6725;
+ --grao:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(70vmax 50vmax at 90% -10%,rgba(253,103,37,.14),transparent 60%),var(--bg);color:var(--ink);font:16px/1.55 "Instrument Sans",system-ui,sans-serif}
+.wrap{width:min(1180px,100%);margin:0 auto;padding:0 16px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.logo{height:30px;width:auto;display:block}
+.k{font:500 12px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+h1{font:500 clamp(46px,8vw,86px)/.92 "Handjet",sans-serif;margin:12px 0 16px;max-width:15ch}
+h1 em{font-style:normal;color:var(--acc)}
+h2{font:500 clamp(34px,5vw,48px)/1 "Handjet",sans-serif;margin:0 0 6px}
+.lead{color:var(--ink2);max-width:64ch;font-size:17px;margin:0}
+.how{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.how li{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-weight:600}
+.how b{font:600 30px/1 "Handjet",sans-serif;color:var(--acc)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin:34px 0}
+label{display:block;font-size:13px;font-weight:600;color:var(--ink2)}
+input[type=text],textarea,select{display:block;width:100%;margin-top:6px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:500 15px/1.4 "Instrument Sans",sans-serif;padding:10px 12px;outline:none}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--acc)}
+textarea{resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:#140A05;font:700 14px "Instrument Sans",sans-serif;border:0;border-radius:11px;padding:11px 15px;cursor:pointer;transition:filter .2s,transform .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
+.btn.ok{background:#2EBD6B;color:#04170B}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+.chip{font:600 14px "Instrument Sans",sans-serif;background:var(--card);color:var(--ink2);border:1px solid var(--line);border-radius:99px;padding:8px 14px;cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#140A05}
+.grade{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));margin-top:20px}
+.est{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.est[hidden]{display:none}
+.est .info{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.est .cat{font:500 11px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--acc)}
+.est h3{margin:0;font-size:18px;line-height:1.2}
+.est .uso{margin:0;font-size:13.5px;color:var(--ink2)}
+.pal{display:flex;gap:6px}
+.pal button{flex:1;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.12);cursor:pointer;position:relative;padding:0}
+.pal button:hover::after,.pal button:focus-visible::after{content:attr(data-h);position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);background:#000;color:#fff;font:500 11px "JetBrains Mono",monospace;padding:4px 6px;border-radius:6px;white-space:nowrap}
+.fon{font-size:12.5px;color:var(--mut);margin:0}
+.est .acts{display:flex;gap:8px;margin-top:auto;padding-top:6px}
+.est .acts .btn{flex:1;padding:10px 8px;font-size:13.5px;white-space:nowrap}
+/* gerador */
+.ger{display:grid;gap:18px;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.ger .campos{display:grid;gap:12px;align-content:start}
+.ger .dois{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.cores{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.cor{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:5px 10px 5px 5px;font:500 13px "JetBrains Mono",monospace;color:var(--ink)}
+.cor input{appearance:none;-webkit-appearance:none;width:28px;height:28px;border:0;border-radius:7px;padding:0;background:none;cursor:pointer}
+.cor input::-webkit-color-swatch-wrapper{padding:0}
+.cor input::-webkit-color-swatch{border:1px solid rgba(255,255,255,.2);border-radius:7px}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink2);cursor:pointer}
+.chk input{accent-color:var(--acc);width:16px;height:16px}
+.saida{display:flex;flex-direction:column;gap:10px}
+.saida pre{margin:0;flex:1;min-height:340px;max-height:560px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px;font:400 13px/1.6 "JetBrains Mono",monospace;color:var(--ink2);white-space:pre-wrap;word-break:break-word}
+.dicas{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:18px}
+.dica{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.dica b{display:block;margin-bottom:4px}
+.dica p{margin:0;font-size:14px;color:var(--ink2)}
+dialog{width:min(760px,calc(100% - 32px));max-height:calc(100dvh - 48px);background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:0}
+dialog::backdrop{background:rgba(8,7,11,.7);backdrop-filter:blur(4px)}
+.dlg-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dlg-h h3{margin:0;font-size:18px}
+dialog pre{margin:0;padding:18px;max-height:62dvh;overflow:auto;font:400 13px/1.6 "JetBrains Mono",monospace;color:var(--ink2);white-space:pre-wrap;word-break:break-word}
+.dlg-f{display:flex;gap:8px;justify-content:flex-end;padding:14px 18px;border-top:1px solid var(--line)}
+.x{background:none;border:1px solid var(--line);color:var(--ink);border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:16px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:80;background:#14301F;border:1px solid #2EBD6B;color:#E8FFF0;border-radius:12px;padding:11px 16px;font-size:14px;transition:opacity .25s,transform .25s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+footer{color:var(--mut);font-size:13px;padding:40px 0 50px}
+@media (max-width:860px){.ger{grid-template-columns:1fr}.saida pre{min-height:260px}}
+
+/* ================= PRÉVIAS ANIMADAS DOS ESTILOS ================= */
+.pv{position:relative;aspect-ratio:4/5;overflow:hidden;isolation:isolate;container-type:inline-size;--d:4s}
+.pv *{animation-duration:var(--d);animation-iteration-count:infinite;animation-fill-mode:both}
+.pv i{position:absolute;display:block}
+.pv .h{position:absolute;left:9%;right:9%;top:28%;z-index:2;font-size:15cqw;line-height:.95}
+.pv .h span{display:block;animation-name:kUp}
+.pv .h span+span{animation-delay:.12s}
+.pv .p{position:absolute;left:9%;right:9%;top:66%;z-index:2;font-size:4.8cqw;line-height:1.3;animation-name:kSub}
+.pv .bt{position:absolute;left:9%;bottom:8%;z-index:2;font-size:4.2cqw;line-height:1;padding:2.6cqw 4.4cqw;border-radius:99px;font-weight:700;animation-name:kBtn}
+.pausa *,.pausa *::before,.pausa *::after{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){.pv *,.pv *::before,.pv *::after{animation:none!important}}
+@keyframes kUp{0%{opacity:0;transform:translateY(30%)}14%,86%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-15%)}}
+@keyframes kSlam{0%{opacity:0;transform:scale(1.8)}9%{opacity:1;transform:scale(.95)}14%,86%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes kMask{0%{clip-path:inset(0 0 100% 0);transform:translateY(40%)}16%,86%{clip-path:inset(0 0 0 0);transform:none}100%{clip-path:inset(100% 0 0 0)}}
+@keyframes kLeft{0%{opacity:0;transform:translateX(-60%)}12%,86%{opacity:1;transform:none}100%{opacity:0;transform:translateX(30%)}}
+@keyframes kPop{0%{opacity:0;transform:scale(.3) rotate(-12deg)}10%{opacity:1;transform:scale(1.12) rotate(3deg)}16%,86%{opacity:1;transform:none}100%{opacity:0;transform:scale(.6)}}
+@keyframes kFade{0%{opacity:0}20%,82%{opacity:1}100%{opacity:0}}
+@keyframes kBlur{0%{opacity:0;filter:blur(3cqw);transform:scale(1.08)}24%,84%{opacity:1;filter:blur(0);transform:none}100%{opacity:0;filter:blur(2cqw)}}
+@keyframes kType{0%{clip-path:inset(0 100% 0 0)}30%,86%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 0);opacity:0}}
+@keyframes kSub{0%,22%{opacity:0;transform:translateY(30%)}34%,86%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes kBtn{0%,32%{opacity:0;transform:translateY(40%) scale(.8)}42%,86%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes kSpin{to{transform:rotate(360deg)}}
+@keyframes kFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8%)}}
+@keyframes kBlink{50%{opacity:0}}
+@keyframes kLine{0%{transform:scaleX(0);transform-origin:left}20%,86%{transform:scaleX(1);transform-origin:left}100%{transform:scaleX(0);transform-origin:right}}
+@keyframes kGrow{0%{transform:scale(0)}18%,86%{transform:scale(1)}100%{transform:scale(0)}}
+@keyframes kDrift{0%,100%{transform:translate(0,0)}50%{transform:translate(18cqw,10cqw)}}
+
+/* 01 neo brutalista */
+.s-nb{background:#F5F0E6;color:#111;font-family:"Archivo Black"}
+.s-nb .h{font-size:14cqw;text-transform:uppercase;top:26%}
+.s-nb .h span{animation-name:kLeft;animation-timing-function:cubic-bezier(.3,1.6,.5,1)}
+.s-nb .h span+span{display:inline-block;background:#FFD400;border:.9cqw solid #111;box-shadow:2cqw 2cqw 0 #111;padding:0 2cqw;margin-top:2.5cqw;rotate:-2deg}
+.s-nb .p{font-family:"Space Grotesk";font-weight:500;top:64%}
+.s-nb .bt{background:#2F5BFF;color:#fff;border:.8cqw solid #111;box-shadow:1.6cqw 1.6cqw 0 #111;border-radius:2cqw;font-family:"Space Grotesk"}
+.s-nb .a{right:8%;top:7%;width:20cqw;height:20cqw;background:#FFD400;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);animation:kSpin 8s linear infinite}
+.s-nb .b{left:9%;top:9%;width:30cqw;height:3cqw;background:repeating-linear-gradient(90deg,#111 0 3cqw,transparent 3cqw 6cqw)}
+/* 02 tipografia cinética */
+.s-tc{background:#0B0B0B;color:#fff;font-family:Anton}
+.s-tc .h{font-size:25cqw;top:20%;text-transform:uppercase;line-height:.88}
+.s-tc .h span{animation-name:kSlam;animation-timing-function:cubic-bezier(.2,.9,.3,1)}
+.s-tc .h span+span{color:#FF3D2E;animation-delay:.35s}
+.s-tc .p{font-family:Inter;font-weight:600;color:#8A8A8A;top:70%}
+.s-tc .bt{background:#FF3D2E;color:#fff;font-family:Inter}
+.s-tc .a{left:9%;top:14%;height:.9cqw;width:30cqw;background:#FF3D2E;animation:kLine 4s infinite}
+/* 03 pop art */
+.s-pop{background:#FFE14D radial-gradient(rgba(232,50,43,.22) 18%,transparent 21%) 0 0/4.5cqw 4.5cqw;color:#E8322B;font-family:Bangers}
+.s-pop .a,.s-pop .b{left:50%;top:44%;width:84cqw;height:84cqw;margin:-42cqw;background:#111;clip-path:polygon(50% 0,58% 30%,85% 12%,72% 40%,100% 45%,73% 58%,90% 85%,60% 72%,52% 100%,42% 72%,14% 90%,28% 60%,0 52%,26% 40%,10% 14%,40% 28%);animation:kPop 4s infinite cubic-bezier(.3,1.7,.5,1)}
+.s-pop .b{background:#fff;transform-origin:center;width:78cqw;height:78cqw;margin:-39cqw}
+.s-pop .h{font-size:20cqw;text-align:center;left:5%;right:5%;top:30%;rotate:-6deg;text-shadow:.9cqw .9cqw 0 #111,-.4cqw -.4cqw 0 #111,.4cqw -.4cqw 0 #111,-.4cqw .4cqw 0 #111;letter-spacing:.02em}
+.s-pop .h span{animation-name:kPop;animation-timing-function:cubic-bezier(.3,1.7,.5,1)}
+.s-pop .h span+span{color:#1F6FEB}
+.s-pop .p{font-family:Rubik;font-weight:800;text-align:center;top:70%;background:#fff;color:#111;border:.6cqw solid #111;border-radius:4cqw;padding:2cqw;left:12%;right:12%;font-size:4.4cqw}
+.s-pop .bt{display:none}
+/* 04 esportivo */
+.s-sp{background:#0A0A0A;color:#fff;font-family:Anton}
+.s-sp .a{inset:0;background:repeating-linear-gradient(115deg,transparent 0 9cqw,rgba(255,31,61,.8) 9cqw 11cqw,transparent 11cqw 22cqw);animation:kRunBg 1.2s linear infinite;opacity:.5}
+@keyframes kRunBg{to{background-position:48cqw 0}}
+.s-sp .h{font-size:14.5cqw;text-transform:uppercase;transform:skewX(-10deg);top:32%}
+.s-sp .h span{animation-name:kLeft;animation-timing-function:cubic-bezier(.15,.9,.2,1)}
+.s-sp .h span+span{color:#FF1F3D}
+.s-sp .p{font-family:Oswald;font-weight:500;text-transform:uppercase;letter-spacing:.05em;top:68%}
+.s-sp .bt{background:#FF1F3D;color:#fff;border-radius:0;clip-path:polygon(7% 0,100% 0,93% 100%,0 100%);font-family:Oswald;font-weight:700;padding-inline:6cqw;text-transform:uppercase}
+.s-sp .b{right:8%;top:8%;font:700 7cqw Oswald;color:#FF1F3D}
+.s-sp .b::after{content:"00:45"}
+/* 05 monocromático */
+.s-mo{font-family:"Inter Tight";font-weight:900;animation:kInv 4s infinite}
+@keyframes kInv{0%,49%{background:#000;color:#fff}50%,100%{background:#fff;color:#000}}
+.s-mo .h{font-size:19cqw;letter-spacing:-.04em;top:28%}
+.s-mo .h span{animation-name:kMask;animation-timing-function:cubic-bezier(.7,0,.2,1)}
+.s-mo .p{font-family:Inter;font-weight:400;top:66%}
+.s-mo .bt{border:.6cqw solid currentColor;background:transparent;color:inherit;border-radius:0;font-family:Inter}
+.s-mo .a{left:9%;top:9%;font:500 4cqw Inter}
+.s-mo .a::after{content:"01 / 03"}
+.s-mo .b{left:9%;right:9%;top:62%;height:.3cqw;background:currentColor;opacity:.5}
+/* 06 suíço */
+.s-sw{background:#F4F4F0;color:#111;font-family:Inter}
+.s-sw .b{inset:0;background:linear-gradient(90deg,rgba(0,0,0,.07) 1px,transparent 1px) 0 0/16.66% 100%}
+.s-sw .a{right:-14cqw;top:-10cqw;width:62cqw;height:62cqw;border-radius:50%;background:#E30613;animation:kGrow 4s infinite cubic-bezier(.7,0,.2,1)}
+.s-sw .h{font-weight:800;font-size:16cqw;letter-spacing:-.05em;text-transform:lowercase;top:auto;bottom:33%}
+.s-sw .h span{animation-timing-function:cubic-bezier(.7,0,.2,1)}
+.s-sw .p{top:auto;bottom:22%;font-weight:400}
+.s-sw .bt{background:#111;color:#fff;border-radius:0;bottom:7%}
+.s-sw .c{left:9%;top:8%;font:800 5cqw Inter}
+.s-sw .c::after{content:"03"}
+/* 07 luxo */
+.s-lx{background:radial-gradient(80% 60% at 50% 40%,#1c1a17,#0E0E0E);color:#F3EDE2;font-family:Fraunces;text-align:center}
+.s-lx .h{font-weight:600;font-size:10cqw;letter-spacing:.2em;text-transform:uppercase;top:37%;line-height:1.3;left:4%;right:4%}
+.s-lx .h span{animation-name:kBlur;animation-timing-function:ease-in-out}
+.s-lx .h span+span{color:#C9A45C;animation-delay:.4s}
+.s-lx .a,.s-lx .b{left:32%;right:32%;top:31%;height:.3cqw;background:#C9A45C;animation:kGrow2 4s infinite ease-in-out}
+.s-lx .b{top:61%;animation-delay:.2s}
+@keyframes kGrow2{0%{transform:scaleX(0)}25%,86%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.s-lx .c{inset:0;background:linear-gradient(105deg,transparent 40%,rgba(201,164,92,.2) 50%,transparent 60%);animation:kShine 4s infinite;z-index:3}
+@keyframes kShine{0%,30%{transform:translateX(-100%)}70%,100%{transform:translateX(100%)}}
+.s-lx .p{font-family:Inter;letter-spacing:.2em;text-transform:uppercase;font-size:3.4cqw;top:66%;color:#bdb5a6;left:4%;right:4%}
+.s-lx .bt{left:50%;translate:-50% 0;border:.3cqw solid #C9A45C;color:#C9A45C;background:transparent;border-radius:0;letter-spacing:.14em;text-transform:uppercase;font-family:Inter;font-weight:500}
+/* 08 editorial */
+.s-ed{background:#F2EDE4;color:#161616;font-family:Fraunces}
+.s-ed .h{font-weight:700;font-size:21cqw;letter-spacing:-.03em;top:17%;line-height:.92}
+.s-ed .h span{animation-name:kMask;animation-timing-function:cubic-bezier(.3,.8,.3,1)}
+.s-ed .h span+span{animation-delay:.15s}
+.s-ed .a{left:9%;right:9%;top:12%;height:.3cqw;background:#161616}
+.s-ed .b{left:9%;top:6%;font:700 3.2cqw Inter;letter-spacing:.14em}
+.s-ed .b::after{content:"EDIÇÃO 07 · OUTUBRO"}
+.s-ed .c{right:9%;top:57%;width:34cqw;height:26cqw;background:#D9CBB3 linear-gradient(135deg,transparent 48%,rgba(0,0,0,.08) 50%,transparent 52%);animation:kFade 4s infinite .3s}
+.s-ed .p{font-family:Inter;font-weight:500;top:58%;right:48%;font-size:3.9cqw;line-height:1.4}
+.s-ed .bt{background:#C2412D;color:#fff;border-radius:0;font-family:Inter}
+/* 09 soft minimal */
+.s-sm{background:#EFE7DC;color:#3B3530;font-family:"DM Sans"}
+.s-sm .a{right:-10cqw;top:5%;width:60cqw;height:56cqw;background:#C97B5A;border-radius:58% 42% 55% 45%/48% 55% 45% 52%;animation:kBreath 6s ease-in-out infinite;opacity:.9}
+.s-sm .b{right:30%;top:30%;width:22cqw;height:22cqw;border-radius:50%;background:#8FA58C;animation:kBreath 7s ease-in-out infinite reverse}
+@keyframes kBreath{0%,100%{transform:scale(.97) rotate(0)}50%{transform:scale(1.04) rotate(8deg)}}
+.s-sm .h{font-weight:700;font-size:13cqw;top:48%;letter-spacing:-.02em}
+.s-sm .h span{animation-timing-function:cubic-bezier(.25,.6,.3,1)}
+.s-sm .p{top:74%}
+.s-sm .bt{background:#3B3530;color:#EFE7DC;bottom:6%}
+/* 10 japandi */
+.s-jp{background:#F4F1EA;color:#1C1C1C;font-family:"Zen Kaku Gothic New";text-align:center}
+.s-jp .a{left:50%;top:14%;width:48cqw;height:48cqw;margin-left:-24cqw;border-radius:50%;border:2.2cqw solid #1C1C1C;border-right-color:transparent;rotate:-30deg;animation:kEnso 4s infinite ease-in-out}
+@keyframes kEnso{0%{opacity:0;transform:rotate(-90deg) scale(.9)}25%,86%{opacity:1;transform:none}100%{opacity:0}}
+.s-jp .b{right:16%;top:16%;width:10cqw;height:10cqw;background:#B23A2B;border-radius:1cqw;animation:kStamp 4s infinite}
+@keyframes kStamp{0%,30%{opacity:0;transform:scale(1.8)}36%,86%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.s-jp .c{left:30%;right:30%;top:69%;height:.3cqw;background:#A68A6D}
+.s-jp .h{font-weight:700;font-size:8.5cqw;letter-spacing:.24em;top:72%;left:0;right:0;line-height:1.25}
+.s-jp .h span{animation-name:kFade}
+.s-jp .h span+span{font-weight:400;font-size:.55em;letter-spacing:.3em;color:#A68A6D;animation-delay:.4s}
+.s-jp .p{top:88%;font-size:3.2cqw;letter-spacing:.2em;color:#A68A6D;left:0;right:0}
+.s-jp .bt{display:none}
+/* 11 terminal */
+.s-tm{background:#0B0F0C;color:#39FF88;font-family:"JetBrains Mono"}
+.s-tm .a{left:6%;right:6%;top:7%;height:8%;border-bottom:.3cqw solid #1f2a22;background:radial-gradient(circle at 4cqw 50%,#ff5f56 1.4cqw,transparent 1.5cqw),radial-gradient(circle at 9cqw 50%,#ffbd2e 1.4cqw,transparent 1.5cqw),radial-gradient(circle at 14cqw 50%,#27c93f 1.4cqw,transparent 1.5cqw)}
+.s-tm .h{font-weight:700;font-size:7.6cqw;top:26%;line-height:1.6}
+.s-tm .h span{width:max-content;max-width:100%;animation-name:kType;animation-timing-function:steps(16)}
+.s-tm .h span:first-child::before{content:"$ ";color:#5C6B61}
+.s-tm .h span+span{color:#FFB000;animation-delay:.9s}
+.s-tm .p{color:#5C6B61;font-size:4.2cqw;top:52%}
+.s-tm .p::after{content:"█";animation:kBlink 1s steps(1) infinite;color:#39FF88;margin-left:1cqw}
+.s-tm .b{left:9%;right:9%;top:66%;height:4cqw;background:repeating-linear-gradient(90deg,#39FF88 0 3cqw,transparent 3cqw 4cqw);animation:kBar 4s steps(10) infinite}
+@keyframes kBar{0%,20%{clip-path:inset(0 100% 0 0)}80%,100%{clip-path:inset(0 0 0 0)}}
+.s-tm .bt{background:transparent;border:.4cqw solid #39FF88;color:#39FF88;border-radius:1cqw;font-family:"JetBrains Mono"}
+/* 12 neon */
+.s-ne{background:#0A0614;color:#fff;font-family:"Chakra Petch";text-align:center}
+.s-ne .a{left:-20%;right:-20%;bottom:-4%;height:42%;background:linear-gradient(transparent 94%,rgba(255,43,214,.75) 94%) 0 0/100% 6cqw,linear-gradient(90deg,transparent 95%,rgba(0,229,255,.5) 95%) 0 0/8cqw 100%;transform:perspective(40cqw) rotateX(60deg);transform-origin:bottom;animation:kGridA 1.2s linear infinite}
+@keyframes kGridA{to{background-position:0 6cqw,0 0}}
+.s-ne .b{inset:0;background:repeating-linear-gradient(transparent 0 .6cqw,rgba(255,255,255,.05) .6cqw 1.2cqw);z-index:3;pointer-events:none}
+.s-ne .h{font-weight:700;font-size:16cqw;text-transform:uppercase;left:4%;right:4%;top:22%;color:#FFE6FA;text-shadow:0 0 1cqw #fff,0 0 3cqw #FF2BD6,0 0 7cqw #FF2BD6}
+.s-ne .h span{animation-name:kNeon;animation-timing-function:linear}
+.s-ne .h span+span{color:#E6FDFF;text-shadow:0 0 1cqw #fff,0 0 3cqw #00E5FF,0 0 7cqw #00E5FF;animation-delay:.25s}
+@keyframes kNeon{0%{opacity:0}3%{opacity:1}5%{opacity:.2}8%{opacity:1}10%{opacity:.4}13%,86%{opacity:1}100%{opacity:0}}
+.s-ne .p{top:56%;color:#00E5FF;font-weight:500;letter-spacing:.12em;text-transform:uppercase;font-size:3.8cqw}
+.s-ne .bt{left:50%;translate:-50% 0;bottom:auto;top:66%;background:transparent;border:.4cqw solid #FF2BD6;color:#FFE6FA;box-shadow:0 0 3cqw #FF2BD6,inset 0 0 2cqw rgba(255,43,214,.5);font-family:"Chakra Petch"}
+/* 13 glitch */
+.s-gl{background:#050505;color:#F5F5F5;font-family:"Space Grotesk"}
+.s-gl .h{font-weight:700;font-size:18cqw;text-transform:uppercase;top:30%}
+.s-gl .h span{position:relative;animation-name:kGlitch;animation-timing-function:steps(1)}
+.s-gl .h span::before,.s-gl .h span::after{content:attr(data-t);position:absolute;left:0;top:0;mix-blend-mode:screen}
+.s-gl .h span::before{color:#FF0040;animation:kG1 4s steps(1) infinite}
+.s-gl .h span::after{color:#00F0FF;animation:kG2 4s steps(1) infinite}
+@keyframes kG1{0%,12%{transform:translate(-1.6cqw,0)}14%,60%{transform:none}62%{transform:translate(1.2cqw,-.6cqw);clip-path:inset(20% 0 50% 0)}66%,100%{transform:none;clip-path:none}}
+@keyframes kG2{0%,12%{transform:translate(1.6cqw,0)}14%,60%{transform:none}62%{transform:translate(-1.2cqw,.6cqw);clip-path:inset(50% 0 20% 0)}66%,100%{transform:none;clip-path:none}}
+@keyframes kGlitch{0%{opacity:0}2%{opacity:1;transform:translateX(3cqw)}5%{transform:translateX(-2cqw)}8%,86%{transform:none;opacity:1}88%{transform:translateX(2cqw)}90%,100%{opacity:0}}
+.s-gl .a{left:0;right:0;top:46%;height:3%;background:#fff;mix-blend-mode:difference;animation:kSlice 4s steps(1) infinite;z-index:3}
+@keyframes kSlice{0%,60%{opacity:0}61%{opacity:1;transform:translateY(-200%)}63%{transform:translateY(300%)}65%,100%{opacity:0}}
+.s-gl .p{font-family:"Space Mono";top:64%;color:#8a8a8a}
+.s-gl .bt{background:#F5F5F5;color:#050505;border-radius:0;font-family:"Space Mono"}
+/* 14 vidro fosco */
+.s-gs{background:#0E1630;color:#fff;font-family:"Plus Jakarta Sans"}
+.s-gs .a{left:-20%;top:-6%;width:84cqw;height:84cqw;background:radial-gradient(closest-side,#7C5CFF,rgba(124,92,255,0));animation:kDrift 7s ease-in-out infinite}
+.s-gs .b{right:-25%;bottom:-6%;width:90cqw;height:90cqw;background:radial-gradient(closest-side,#FF7AC6,rgba(255,122,198,0));animation:kDrift 8s ease-in-out infinite reverse}
+.s-gs .c{left:8%;right:8%;top:20%;height:54%;border-radius:6cqw;background:rgba(255,255,255,.12);border:.3cqw solid rgba(255,255,255,.35);backdrop-filter:blur(4cqw);-webkit-backdrop-filter:blur(4cqw);box-shadow:0 4cqw 10cqw rgba(0,0,0,.25);animation:kCard 4s infinite cubic-bezier(.3,1.3,.5,1);z-index:1}
+@keyframes kCard{0%{opacity:0;transform:perspective(80cqw) rotateX(25deg) translateY(10%)}16%,86%{opacity:1;transform:none}100%{opacity:0}}
+.s-gs .h{font-weight:800;font-size:11.5cqw;top:28%;left:16%;right:16%}
+.s-gs .p{top:56%;left:16%;right:16%;opacity:.85}
+.s-gs .bt{background:#fff;color:#0E1630}
+/* 15 dashboard */
+.s-db{background:#0F1218;color:#E2E8F0;font-family:Inter}
+.s-db .a{left:8%;right:8%;top:9%;height:40%;border-radius:4cqw;background:#161B24;border:.3cqw solid #232A36}
+.s-db .h{top:14%;left:14%;right:14%;font-weight:800;font-size:17cqw;color:#fff}
+.s-db .h span:first-child{font-size:3.8cqw;font-weight:600;color:#94A3B8;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2.6cqw}
+.s-db .h span+span{animation-name:kPop}
+.s-db .c{right:14%;top:15%;font:700 3.8cqw Inter;color:#22C55E;background:rgba(34,197,94,.14);padding:1cqw 2cqw;border-radius:2cqw;z-index:3}
+.s-db .c::after{content:"↑ 32%"}
+.s-db .b{left:14%;right:14%;top:56%;height:20%;background:linear-gradient(#22C55E66,#22C55E66) 0 100%/14% 30% no-repeat,linear-gradient(#22C55E66,#22C55E66) 21.5% 100%/14% 50% no-repeat,linear-gradient(#22C55E66,#22C55E66) 43% 100%/14% 42% no-repeat,linear-gradient(#22C55E99,#22C55E99) 64.5% 100%/14% 70% no-repeat,linear-gradient(#22C55E,#22C55E) 86% 100%/14% 100% no-repeat;transform-origin:bottom;animation:kBars 4s infinite cubic-bezier(.2,.9,.3,1)}
+@keyframes kBars{0%{transform:scaleY(0)}25%,86%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+.s-db .p{top:81%;font-size:3.8cqw;color:#94A3B8;left:14%}
+.s-db .bt{display:none}
+/* 16 cromado y2k */
+.s-y2{background:#0B0B0F;color:#fff;font-family:Syne;text-align:center}
+.s-y2 .h{font-weight:800;font-size:17cqw;text-transform:uppercase;left:4%;right:4%;top:28%}
+.s-y2 .h span{background:linear-gradient(180deg,#fff 0%,#9aa3b2 38%,#2a2f3a 50%,#d9dde3 62%,#fff 100%);background-size:100% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:kPop 4s infinite cubic-bezier(.3,1.5,.5,1),kChrome 3s ease-in-out infinite alternate}
+.s-y2 .h span+span{animation-delay:.15s,0s}
+@keyframes kChrome{to{background-position:0 100%}}
+.s-y2 .a,.s-y2 .b,.s-y2 .c{width:9cqw;height:9cqw;background:#fff;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:kTwinkle 2s ease-in-out infinite}
+.s-y2 .a{left:12%;top:16%}
+.s-y2 .b{right:14%;top:60%;background:#FF6AD5;animation-delay:.6s}
+.s-y2 .c{left:20%;bottom:20%;background:#2D5BFF;animation-delay:1.2s}
+@keyframes kTwinkle{0%,100%{transform:scale(.3) rotate(0);opacity:.4}50%{transform:scale(1.2) rotate(90deg);opacity:1}}
+.s-y2 .p{top:62%;font-family:"Space Grotesk";font-weight:500;color:#D9DDE3}
+.s-y2 .bt{left:50%;translate:-50% 0;background:linear-gradient(90deg,#2D5BFF,#FF6AD5);color:#fff;font-family:"Space Grotesk"}
+/* 17 anos 70 */
+.s-gr{background:#F4E4C1;color:#6B3E26;font-family:Shrikhand;text-align:center}
+.s-gr .a{left:50%;bottom:-62cqw;width:124cqw;height:124cqw;margin-left:-62cqw;border-radius:50%;background:radial-gradient(circle,#F4E4C1 0 30%,#E3A72F 30% 42%,#F4E4C1 42% 44%,#E8652B 44% 56%,#F4E4C1 56% 58%,#6B3E26 58% 70%,transparent 70.5%);animation:kRise 4s infinite cubic-bezier(.3,1.2,.5,1)}
+@keyframes kRise{0%{transform:translateY(30%)}22%,86%{transform:none}100%{transform:translateY(30%)}}
+.s-gr .h{font-size:15cqw;left:4%;right:4%;top:13%;color:#E8652B;text-shadow:.8cqw .8cqw 0 #6B3E26;line-height:1.05}
+.s-gr .h span{animation-name:kWave;animation-timing-function:ease-in-out}
+.s-gr .h span+span{color:#E3A72F;animation-delay:.15s}
+@keyframes kWave{0%{opacity:0;transform:translateY(30%) rotate(-6deg)}14%{opacity:1;transform:rotate(3deg)}20%,86%{opacity:1;transform:none}100%{opacity:0}}
+.s-gr .p{top:45%;font-family:Rubik;font-weight:500;font-size:4.4cqw}
+.s-gr .bt{left:50%;translate:-50% 0;bottom:9%;background:#6B3E26;color:#F4E4C1;font-family:Rubik}
+/* 18 synthwave */
+.s-sy{background:linear-gradient(#1A0B2E 0%,#4a1260 52%,#1A0B2E 52.2%);color:#fff;font-family:Audiowide;text-align:center}
+.s-sy .a{left:50%;top:16%;width:58cqw;height:58cqw;margin-left:-29cqw;border-radius:50%;background:linear-gradient(#FFD36E,#FF9A3C 40%,#FF2E88);-webkit-mask:linear-gradient(#000 52%,transparent 52% 57%,#000 57% 65%,transparent 65% 70%,#000 70% 78%,transparent 78% 83%,#000 83%);mask:linear-gradient(#000 52%,transparent 52% 57%,#000 57% 65%,transparent 65% 70%,#000 70% 78%,transparent 78% 83%,#000 83%);animation:kSun 6s ease-in-out infinite alternate}
+@keyframes kSun{to{transform:translateY(8%)}}
+.s-sy .b{left:-30%;right:-30%;top:52%;bottom:0;background:linear-gradient(transparent 90%,#FF2E88 90%) 0 0/100% 5cqw,linear-gradient(90deg,transparent 93%,#2DE2E6 93%) 0 0/7cqw 100%;transform:perspective(30cqw) rotateX(62deg);transform-origin:top;animation:kGridB 1s linear infinite}
+@keyframes kGridB{to{background-position:0 5cqw,0 0}}
+.s-sy .h{font-size:12.5cqw;left:2%;right:2%;top:42%;z-index:3;text-transform:uppercase;filter:drop-shadow(0 0 2cqw rgba(255,46,136,.7))}
+.s-sy .h span{background:linear-gradient(#fff 35%,#2DE2E6 55%,#FF2E88 100%);-webkit-background-clip:text;background-clip:text;color:transparent;animation-name:kBlur}
+.s-sy .p{top:7%;color:#2DE2E6;font-family:"Space Grotesk";letter-spacing:.3em;text-transform:uppercase;font-size:3.4cqw;left:0;right:0}
+.s-sy .bt{display:none}
+/* 19 vaporwave */
+.s-vw{background:linear-gradient(160deg,#FF9CEE,#B28DFF 50%,#7DF9FF);color:#4A3AFF;font-family:VT323}
+.s-vw .a{left:10%;right:10%;top:18%;height:48%;background:#E9E3FF;border:.6cqw solid #4A3AFF;box-shadow:1.6cqw 1.6cqw 0 #4A3AFF;animation:kWin 4s infinite steps(4)}
+@keyframes kWin{0%{transform:scale(0)}8%,88%{transform:scale(1)}92%,100%{transform:scale(0)}}
+.s-vw .a::before{content:"motion.exe";display:block;background:#4A3AFF;color:#fff;font:4.6cqw VT323;padding:.4cqw 2cqw}
+.s-vw .h{font-size:17cqw;top:30%;left:16%;right:16%;line-height:.85;text-transform:uppercase}
+.s-vw .h span{animation-name:kFade;animation-timing-function:steps(3)}
+.s-vw .p{top:52%;left:16%;right:16%;font-size:6cqw;line-height:1}
+.s-vw .b{right:14%;bottom:26%;width:8cqw;height:10cqw;background:#fff;clip-path:polygon(0 0,0 80%,25% 60%,45% 100%,58% 94%,40% 56%,75% 56%);animation:kCursor 4s infinite ease-in-out;z-index:3}
+@keyframes kCursor{0%,40%{transform:translate(20cqw,10cqw)}60%,100%{transform:none}}
+.s-vw .bt{left:16%;bottom:11%;background:#E9E3FF;color:#4A3AFF;border:.5cqw solid #4A3AFF;border-radius:0;font-family:VT323;font-size:6cqw;font-weight:400;box-shadow:1cqw 1cqw 0 #4A3AFF}
+/* 20 risografia */
+.s-ri{background:#F3EEE3;color:#0078BF;font-family:"Archivo Black"}
+.s-ri .a{right:8%;top:8%;width:36cqw;height:36cqw;border-radius:50%;background:#FFE800;mix-blend-mode:multiply;animation:kFloat 5s ease-in-out infinite}
+.s-ri .b{left:-6%;bottom:13%;width:46cqw;height:20cqw;background:#FF48B0;mix-blend-mode:multiply;rotate:-8deg}
+.s-ri .c{inset:0;background:var(--grao);mix-blend-mode:multiply;opacity:.55;z-index:4}
+.s-ri .h{font-size:15.5cqw;text-transform:uppercase;top:28%;mix-blend-mode:multiply}
+.s-ri .h span{animation-name:kRiso;animation-timing-function:steps(6)}
+.s-ri .h span+span{color:#FF48B0;margin-top:-5cqw;margin-left:4cqw}
+@keyframes kRiso{0%{opacity:0;transform:translate(-4cqw,2cqw)}16%{opacity:1;transform:translate(.6cqw,-.3cqw)}20%,86%{opacity:1;transform:translate(.4cqw,0)}100%{opacity:0}}
+.s-ri .p{font-family:"Space Mono";color:#111;top:66%;font-size:4.2cqw}
+.s-ri .bt{background:#0078BF;color:#F3EEE3;border-radius:0;font-family:"Space Mono"}
+/* 21 bauhaus */
+.s-bh{background:#F1EAD8;color:#111;font-family:Outfit}
+.s-bh .a{left:9%;top:9%;width:30cqw;height:30cqw;border-radius:50%;background:#D63A2F;animation:kRoll 4s infinite cubic-bezier(.3,1.3,.5,1)}
+@keyframes kRoll{0%{transform:translateX(-60cqw) rotate(-180deg)}20%,86%{transform:none}100%{transform:translateX(60cqw) rotate(180deg)}}
+.s-bh .b{right:9%;top:13%;width:26cqw;height:26cqw;background:#1D4E9E;animation:kSpinIn 4s infinite cubic-bezier(.3,1.3,.5,1)}
+@keyframes kSpinIn{0%{transform:rotate(-90deg) scale(0)}24%,86%{transform:none}100%{transform:scale(0)}}
+.s-bh .c{left:35%;top:30%;width:30cqw;height:26cqw;background:#F2B630;clip-path:polygon(50% 0,100% 100%,0 100%);animation:kDrop 4s infinite cubic-bezier(.3,1.5,.5,1)}
+@keyframes kDrop{0%,8%{transform:translateY(-80cqw)}28%,86%{transform:none}100%{transform:translateY(80cqw)}}
+.s-bh .h{font-weight:800;font-size:15cqw;top:58%;text-transform:uppercase;letter-spacing:-.02em}
+.s-bh .p{top:81%;font-size:4.2cqw}
+.s-bh .bt{display:none}
+/* 22 memphis */
+.s-mp{background:#FFF8EE;color:#222;font-family:Rubik}
+.s-mp .a{right:8%;top:7%;width:26cqw;height:26cqw;background:radial-gradient(#FF6FB5 30%,transparent 33%) 0 0/5cqw 5cqw;animation:kSpin 12s linear infinite}
+.s-mp .b{left:10%;top:12%;width:18cqw;height:16cqw;background:#2EC4B6;clip-path:polygon(50% 0,100% 100%,0 100%);animation:kBounce 1.8s ease-in-out infinite}
+.s-mp .c{right:14%;bottom:19%;width:14cqw;height:14cqw;border-radius:50%;border:2.4cqw solid #FFD23F;animation:kBounce 1.4s ease-in-out infinite .3s}
+@keyframes kBounce{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14%) rotate(14deg)}}
+.s-mp .h{font-weight:800;font-size:15cqw;top:36%;text-transform:uppercase}
+.s-mp .h span{animation-name:kPop;animation-timing-function:cubic-bezier(.3,1.7,.5,1)}
+.s-mp .h span+span{color:#FF6FB5;text-shadow:1cqw 1cqw 0 #2EC4B6}
+.s-mp .p{top:67%;font-weight:500}
+.s-mp .bt{background:#222;color:#FFD23F}
+/* 23 recorte de papel */
+.s-pp{background:#8EC5E8;color:#2b3a2e;font-family:"Baloo 2"}
+.s-pp .a{left:-10%;right:-10%;bottom:-6%;height:38%;background:#7BC67E;border-radius:50% 50% 0 0/40% 40% 0 0;box-shadow:0 -1.4cqw 3cqw rgba(0,0,0,.18);animation:kLayer 4s infinite cubic-bezier(.3,1.3,.5,1)}
+.s-pp .b{left:-20%;right:30%;bottom:-8%;height:30%;background:#5FAE63;border-radius:50% 50% 0 0/50% 50% 0 0;box-shadow:0 -1.4cqw 3cqw rgba(0,0,0,.2);animation:kLayer 4s infinite cubic-bezier(.3,1.3,.5,1) .15s}
+@keyframes kLayer{0%{transform:translateY(100%)}20%,86%{transform:none}100%{transform:translateY(100%)}}
+.s-pp .c{right:12%;top:8%;width:20cqw;height:20cqw;border-radius:50%;background:#FFD15C;box-shadow:0 1cqw 2cqw rgba(0,0,0,.15);animation:kFloat 4s ease-in-out infinite}
+.s-pp .h{font-weight:800;font-size:15cqw;top:24%;color:#FFF9EF;text-shadow:0 1cqw 0 rgba(0,0,0,.18)}
+.s-pp .h span{animation-name:kPop}
+.s-pp .p{top:50%;color:#FFF9EF;font-weight:500}
+.s-pp .bt{background:#FFF9EF;color:#2b3a2e;z-index:3;box-shadow:0 1cqw 0 rgba(0,0,0,.15)}
+/* 24 rabisco à mão */
+.s-dd{background:#FFFDF7 repeating-linear-gradient(transparent 0 7.4cqw,#e3ebfb 7.4cqw 7.7cqw);color:#2B2B2B;font-family:Nunito}
+.s-dd .h{font-weight:800;font-size:13cqw;top:26%}
+.s-dd .h span+span{position:relative;display:inline-block}
+.s-dd .h span+span::before{content:"";position:absolute;left:-3%;right:-3%;bottom:6%;height:44%;background:#FFE45C;z-index:-1;transform-origin:left;animation:kHi 4s infinite}
+@keyframes kHi{0%,18%{transform:scaleX(0)}34%,86%{transform:scaleX(1)}100%{transform:scaleX(1);opacity:0}}
+.s-dd .a{left:5%;top:24%;width:58cqw;height:18cqw;border:.6cqw solid #2F6BFF;border-radius:50% 46% 52% 48%/55% 50% 48% 45%;rotate:-4deg;animation:kFade 4s infinite .6s}
+.s-dd .b{right:9%;top:9%;font:12cqw/1 "Caveat Brush";color:#2F6BFF;rotate:8deg;animation:kFloat 3s ease-in-out infinite}
+.s-dd .b::after{content:"olha!"}
+.s-dd .p{top:66%;font-weight:600}
+.s-dd .bt{background:#2F6BFF;color:#fff}
+/* 25 clay 3d */
+.s-cl{background:#C9B6FF;color:#3a2a6b;font-family:Fredoka}
+.s-cl .a,.s-cl .b{width:30cqw;height:30cqw;border-radius:40%;background:#FFC4A3;box-shadow:inset -2cqw -2cqw 4cqw rgba(0,0,0,.12),inset 2cqw 2cqw 4cqw rgba(255,255,255,.6),0 3cqw 5cqw rgba(58,42,107,.25);animation:kSquash 1.6s ease-in-out infinite}
+.s-cl .a{left:12%;top:10%}
+.s-cl .b{right:12%;top:18%;width:22cqw;height:22cqw;border-radius:50%;background:#A8E6CF;animation-delay:.4s}
+@keyframes kSquash{0%,100%{transform:translateY(0) scale(1,1)}40%{transform:translateY(-18%) scale(.94,1.06)}55%{transform:translateY(0) scale(1.12,.88)}70%{transform:scale(.98,1.02)}}
+.s-cl .h{font-weight:700;font-size:14cqw;top:47%}
+.s-cl .h span{animation-name:kPop;animation-timing-function:cubic-bezier(.3,1.8,.5,1)}
+.s-cl .p{top:72%;font-weight:500}
+.s-cl .bt{background:#6C8CFF;color:#fff;box-shadow:inset 0 -1.2cqw 0 rgba(0,0,0,.18),0 2cqw 3cqw rgba(58,42,107,.3);bottom:6%}
+/* 26 gradiente líquido */
+.s-lq{background:#2B1B6F;color:#fff;font-family:Manrope}
+.s-lq .a,.s-lq .b,.s-lq .c{width:110cqw;height:110cqw}
+.s-lq .a{left:-40%;top:-25%;background:radial-gradient(closest-side,#FF6B6B,rgba(255,107,107,0));animation:kDrift 6s ease-in-out infinite}
+.s-lq .b{right:-45%;top:20%;background:radial-gradient(closest-side,#FFB86B,rgba(255,184,107,0));animation:kDrift 7s ease-in-out infinite reverse}
+.s-lq .c{left:-5%;bottom:-45%;width:100cqw;height:100cqw;background:radial-gradient(closest-side,#FF8FD1,rgba(255,143,209,0));animation:kDrift 8s ease-in-out infinite}
+.s-lq .h{font-weight:800;font-size:15cqw;top:32%;letter-spacing:-.03em}
+.s-lq .h span{animation-name:kBlur}
+.s-lq .p{top:62%}
+.s-lq .bt{background:#fff;color:#2B1B6F}
+/* 27 colagem */
+.s-cg{background:#EDE6D6;color:#121212;font-family:"Archivo Black"}
+.s-cg .b{right:-6%;top:54%;width:48cqw;height:36cqw;background:#E2261C;clip-path:polygon(0 6%,12% 0,30% 5%,46% 0,64% 4%,80% 0,100% 5%,100% 100%,0 100%)}
+.s-cg .c{inset:0;background:var(--grao);mix-blend-mode:multiply;opacity:.45;z-index:4}
+.s-cg .h{font-size:10.5cqw;top:20%;text-transform:uppercase;line-height:1.2}
+.s-cg .h span{display:table;padding:0 2cqw;margin:.8cqw 0;animation-name:kCola;animation-timing-function:steps(4)}
+.s-cg .h span:first-child{background:#121212;color:#EDE6D6;rotate:-3deg}
+.s-cg .h span+span{background:#F7D046;rotate:2deg;animation-delay:.25s}
+@keyframes kCola{0%{opacity:0;transform:scale(1.4) rotate(8deg)}12%,86%{opacity:1;transform:none}100%{opacity:0}}
+.s-cg .a{left:26%;top:18%;width:22cqw;height:6cqw;background:rgba(255,255,255,.7);rotate:-12deg;z-index:3;animation:kFade 4s infinite .4s}
+.s-cg .p{font-family:"Courier Prime";font-weight:700;top:56%;right:46%;font-size:4.2cqw}
+.s-cg .bt{background:#121212;color:#EDE6D6;border-radius:0;font-family:"Courier Prime"}
+/* 28 título de cinema */
+.s-cn{background:#050505;color:#EDEDED;font-family:Cinzel;text-align:center}
+.s-cn .a,.s-cn .b{left:0;right:0;height:14%;background:#000;z-index:3}
+.s-cn .a{top:0}
+.s-cn .b{bottom:0}
+.s-cn .c{inset:0;background:radial-gradient(60% 40% at 50% 45%,rgba(216,178,110,.2),transparent 70%),var(--grao);background-blend-mode:normal,overlay;animation:kFade 4s infinite}
+.s-cn .h{font-weight:700;font-size:10cqw;letter-spacing:.22em;top:37%;left:4%;right:4%;line-height:1.35;text-shadow:0 0 4cqw rgba(216,178,110,.5)}
+.s-cn .h span{animation-name:kBlur;animation-timing-function:ease-in-out}
+.s-cn .h span+span{color:#D8B26E;font-size:.6em;letter-spacing:.4em;animation-delay:.6s}
+.s-cn .p{top:66%;font-family:Inter;letter-spacing:.3em;text-transform:uppercase;font-size:3cqw;color:#8a8a8a;left:0;right:0}
+.s-cn .bt{display:none}
+/* 29 telejornal */
+.s-nw{background:linear-gradient(160deg,#0A2A66,#06183d);color:#fff;font-family:Oswald;overflow:hidden}
+.s-nw .a{left:0;top:10%;background:#D7141A;font:700 5cqw/1 Oswald;padding:1.8cqw 5cqw 1.8cqw 9%;animation:kSlideIn 4s infinite cubic-bezier(.2,.9,.3,1)}
+.s-nw .a::after{content:"PLANTÃO"}
+@keyframes kSlideIn{0%{transform:translateX(-100%)}12%,86%{transform:none}100%{transform:translateX(-100%)}}
+.s-nw .b{right:8%;top:11.5%;font:500 4cqw/1 Oswald;color:#FFC400}
+.s-nw .b::after{content:"● AO VIVO";animation:kBlink 1s steps(1) infinite}
+.s-nw .h{font-weight:700;font-size:12cqw;text-transform:uppercase;top:auto;bottom:31%;left:0;right:0;padding:2.4cqw 9%;background:#fff;color:#0A2A66;line-height:1}
+.s-nw .h span+span{color:#D7141A}
+.s-nw .p{top:auto;bottom:22%;left:0;right:0;padding:1.8cqw 9%;background:#D7141A;font-family:Inter;font-weight:600;font-size:3.8cqw}
+.s-nw .c{left:0;right:0;bottom:6%;height:8%;background:#FFC400;overflow:hidden;white-space:nowrap}
+.s-nw .c::after{content:"NOVIDADE NA LOJA  •  CONDIÇÃO ESPECIAL ATÉ SEXTA  •  NOVIDADE NA LOJA  •  CONDIÇÃO ESPECIAL ATÉ SEXTA  •  ";display:inline-block;color:#0A2A66;font:700 4cqw/8cqw Oswald;padding-left:4cqw;animation:kTicker 7s linear infinite}
+@keyframes kTicker{to{transform:translateX(-50%)}}
+.s-nw .bt{display:none}
+/* 30 isométrico */
+.s-is{background:#E9EEFF;color:#252A40;font-family:Sora}
+.s-is .a,.s-is .b,.s-is .c{width:26cqw;height:30cqw;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:conic-gradient(from -60deg,#8FA2FF 0 120deg,#3E56E0 120deg 240deg,#4F6BFF 240deg 360deg);animation:kIso 4s infinite cubic-bezier(.3,1.4,.5,1)}
+.s-is .a{left:24%;top:26%}
+.s-is .b{left:37%;top:11%;background:conic-gradient(from -60deg,#FFC59E 0 120deg,#E0681F 120deg 240deg,#FF8A3D 240deg 360deg);animation-delay:.2s}
+.s-is .c{left:50%;top:26%;animation-delay:.4s}
+@keyframes kIso{0%{opacity:0;transform:translateY(-60%)}16%,86%{opacity:1;transform:none}100%{opacity:0;transform:translateY(30%)}}
+.s-is .h{font-weight:800;font-size:12cqw;top:63%}
+.s-is .p{top:80%;font-size:4cqw}
+.s-is .bt{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top"><img class="logo" src="/assets/logo-horizontal.png" alt="Motion Code" width="160" height="33"><span class="k">Bônus extra</span></header>
+
+ <section>
+  <div class="k">Mesa de Estilos</div>
+  <h1>30 estilos visuais. <em>Cada um com o prompt pronto.</em></h1>
+  <p class="lead">Escolha a cara do vídeo antes de pedir ao Claude. Cada estilo traz direção de arte, paleta, fontes, ritmo, transições e o que evitar, num prompt que você copia e cola com o seu roteiro. Assim seus vídeos nunca ficam com cara de template.</p>
+  <ol class="how">
+   <li><b>1</b>Escolha um estilo pela prévia</li>
+   <li><b>2</b>Monte o prompt com o seu roteiro</li>
+   <li><b>3</b>Cole no Claude Code e revise o preview</li>
+  </ol>
+ </section>
+
+ <section style="margin-top:40px">
+  <h2>Os estilos</h2>
+  <div class="chips" id="chips" role="tablist" aria-label="Filtrar por categoria"></div>
+  <div class="grade" id="grade"></div>
+ </section>
+
+ <section class="panel" id="gerador">
+  <h2>Gerador de prompt</h2>
+  <p class="lead" style="font-size:15px;margin-bottom:18px">Escolha o estilo, preencha o que souber e copie o prompt completo. Os campos vazios ficam como espaço para você completar.</p>
+  <div class="ger">
+   <div class="campos">
+    <label>Estilo<select id="gEstilo"></select></label>
+    <div class="dois">
+     <label>Formato<select id="gFmt"><option value="9:16 (Reels e Stories)">9:16 · Reels</option><option value="1:1 (feed)">1:1 · Feed</option><option value="16:9 (YouTube)">16:9 · YouTube</option><option value="três versões: 9:16, 1:1 e 16:9, com o mesmo roteiro adaptado a cada formato">Os três formatos</option></select></label>
+     <label>Duração<select id="gDur"><option>8 segundos</option><option selected>15 segundos</option><option>30 segundos</option></select></label>
+    </div>
+    <label>Nome da marca<input type="text" id="gMarca" placeholder="Ex.: Loja Aurora"></label>
+    <div>
+     <label class="chk"><input type="checkbox" id="gUsarCores"> Usar as cores da minha marca</label>
+     <div class="cores" id="gCores" hidden>
+      <label class="cor"><input type="color" id="gC1" value="#FD6725">Principal</label>
+      <label class="cor"><input type="color" id="gC2" value="#0F0D13">Fundo</label>
+      <label class="cor"><input type="color" id="gC3" value="#FFFFFF">Texto</label>
+     </div>
+    </div>
+    <label>Roteiro (uma linha por cena)<textarea id="gRoteiro" rows="7" placeholder="Cena 1: &quot;Você ainda edita vídeo na mão?&quot;&#10;Cena 2: o produto entra girando, com o preço R$ 129&#10;Cena 3: três benefícios, um por vez&#10;Final: logo e botão &quot;Compre agora&quot;"></textarea></label>
+   </div>
+   <div class="saida">
+    <pre id="gSaida" aria-live="polite"></pre>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="gCopiar">Copiar prompt</button><button class="btn sec" type="button" id="gBaixar">Baixar .txt</button></div>
+   </div>
+  </div>
+ </section>
+
+ <section class="panel">
+  <h2>Como tirar o melhor dos estilos</h2>
+  <div class="dicas">
+   <div class="dica"><b>Mande uma referência junto</b><p>Se tiver um print ou vídeo que você admira, envie com o prompt. O estilo dá a direção e a referência mostra o detalhe.</p></div>
+   <div class="dica"><b>Um estilo por campanha</b><p>Usar o mesmo estilo em todos os criativos de uma campanha deixa a marca reconhecível na rolagem.</p></div>
+   <div class="dica"><b>Peça ajustes por frase</b><p>Depois do primeiro preview, peça mudanças pequenas: "deixe a entrada do título mais lenta" funciona melhor que refazer tudo.</p></div>
+   <div class="dica"><b>Combine com os moldes</b><p>Gostou de um molde da biblioteca? Baixe o código e peça ao Claude: "refaça este molde no estilo Neon Cyberpunk".</p></div>
+  </div>
+ </section>
+
+ <footer>Motion Code · Ueda Agency. Estilos e prompts para uso nos seus vídeos e nos dos seus clientes. As fontes citadas são gratuitas no Google Fonts.</footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgT">
+ <div class="dlg-h"><h3 id="dlgT">Prompt</h3><button class="x" type="button" id="dlgX" aria-label="Fechar">✕</button></div>
+ <pre id="dlgP"></pre>
+ <div class="dlg-f"><button class="btn sec" type="button" id="dlgUsar">Usar no gerador</button><button class="btn" type="button" id="dlgCopiar">Copiar prompt</button></div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ================= OS 30 ESTILOS =================
+   pal: paleta (nome, cor) · fT/fB: fontes · dir: direção de arte · mov: movimento
+   ritmo · curva · trans: transições · el: elementos gráficos · ev: o que evitar
+   ex: textos de exemplo da prévia */
+const CATS = { todos: 'Todos', impacto: 'Impacto', elegante: 'Elegante', tech: 'Tecnologia', retro: 'Retrô', divertido: 'Divertido', cinema: 'Cinema' };
+const ESTILOS = [
+ { id: 'nb', nome: 'Neo Brutalista', cat: 'impacto', uso: 'Ofertas, lançamentos e marcas jovens que querem chamar atenção.',
+   pal: [['Fundo creme', '#F5F0E6'], ['Preto', '#111111'], ['Amarelo', '#FFD400'], ['Azul', '#2F5BFF']],
+   fT: 'Archivo Black (Google Fonts), caixa alta, entrelinha apertada', fB: 'Space Grotesk 500',
+   dir: 'Blocos chapados com contorno preto grosso (4 a 6 px) e sombra dura deslocada, sem desfoque. Grade visível e elementos que parecem colados na tela, como cartazes de papel.',
+   mov: 'Elementos entram batendo de lado com um pequeno quique e ficam levemente tortos (1 a 3 graus). Botões afundam como se fossem clicados: a sombra some e volta.',
+   ritmo: 'rápido, cenas de 1,5 a 2,5 segundos', curva: 'saída rápida com leve ultrapassagem (back.out); nada de fade lento',
+   trans: 'Corte seco ou um bloco sólido que atravessa a tela e revela a próxima cena.',
+   el: 'Etiquetas, setas grossas, estrelas de 8 pontas, faixas tortas com texto.',
+   ev: 'Degradês, sombras suaves, cantos muito arredondados, fontes finas.', ex: ['Oferta', 'de verão', 'Só até domingo, com frete grátis'] },
+ { id: 'tc', nome: 'Tipografia Cinética', cat: 'impacto', uso: 'Ganchos, frases de impacto e Reels de opinião.',
+   pal: [['Fundo', '#0B0B0B'], ['Texto', '#FFFFFF'], ['Destaque', '#FF3D2E'], ['Apoio', '#8A8A8A']],
+   fT: 'Anton (Google Fonts), caixa alta, palavras enormes ocupando a largura da tela', fB: 'Inter 600',
+   dir: 'A palavra é a imagem. Uma ou duas palavras por tela, gigantes, ocupando quase toda a largura, alternando branco e a cor de destaque.',
+   mov: 'Cada palavra bate com escala de 160% para 100% e um tremor curto. Palavras-chave esticam ou giram 90 graus para mudar de linha.',
+   ritmo: 'muito rápido, uma palavra a cada 0,3 a 0,6 segundo, no ritmo da fala ou da batida', curva: 'expo.out na entrada e corte seco na saída',
+   trans: 'A última palavra cresce até preencher a tela e vira o fundo da próxima cena.',
+   el: 'Barras finas, sublinhados que se desenham, contadores pequenos no canto.',
+   ev: 'Frases longas na mesma tela, mais de duas cores, ícones decorativos.', ex: ['Pare', 'agora', 'Uma ideia por tela, no ritmo da fala'] },
+ { id: 'pop', nome: 'Pop Art de Quadrinhos', cat: 'divertido', uso: 'Promoções, varejo e público jovem.',
+   pal: [['Amarelo', '#FFE14D'], ['Vermelho', '#E8322B'], ['Azul', '#1F6FEB'], ['Preto', '#111111']],
+   fT: 'Bangers (Google Fonts), inclinada, com contorno preto', fB: 'Rubik 800',
+   dir: 'Visual de história em quadrinhos: retícula de pontos, balões de fala, onomatopeias e contorno preto em tudo.',
+   mov: 'Balões e onomatopeias surgem com estouro (escala com ultrapassagem e leve rotação). Linhas de ação piscam atrás do texto.',
+   ritmo: 'rápido, cenas de 1,5 a 2 segundos', curva: 'back.out forte, com ultrapassagem de cerca de 20%',
+   trans: 'A tela se divide em quadros de HQ e a câmera entra no próximo quadro.',
+   el: 'Retícula, explosões, balões de fala, "POW!", "UAU!", setas.',
+   ev: 'Fotos realistas sem tratamento, degradês suaves, fontes finas.', ex: ['Uau!', 'Promoção', 'Tudo com 40% de desconto'] },
+ { id: 'sp', nome: 'Esportivo de Alta Energia', cat: 'impacto', uso: 'Academias, suplementos, eventos e desafios.',
+   pal: [['Preto', '#0A0A0A'], ['Vermelho', '#FF1F3D'], ['Branco', '#FFFFFF'], ['Grafite', '#2B2B2B']],
+   fT: 'Anton (Google Fonts), caixa alta, inclinada em -10 graus', fB: 'Oswald 500, caixa alta',
+   dir: 'Diagonais por toda parte, texto inclinado, faixas de velocidade e números grandes como placar. Sensação de movimento mesmo nos quadros parados.',
+   mov: 'Entradas rápidas na diagonal com rastro de velocidade, números contando como cronômetro, faixas que cortam a tela.',
+   ritmo: 'muito rápido, cenas de 1 a 2 segundos, cortes na batida', curva: 'power4.out, entradas em 0,25 segundo',
+   trans: 'Uma faixa diagonal varre a tela com rastro de velocidade.',
+   el: 'Listras diagonais, placar, cronômetro, setas de avanço, textura de asfalto.',
+   ev: 'Elementos centralizados e parados, cores pastel, serifas.', ex: ['Treino', 'sem desculpa', 'Desafio de 21 dias começa segunda'] },
+ { id: 'mo', nome: 'Monocromático Alto Contraste', cat: 'impacto', uso: 'Moda, marcas premium e manifestos.',
+   pal: [['Preto', '#000000'], ['Branco', '#FFFFFF'], ['Cinza médio', '#7A7A7A'], ['Cinza escuro', '#1A1A1A']],
+   fT: 'Inter Tight 900 (Google Fonts), alinhada à esquerda, espaçamento negativo', fB: 'Inter 400',
+   dir: 'Só preto e branco. Telas que se invertem (texto preto no branco vira branco no preto), muito espaço vazio e tipografia enorme alinhada à esquerda.',
+   mov: 'Inversões de cor em corte seco, textos que deslizam por máscara, zoom lento e contínuo na foto (5%).',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'expo.inOut, movimentos precisos',
+   trans: 'Inversão total de cor ou cortina preta horizontal.',
+   el: 'Linhas finas, numeração (01, 02, 03), molduras.',
+   ev: 'Qualquer cor, sombras, texturas, mais de uma fonte decorativa.', ex: ['Menos', 'é mais', 'Nova coleção em preto e branco'] },
+ { id: 'sw', nome: 'Suíço Internacional', cat: 'elegante', uso: 'Consultorias, B2B, arquitetura e cursos.',
+   pal: [['Branco', '#F4F4F0'], ['Vermelho', '#E30613'], ['Preto', '#111111'], ['Cinza', '#BDBDBD']],
+   fT: 'Inter 800 (Google Fonts), caixa baixa, alinhada à esquerda', fB: 'Inter 400',
+   dir: 'Grade rígida de colunas, alinhamento à esquerda, muito espaço em branco e uma única cor forte. Informação organizada como num cartaz suíço dos anos 60.',
+   mov: 'Elementos deslizam ao longo da grade em linhas retas, blocos de cor crescem a partir de uma aresta, números grandes giram como contador.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'power3.inOut, sem ultrapassagem',
+   trans: 'Um bloco vermelho cresce da lateral e cobre a tela.',
+   el: 'Grade aparente, linhas finas, numerais grandes, círculo vermelho.',
+   ev: 'Centralizar tudo, efeitos 3D, brilhos, mais de uma cor de destaque.', ex: ['design', 'que vende', 'Consultoria de marca para empresas'] },
+ { id: 'lx', nome: 'Luxo Minimal', cat: 'elegante', uso: 'Joias, estética, imóveis e alto padrão.',
+   pal: [['Preto', '#0E0E0E'], ['Dourado', '#C9A45C'], ['Marfim', '#F3EDE2'], ['Grafite', '#3A3A3A']],
+   fT: 'Fraunces 600 (Google Fonts), caixa alta, espaçamento largo (0,2 em)', fB: 'Inter 400, caixa alta, espaçamento largo',
+   dir: 'Fundo escuro, muito respiro e dourado só nos detalhes (filetes, ícones, uma palavra). Composição centralizada e calma.',
+   mov: 'Revelações lentas por máscara, brilho dourado que passa pelo texto, câmera que se aproxima devagar.',
+   ritmo: 'lento, cenas de 3 a 4 segundos', curva: 'sine.inOut, durações de 1 a 1,5 segundo',
+   trans: 'Fade pelo preto ou uma linha dourada que se abre e revela a cena.',
+   el: 'Filetes dourados, monograma, moldura fina, partículas de brilho discretas.',
+   ev: 'Muitas cores, movimentos rápidos, sombras pesadas, texto em excesso.', ex: ['Coleção', 'Noir', 'Edição limitada'] },
+ { id: 'ed', nome: 'Editorial de Revista', cat: 'elegante', uso: 'Conteúdo de autoridade, moda, beleza e estilo de vida.',
+   pal: [['Papel', '#F2EDE4'], ['Preto', '#161616'], ['Vermelho', '#C2412D'], ['Bege', '#D9CBB3']],
+   fT: 'Fraunces 700 (Google Fonts), títulos grandes, sem itálico', fB: 'Inter 500',
+   dir: 'Layout de capa de revista: título enorme, foto recortada, colunas de texto, número da edição e legendas pequenas.',
+   mov: 'Títulos entram linha por linha com máscara, fotos deslizam como páginas, legendas aparecem por último.',
+   ritmo: 'médio, cenas de 2,5 a 3,5 segundos', curva: 'power2.out',
+   trans: 'Virada de página: a cena desliza de lado com sombra. Ou corte seco.',
+   el: 'Número da edição, linhas finas, legendas, aspas grandes.',
+   ev: 'Neon, efeitos tecnológicos, mais de duas fontes.', ex: ['O guia', 'da pele', 'Tudo o que muda depois dos 30, explicado por quem entende.'] },
+ { id: 'sm', nome: 'Soft Minimal', cat: 'elegante', uso: 'Bem-estar, saúde, terapias e produtos naturais.',
+   pal: [['Areia', '#EFE7DC'], ['Terracota', '#C97B5A'], ['Sálvia', '#8FA58C'], ['Grafite quente', '#3B3530']],
+   fT: 'DM Sans 700 (Google Fonts)', fB: 'DM Sans 400',
+   dir: 'Tons terrosos, cantos bem arredondados, formas orgânicas e bastante espaço. Sensação de calma e cuidado.',
+   mov: 'Tudo flutua: entradas suaves de baixo para cima e formas orgânicas que respiram (escala de 98% a 102%).',
+   ritmo: 'lento, cenas de 3 a 4 segundos', curva: 'sine.out, sem quiques',
+   trans: 'Fade cruzado com leve desfoque.',
+   el: 'Formas orgânicas, folhas simples, linhas curvas, cartões arredondados.',
+   ev: 'Preto puro, cortes secos, vermelho vivo, tipografia agressiva.', ex: ['Respire', 'fundo', 'Terapias para o seu equilíbrio'] },
+ { id: 'jp', nome: 'Japandi Zen', cat: 'elegante', uso: 'Interiores, cerâmica, chás e marcas artesanais.',
+   pal: [['Off-white', '#F4F1EA'], ['Preto', '#1C1C1C'], ['Vermelho carimbo', '#B23A2B'], ['Madeira', '#A68A6D']],
+   fT: 'Zen Kaku Gothic New 700 (Google Fonts), espaçamento largo', fB: 'Zen Kaku Gothic New 400',
+   dir: 'Muito vazio, poucos elementos, assimetria equilibrada e um carimbo vermelho como único ponto de cor.',
+   mov: 'Movimentos mínimos e lentos: pinceladas que se desenham, carimbo que pousa, texto que aparece letra a letra.',
+   ritmo: 'muito lento, cenas de 3,5 a 5 segundos', curva: 'power1.inOut',
+   trans: 'Fade pelo off-white.',
+   el: 'Pincelada, carimbo quadrado vermelho, linha de horizonte, círculo ensō.',
+   ev: 'Excesso de texto, cores vivas, movimentos rápidos, sombras.', ex: ['Calma', 'feita à mão', 'Cerâmica autoral'] },
+ { id: 'tm', nome: 'Terminal de Código', cat: 'tech', uso: 'Tecnologia, cursos de programação, IA e SaaS.',
+   pal: [['Preto', '#0B0F0C'], ['Verde', '#39FF88'], ['Âmbar', '#FFB000'], ['Cinza', '#5C6B61']],
+   fT: 'JetBrains Mono 700 (Google Fonts)', fB: 'JetBrains Mono 400',
+   dir: 'Tela de terminal: fundo escuro, texto monoespaçado, cursor piscando, linhas de comando e respostas. Tudo parece estar sendo digitado ao vivo.',
+   mov: 'Texto digitado caractere por caractere, cursor piscando, linhas que sobem como log, barra de progresso em blocos.',
+   ritmo: 'médio, cenas de 2 a 3 segundos, digitação a cerca de 25 caracteres por segundo', curva: 'steps na digitação e power2.out no resto',
+   trans: 'A tela é limpa (como o comando clear) ou uma nova janela de terminal se abre.',
+   el: 'Prompt "$", cursor, colchetes, barra [████░░], janelas com três bolinhas.',
+   ev: 'Fontes proporcionais, fotos, degradês coloridos.', ex: ['render --video', 'pronto em 12s', '3 formatos exportados'] },
+ { id: 'ne', nome: 'Neon Cyberpunk', cat: 'tech', uso: 'Games, eventos noturnos, tecnologia e música.',
+   pal: [['Noite', '#0A0614'], ['Magenta', '#FF2BD6'], ['Ciano', '#00E5FF'], ['Roxo', '#5B2BFF']],
+   fT: 'Chakra Petch 700 (Google Fonts), caixa alta', fB: 'Chakra Petch 500',
+   dir: 'Cidade à noite: fundo quase preto, letreiros de neon com brilho, linhas de varredura e reflexos.',
+   mov: 'O neon pisca ao acender, o brilho pulsa, linhas de varredura descem, pequenas falhas digitais aparecem.',
+   ritmo: 'rápido, cenas de 1,5 a 2,5 segundos', curva: 'steps na piscada e expo.out nas entradas',
+   trans: 'Falha digital de 0,2 segundo ou flash de neon.',
+   el: 'Grade em perspectiva, linhas de varredura, molduras luminosas.',
+   ev: 'Fundo claro, cores pastel, fontes serifadas.', ex: ['Noite', 'neon', 'Sábado · 23h · Centro'] },
+ { id: 'gl', nome: 'Glitch Digital', cat: 'tech', uso: 'Lançamentos de tecnologia, música eletrônica e ganchos de impacto.',
+   pal: [['Preto', '#050505'], ['Vermelho RGB', '#FF0040'], ['Ciano RGB', '#00F0FF'], ['Branco', '#F5F5F5']],
+   fT: 'Space Grotesk 700 (Google Fonts), caixa alta', fB: 'Space Mono 400',
+   dir: 'Imagem "quebrada": separação dos canais vermelho e ciano, fatias deslocadas, ruído e pixels. Controlado, não caótico.',
+   mov: 'O texto treme com separação de cor por 0,2 segundo e estabiliza; fatias horizontais deslizam; ruído aparece nas trocas.',
+   ritmo: 'rápido, cenas de 1,5 a 2 segundos', curva: 'steps e cortes secos',
+   trans: 'A tela é fatiada em faixas que deslizam e revelam a próxima cena.',
+   el: 'Barras de ruído, pixels, linhas de varredura, códigos hexadecimais.',
+   ev: 'Glitch o tempo todo (cansa e atrapalha a leitura), cores quentes suaves.', ex: ['Nova', 'versão', 'Atualização 2.0 disponível'] },
+ { id: 'gs', nome: 'Vidro Fosco', cat: 'tech', uso: 'Apps, fintechs, SaaS e produtos digitais.',
+   pal: [['Azul profundo', '#0E1630'], ['Violeta', '#7C5CFF'], ['Rosa', '#FF7AC6'], ['Vidro (branco 20%)', '#FFFFFF33']],
+   fT: 'Plus Jakarta Sans 800 (Google Fonts)', fB: 'Plus Jakarta Sans 500',
+   dir: 'Cartões de vidro fosco flutuando sobre manchas de cor desfocadas, bordas claras finas e sombras suaves. Aparência de interface moderna.',
+   mov: 'Manchas de cor se movem devagar ao fundo; cartões entram com leve rotação 3D e assentam; números e ícones aparecem dentro deles.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'power3.out, com leve ultrapassagem nos cartões',
+   trans: 'Um cartão cresce até virar a tela seguinte.',
+   el: 'Cartões translúcidos, ícones de linha, gráficos simples, botões de liga e desliga.',
+   ev: 'Fundo chapado (o vidro precisa de cor atrás), texto pequeno sobre o vidro sem contraste.', ex: ['Seu dinheiro', 'rende mais', 'Conta digital sem tarifa'] },
+ { id: 'db', nome: 'Dashboard de Dados', cat: 'tech', uso: 'Resultados, cases, relatórios e B2B.',
+   pal: [['Grafite', '#0F1218'], ['Verde', '#22C55E'], ['Azul', '#3B82F6'], ['Cinza', '#94A3B8']],
+   fT: 'Inter 800 (Google Fonts)', fB: 'Inter 500 com números tabulares',
+   dir: 'Tela de painel: cartões com métricas, gráficos de barra e de linha, números grandes e rótulos pequenos. Cada número conta uma história de resultado.',
+   mov: 'Números contam do zero, barras crescem de baixo, linhas se desenham, setas de alta pulsam.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'expo.out nos contadores e power2.out nas barras',
+   trans: 'Zoom em um cartão que vira a cena seguinte.',
+   el: 'Cartões, gráficos, setas de alta, selos "+32%", grade fina.',
+   ev: 'Números inventados apresentados como reais, gráficos demais na mesma tela.', ex: ['Vendas no mês', '+248%', 'Resultado com anúncios em vídeo'] },
+ { id: 'y2', nome: 'Cromado Y2K', cat: 'retro', uso: 'Moda, música e marcas jovens.',
+   pal: [['Prata', '#D9DDE3'], ['Azul elétrico', '#2D5BFF'], ['Rosa', '#FF6AD5'], ['Preto', '#0B0B0F']],
+   fT: 'Syne 800 (Google Fonts), caixa alta, com efeito cromado', fB: 'Space Grotesk 500',
+   dir: 'Estética dos anos 2000: texto cromado com reflexo, formas líquidas, estrelas brilhantes e degradês iridescentes.',
+   mov: 'O texto cromado gira levemente em 3D, brilhos piscam, formas líquidas se deformam, adesivos entram rodando.',
+   ritmo: 'rápido, cenas de 1,5 a 2,5 segundos', curva: 'elastic.out nos adesivos e sine.inOut nos reflexos',
+   trans: 'Flash branco com uma estrela de brilho.',
+   el: 'Estrelas de 4 pontas, bolhas, adesivos, molduras de janela antiga.',
+   ev: 'Visual corporativo, cores sóbrias, serifas clássicas.', ex: ['Brilha', 'muito', 'Coleção nova no ar'] },
+ { id: 'gr', nome: 'Anos 70 Groovy', cat: 'retro', uso: 'Cafeterias, moda vintage, festas e música.',
+   pal: [['Creme', '#F4E4C1'], ['Laranja', '#E8652B'], ['Mostarda', '#E3A72F'], ['Marrom', '#6B3E26']],
+   fT: 'Shrikhand (Google Fonts), letras gordas e arredondadas', fB: 'Rubik 500',
+   dir: 'Formas onduladas, arco-íris de faixas grossas, letras gordas e um sol nascendo. Clima quente e nostálgico.',
+   mov: 'Faixas onduladas balançam, o texto entra ondulando, o sol sobe devagar, elementos têm leve quique.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'sine.inOut e back.out suave',
+   trans: 'Faixas curvas atravessam a tela em arco.',
+   el: 'Arco-íris de três faixas, sol, flores, ondas, textura de papel.',
+   ev: 'Preto puro, neon, tipografia fina, layout muito reto.', ex: ['Café', 'da tarde', 'Todo sábado, das 15h às 18h'] },
+ { id: 'sy', nome: 'Synthwave Anos 80', cat: 'retro', uso: 'Eventos, games, música e campanhas nostálgicas.',
+   pal: [['Roxo', '#1A0B2E'], ['Rosa', '#FF2E88'], ['Laranja', '#FF9A3C'], ['Ciano', '#2DE2E6']],
+   fT: 'Audiowide (Google Fonts), caixa alta, com degradê e brilho', fB: 'Space Grotesk 500',
+   dir: 'Pôr do sol listrado, grade em perspectiva correndo até o horizonte, montanhas em linha e texto cromado com brilho.',
+   mov: 'A grade corre na direção da câmera sem parar, o sol desce devagar, o texto acende com brilho e reflexo.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'sine.inOut',
+   trans: 'Flash de luz no horizonte ou varredura de fita VHS.',
+   el: 'Sol listrado, grade, palmeiras, estrelas, efeito de fita VHS.',
+   ev: 'Fundo claro, fotos sem tratamento, tipografia sóbria.', ex: ['Noite', 'retrô', 'Festa anos 80 · sexta'] },
+ { id: 'vw', nome: 'Vaporwave', cat: 'retro', uso: 'Marcas irreverentes, música e cultura pop.',
+   pal: [['Rosa', '#FF9CEE'], ['Ciano', '#7DF9FF'], ['Lilás', '#B28DFF'], ['Azul', '#4A3AFF']],
+   fT: 'VT323 (Google Fonts), fonte de pixel', fB: 'VT323',
+   dir: 'Janelas de computador antigo, degradês pastel, grades e pixels. Humor nostálgico da internet dos anos 90.',
+   mov: 'Janelas abrem e fecham como pop-ups, um cursor clica, textos piscam, elementos flutuam em loop.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'steps nas janelas e sine.inOut nas flutuações',
+   trans: 'Janela de "carregando" que vira a próxima cena.',
+   el: 'Janelas com barra de título, cursor de seta, barras de progresso, piso xadrez em perspectiva.',
+   ev: 'Visual sério e corporativo, fotos realistas sem efeito.', ex: ['Modo', 'nostalgia', 'Carregando novidades...'] },
+ { id: 'ri', nome: 'Risografia', cat: 'retro', uso: 'Eventos culturais, editoras e marcas autorais.',
+   pal: [['Papel', '#F3EEE3'], ['Rosa fluor', '#FF48B0'], ['Azul', '#0078BF'], ['Amarelo', '#FFE800']],
+   fT: 'Archivo Black (Google Fonts), caixa alta', fB: 'Space Mono 400',
+   dir: 'Impressão em duas cores sobrepostas com leve desalinhamento, granulado forte e cores que se misturam onde se cruzam.',
+   mov: 'Camadas de cor entram separadas e se encaixam, com 2 px de desalinhamento que permanece; granulado animado; formas carimbadas.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'steps(6), para parecer quadro a quadro',
+   trans: 'Uma nova camada de tinta cobre a tela.',
+   el: 'Granulado, meio-tom, formas simples recortadas, marcas de registro.',
+   ev: 'Cores digitais saturadas sem textura, sombras realistas.', ex: ['Feira', 'gráfica', 'Edição de outono · entrada livre'] },
+ { id: 'bh', nome: 'Bauhaus', cat: 'retro', uso: 'Arquitetura, design, educação e arte.',
+   pal: [['Creme', '#F1EAD8'], ['Vermelho', '#D63A2F'], ['Azul', '#1D4E9E'], ['Amarelo', '#F2B630']],
+   fT: 'Outfit 800 (Google Fonts), geométrica, caixa alta', fB: 'Outfit 400',
+   dir: 'Formas geométricas primárias (círculo, quadrado, triângulo) compondo a tela, cores primárias e tipografia geométrica.',
+   mov: 'Formas rolam, giram e se encaixam como peças; o texto entra alinhado às formas.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'back.out suave nos encaixes',
+   trans: 'Um círculo cresce e cobre a tela.',
+   el: 'Círculos, meios-círculos, quadrados, triângulos, linhas grossas.',
+   ev: 'Degradês, texturas, fotos com fundo, fontes manuscritas.', ex: ['Forma', 'e função', 'Escola de arquitetura'] },
+ { id: 'mp', nome: 'Memphis Anos 90', cat: 'divertido', uso: 'Infantil, festas, educação e marcas descontraídas.',
+   pal: [['Branco quente', '#FFF8EE'], ['Rosa', '#FF6FB5'], ['Turquesa', '#2EC4B6'], ['Amarelo', '#FFD23F']],
+   fT: 'Rubik 800 (Google Fonts), caixa alta', fB: 'Rubik 500',
+   dir: 'Confete geométrico: zigue-zagues, bolinhas, triângulos e rabiscos espalhados em cores vivas sobre fundo claro.',
+   mov: 'Peças pulam e giram em loop, o texto entra com quique, confetes caem devagar.',
+   ritmo: 'rápido, cenas de 1,5 a 2,5 segundos', curva: 'back.out e elastic.out',
+   trans: 'Chuva de confetes geométricos que cobre e revela a próxima cena.',
+   el: 'Zigue-zague, bolinhas, triângulos, rabiscos, retícula.',
+   ev: 'Tons sóbrios, layout muito rígido, fotos escuras.', ex: ['Festa', 'de 5 anos', 'Convite especial para a turma'] },
+ { id: 'pp', nome: 'Recorte de Papel', cat: 'divertido', uso: 'Infantil, educação, artesanato e marcas acolhedoras.',
+   pal: [['Céu', '#8EC5E8'], ['Grama', '#7BC67E'], ['Sol', '#FFD15C'], ['Papel', '#FFF9EF']],
+   fT: 'Baloo 2 800 (Google Fonts)', fB: 'Baloo 2 500',
+   dir: 'Camadas de papel recortado empilhadas, com sombras suaves entre elas e textura de papel. Tudo parece montado à mão.',
+   mov: 'Camadas sobem uma a uma, balançam um pouco e assentam; elementos entram como se fossem puxados por uma aba.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'back.out suave',
+   trans: 'Uma camada de papel desliza por cima da cena.',
+   el: 'Nuvens, morros, sol, bandeirolas, bordas onduladas.',
+   ev: 'Brilhos digitais, neon, tipografia técnica.', ex: ['Hora', 'de brincar', 'Oficina de férias para crianças'] },
+ { id: 'dd', nome: 'Rabisco à Mão', cat: 'divertido', uso: 'Conteúdo educativo, explicações e marcas pessoais.',
+   pal: [['Papel', '#FFFDF7'], ['Grafite', '#2B2B2B'], ['Marca-texto', '#FFE45C'], ['Azul caneta', '#2F6BFF']],
+   fT: 'Nunito 800 (Google Fonts) nos títulos e Caveat Brush nas anotações', fB: 'Nunito 600',
+   dir: 'Caderno de anotações: setas desenhadas, círculos em volta das palavras, marca-texto amarelo e pequenos desenhos de traço.',
+   mov: 'Traços se desenham na tela, o marca-texto passa por trás das palavras-chave, setas apontam para o que importa.',
+   ritmo: 'médio, cenas de 2 a 3,5 segundos', curva: 'power1.inOut nos traços',
+   trans: 'A folha vira ou a tela é "apagada" com borracha.',
+   el: 'Setas, círculos, sublinhados, estrelas desenhadas, post-its.',
+   ev: 'Rabiscos demais ao mesmo tempo, letra manuscrita difícil de ler nos títulos.', ex: ['Aprenda', 'em 3 passos', 'Resumo desenhado para você salvar'] },
+ { id: 'cl', nome: 'Clay 3D Fofo', cat: 'divertido', uso: 'Apps, infantil e produtos fofos.',
+   pal: [['Lilás', '#C9B6FF'], ['Pêssego', '#FFC4A3'], ['Menta', '#A8E6CF'], ['Azul', '#6C8CFF']],
+   fT: 'Fredoka 700 (Google Fonts)', fB: 'Fredoka 500',
+   dir: 'Formas infladas como massinha, com sombra interna e brilho suave, cores pastel e cantos bem arredondados.',
+   mov: 'Formas pulam com achatamento (squash and stretch), botões afundam ao toque, elementos balançam como gelatina.',
+   ritmo: 'médio, cenas de 2 a 3 segundos', curva: 'elastic.out e back.out',
+   trans: 'Uma forma inflada cresce e vira a próxima cena.',
+   el: 'Blobs, ícones 3D arredondados, botões gordinhos, estrelas fofas.',
+   ev: 'Preto puro, ângulos retos, texturas sujas.', ex: ['Seu app', 'mais fofo', 'Organize a rotina com leveza'] },
+ { id: 'lq', nome: 'Gradiente Líquido', cat: 'tech', uso: 'Beleza, tecnologia, música e marcas modernas.',
+   pal: [['Índigo', '#2B1B6F'], ['Coral', '#FF6B6B'], ['Pêssego', '#FFB86B'], ['Rosa', '#FF8FD1']],
+   fT: 'Manrope 800 (Google Fonts)', fB: 'Manrope 500',
+   dir: 'Fundo de degradê em malha com cores que se misturam devagar, como tinta na água, e texto branco e limpo por cima.',
+   mov: 'Manchas de cor fluem e se fundem sem parar; o texto entra com desfoque que vira nitidez.',
+   ritmo: 'médio a lento, cenas de 2,5 a 3,5 segundos', curva: 'sine.inOut no fundo e power3.out no texto',
+   trans: 'As cores giram e se misturam formando a próxima cena.',
+   el: 'Manchas desfocadas, grão sutil, linhas finas brancas.',
+   ev: 'Contornos duros, muitas fontes, ícones detalhados.', ex: ['Cor', 'em movimento', 'Linha nova de maquiagem'] },
+ { id: 'cg', nome: 'Colagem de Recortes', cat: 'divertido', uso: 'Moda, eventos, manifestos e marcas autorais.',
+   pal: [['Papel', '#EDE6D6'], ['Preto', '#121212'], ['Vermelho', '#E2261C'], ['Amarelo', '#F7D046']],
+   fT: 'Archivo Black (Google Fonts) em tarjas recortadas', fB: 'Courier Prime 700',
+   dir: 'Recortes de revista colados: letras de tamanhos diferentes, fita adesiva, papel rasgado, fotos em preto e branco com uma cor de destaque.',
+   mov: 'Recortes entram como se fossem colados (pequena rotação e escala), a fita adesiva aparece por último, leve tremor de stop motion.',
+   ritmo: 'médio, cenas de 2 a 3 segundos, entradas a 12 quadros por segundo', curva: 'steps(4), para o efeito de stop motion',
+   trans: 'Um pedaço de papel rasgado cobre a tela.',
+   el: 'Fita adesiva, papel rasgado, letras recortadas, carimbos, grampos.',
+   ev: 'Alinhamento perfeito, visual limpo demais, degradês digitais.', ex: ['Manifesto', 'da marca', 'Feito à mão, sem fórmula pronta'] },
+ { id: 'cn', nome: 'Título de Cinema', cat: 'cinema', uso: 'Lançamentos, documentários, trailers e marcas pessoais fortes.',
+   pal: [['Preto', '#050505'], ['Dourado', '#D8B26E'], ['Branco gelo', '#EDEDED'], ['Grafite', '#3C3C3C']],
+   fT: 'Cinzel 700 (Google Fonts), caixa alta, espaçamento largo', fB: 'Inter 400',
+   dir: 'Abertura de filme: tarjas pretas de cinema, grão de película, luz de projetor e títulos centralizados com muito espaço.',
+   mov: 'Títulos surgem do escuro com um brilho que cresce, a câmera se aproxima devagar, partículas de poeira flutuam na luz.',
+   ritmo: 'lento, cenas de 3 a 4,5 segundos', curva: 'sine.inOut, durações longas',
+   trans: 'Fade pelo preto ou flash de luz de projetor.',
+   el: 'Tarjas, grão, poeira, reflexo de lente, créditos.',
+   ev: 'Cores saturadas, cortes rápidos, muitos elementos na tela.', ex: ['A jornada', 'começa agora', 'Em breve'] },
+ { id: 'nw', nome: 'Telejornal', cat: 'cinema', uso: 'Anúncios de urgência, novidades e notícias da marca.',
+   pal: [['Azul', '#0A2A66'], ['Vermelho', '#D7141A'], ['Branco', '#FFFFFF'], ['Amarelo', '#FFC400']],
+   fT: 'Oswald 700 (Google Fonts), caixa alta', fB: 'Inter 600',
+   dir: 'Visual de jornal de TV: tarja de "Plantão", faixa de manchete na parte de baixo, relógio no canto e letreiro rolando.',
+   mov: 'Tarjas deslizam da lateral, a manchete troca com giro de faixa, o letreiro corre sem parar, o selo "AO VIVO" pisca.',
+   ritmo: 'rápido, cenas de 2 a 3 segundos', curva: 'power3.out nas tarjas',
+   trans: 'Vinheta de faixas azul e vermelha que atravessa a tela.',
+   el: 'Faixa de manchete, letreiro rolando, relógio, selo "AO VIVO", globo simples.',
+   ev: 'Logos ou nomes de emissoras reais, fontes manuscritas.', ex: ['Notícia', 'urgente', 'Loja abre filial no centro'] },
+ { id: 'is', nome: 'Isométrico 3D', cat: 'tech', uso: 'Logística, SaaS, processos e explicações de serviço.',
+   pal: [['Céu', '#E9EEFF'], ['Azul', '#4F6BFF'], ['Laranja', '#FF8A3D'], ['Grafite', '#252A40']],
+   fT: 'Sora 800 (Google Fonts)', fB: 'Sora 400',
+   dir: 'Blocos e objetos em perspectiva isométrica (30 graus), como uma maquete, com três tons por face e sombras suaves.',
+   mov: 'Blocos sobem do chão e se empilham, caminhos se desenham entre eles, pequenos objetos percorrem os caminhos.',
+   ritmo: 'médio, cenas de 2,5 a 3,5 segundos', curva: 'back.out suave ao assentar',
+   trans: 'A câmera desliza pela maquete até a próxima área.',
+   el: 'Cubos, plataformas, setas no chão, ícones isométricos, linhas pontilhadas.',
+   ev: 'Perspectivas misturadas (isométrico com frontal), excesso de detalhe.', ex: ['Do pedido', 'à entrega', 'Logística sem atrito'] },
+];
+
+/* ---------- monta o prompt ---------- */
+function montarPrompt(s, o = {}) {
+  const fmt = o.fmt || '[9:16, 1:1 ou 16:9]', dur = o.dur || '[duração, ex.: 15 segundos]', marca = (o.marca || '').trim();
+  const cores = o.cores ? `Use as cores da minha marca no lugar desta paleta, mantendo a mesma lógica do estilo: principal ${o.cores[0]}, fundo ${o.cores[1]}, texto ${o.cores[2]}.` : 'Se eu enviar as cores da minha marca, mantenha a lógica do estilo e troque só os tons.';
+  return `Crie um vídeo motion no estilo "${s.nome}".
+
+DIREÇÃO DE ARTE
+${s.dir}
+
+PALETA
+${s.pal.map(([n, h]) => `- ${n}: ${h}`).join('\n')}
+${cores}
+
+TIPOGRAFIA
+- Títulos: ${s.fT}
+- Textos de apoio: ${s.fB}
+- Use os textos exatamente como estão no roteiro, sem trocar, abreviar ou corrigir palavras.
+
+MOVIMENTO
+${s.mov}
+- Ritmo: ${s.ritmo}.
+- Curvas de animação: ${s.curva}.
+
+TRANSIÇÕES ENTRE CENAS
+${s.trans}
+
+ELEMENTOS GRÁFICOS
+${s.el}
+
+EVITE
+${s.ev}
+
+ENTREGA
+- Formato: ${fmt}.
+- Duração: ${dur}.
+- Área segura: nada importante a menos de 6% das bordas. No 9:16, deixe livres o topo (12%) e a base (18%), onde ficam os botões do Reels.
+- Termine com ${marca ? `a logo da ${marca}` : 'a logo da marca'} e a chamada para ação na tela por pelo menos 1,5 segundo.
+- Monte o vídeo em código e me mostre o preview para eu revisar antes de renderizar o MP4.
+
+ROTEIRO
+${(o.roteiro || '').trim() || '[cole aqui as cenas e os textos do seu vídeo, uma linha por cena]'}`;
+}
+
+/* ---------- página ---------- */
+(() => {
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  let tToast;
+  function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(tToast); tToast = setTimeout(() => t.classList.remove('on'), 2200); }
+  async function copiar(txt, msg) {
+    try { await navigator.clipboard.writeText(txt); }
+    catch (e) { const ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e2) { /* sem cópia */ } ta.remove(); }
+    toast(msg || 'Copiado');
+  }
+
+  // filtros
+  const chips = $('chips');
+  Object.entries(CATS).forEach(([k, v]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (k === 'todos' ? ' on' : ''); b.dataset.cat = k; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', k === 'todos'); b.textContent = v + (k === 'todos' ? ` (${ESTILOS.length})` : ` (${ESTILOS.filter(s => s.cat === k).length})`); chips.appendChild(b); });
+  chips.addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; chips.querySelectorAll('.chip').forEach(c => { c.classList.toggle('on', c === b); c.setAttribute('aria-selected', c === b); }); document.querySelectorAll('.est').forEach(el => { el.hidden = b.dataset.cat !== 'todos' && el.dataset.cat !== b.dataset.cat; }); });
+
+  // cartões
+  const grade = $('grade');
+  ESTILOS.forEach((s, i) => {
+    const el = document.createElement('article'); el.className = 'est'; el.dataset.cat = s.cat; el.dataset.id = s.id;
+    const [l1, l2, p] = s.ex;
+    el.innerHTML = `<div class="pv s-${s.id}" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><div class="h"><span data-t="${esc(l1)}">${esc(l1)}</span><span data-t="${esc(l2)}">${esc(l2)}</span></div><div class="p">${esc(p)}</div><div class="bt">Saiba mais</div></div>
+      <div class="info"><div class="cat">${String(i + 1).padStart(2, '0')} · ${CATS[s.cat]}</div><h3>${esc(s.nome)}</h3><p class="uso">${esc(s.uso)}</p>
+      <div class="pal">${s.pal.map(([n, h]) => `<button type="button" style="background:${h}" data-h="${h}" aria-label="Copiar ${esc(n)} ${h}"></button>`).join('')}</div>
+      <p class="fon">${esc(s.fT.split(' (')[0])} + ${esc(s.fB.split(',')[0])}</p>
+      <div class="acts"><button class="btn sec" type="button" data-ver="${s.id}">Ver prompt</button><button class="btn" type="button" data-copiar="${s.id}">Copiar prompt</button></div></div>`;
+    grade.appendChild(el);
+  });
+  grade.addEventListener('click', e => {
+    const cor = e.target.closest('.pal button'); if (cor) { copiar(cor.dataset.h, 'Cor ' + cor.dataset.h + ' copiada'); return; }
+    const ver = e.target.closest('[data-ver]'); if (ver) { abrirDlg(ver.dataset.ver); return; }
+    const cp = e.target.closest('[data-copiar]'); if (cp) { const s = ESTILOS.find(x => x.id === cp.dataset.copiar); copiar(montarPrompt(s, opcoes()), 'Prompt do estilo ' + s.nome + ' copiado'); }
+  });
+
+  // só anima as prévias que estão na tela
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(ents => ents.forEach(en => en.target.classList.toggle('pausa', !en.isIntersecting)), { rootMargin: '120px' });
+    document.querySelectorAll('.pv').forEach(pv => io.observe(pv));
+  }
+
+  // diálogo
+  let dlgId = null;
+  function abrirDlg(id) { const s = ESTILOS.find(x => x.id === id); dlgId = id; $('dlgT').textContent = s.nome; $('dlgP').textContent = montarPrompt(s, opcoes()); if ($('dlg').showModal) $('dlg').showModal(); else $('dlg').setAttribute('open', ''); }
+  $('dlgX').addEventListener('click', () => $('dlg').close());
+  $('dlg').addEventListener('click', e => { if (e.target === $('dlg')) $('dlg').close(); });
+  $('dlgCopiar').addEventListener('click', () => copiar($('dlgP').textContent, 'Prompt copiado'));
+  $('dlgUsar').addEventListener('click', () => { $('gEstilo').value = dlgId; gerar(); $('dlg').close(); $('gerador').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+
+  // gerador
+  const sel = $('gEstilo');
+  sel.innerHTML = ESTILOS.map((s, i) => `<option value="${s.id}">${String(i + 1).padStart(2, '0')} · ${esc(s.nome)}</option>`).join('');
+  function opcoes() { return { fmt: $('gFmt').value, dur: $('gDur').value, marca: $('gMarca').value, roteiro: $('gRoteiro').value, cores: $('gUsarCores').checked ? [$('gC1').value.toUpperCase(), $('gC2').value.toUpperCase(), $('gC3').value.toUpperCase()] : null }; }
+  function gerar() { $('gSaida').textContent = montarPrompt(ESTILOS.find(x => x.id === sel.value), opcoes()); }
+  ['gEstilo', 'gFmt', 'gDur', 'gMarca', 'gRoteiro', 'gC1', 'gC2', 'gC3'].forEach(id => $(id).addEventListener('input', gerar));
+  $('gUsarCores').addEventListener('change', () => { $('gCores').hidden = !$('gUsarCores').checked; gerar(); });
+  $('gCopiar').addEventListener('click', () => copiar($('gSaida').textContent, 'Prompt copiado. Cole no Claude Code.'));
+  $('gBaixar').addEventListener('click', () => { const s = ESTILOS.find(x => x.id === sel.value), a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([$('gSaida').textContent], { type: 'text/plain;charset=utf-8' })); a.download = 'prompt-' + s.nome.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-') + '.txt'; document.body.appendChild(a); a.click(); a.remove(); });
+  gerar();
+})();
+</script>
+</body>
+</html>

@@ -35,7 +35,8 @@ module.exports = async (req, res) => {
     if (c.status !== "PAID" && c.status !== "REDEEMED") return res.status(200).json({ status: "indisponivel" });
 
     const bumps = String((c.metadata && c.metadata.bumps) || "").split(",").filter((b) => ENTREGAS[b]);
-    return res.status(200).json({ status: "pago", itens: bumps.map((b) => ({ id: b, ...ENTREGAS[b] })) });
+    // valor em centavos, usado pelo evento de compra do pixel no obrigado
+    return res.status(200).json({ status: "pago", valor: c.paidAmount || c.amount || 0, itens: bumps.map((b) => ({ id: b, ...ENTREGAS[b] })) });
   } catch (e) {
     console.error("[entrega]", e.message);
     return res.status(502).json({ erro: "Não foi possível confirmar o pagamento agora." });

@@ -154,8 +154,23 @@ html:not(.js) .selo .anel,html:not(.js) .selo .ok{stroke-dashoffset:0}
 }
 </style>
 <script>document.documentElement.className='js'</script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1432467972410871');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1432467972410871&ev=PageView&noscript=1" alt=""></noscript>
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
 <header class="topo" data-entra>
@@ -257,9 +272,16 @@ if (GRUPO) { document.getElementById('grupo').href = GRUPO; document.getElementB
       lista.appendChild(a);
     });
   }
+  // pixel: a compra só conta com o PIX confirmado, com o valor pago e uma vez por pedido
+  function compra(j){
+    if (!window.fbq || !j.valor) return;
+    var k = 'mc-compra-' + p;
+    try { if (localStorage.getItem(k)) return; localStorage.setItem(k, '1'); } catch (e) {}
+    fbq('track', 'Purchase', { value: j.valor / 100, currency: 'BRL' }, { eventID: p });
+  }
   function confere(){
     fetch('/api/entrega?p=' + encodeURIComponent(p)).then(function(r){ return r.json(); }).then(function(j){
-      if (j.status === 'pago') { if (j.itens && j.itens.length) { box.hidden = false; mostra(j.itens); } else { box.hidden = true; } return; }
+      if (j.status === 'pago') { compra(j); if (j.itens && j.itens.length) { box.hidden = false; mostra(j.itens); } else { box.hidden = true; } return; }
       if (j.status === 'pendente' && ++tent < 20) { box.hidden = false; msg('Confirmando o seu PIX...'); setTimeout(confere, 3000); return; }
       if (j.status === 'pendente') { box.hidden = false; msg('O PIX ainda está sendo confirmado. Atualize esta página em alguns minutos.'); return; }
       box.hidden = true;

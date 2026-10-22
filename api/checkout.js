@@ -64,6 +64,25 @@ function origem(req) {
   return proto + "://" + req.headers.host;
 }
 
+// Dados para o Meta reconhecer quem comprou (usados pelo webhook na API de Conversões)
+// e a origem da visita, que aparece no painel /admin
+function rastreio(req, pedido) {
+  const ck = {};
+  String(req.headers.cookie || "").split(";").forEach((p) => { const i = p.indexOf("="); if (i > 0) ck[p.slice(0, i).trim()] = decodeURIComponent(p.slice(i + 1).trim()); });
+  const o = (pedido && typeof pedido.origem === "object" && pedido.origem) || {};
+  const c = (s, n) => String(s == null ? "" : s).slice(0, n);
+  let fbc = ck._fbc || "";
+  if (!fbc && o.fbclid) fbc = "fb.1." + Date.now() + "." + c(o.fbclid, 200);
+  return {
+    vid: c(pedido && pedido.vid, 40),
+    fbp: c(ck._fbp, 80),
+    fbc: c(fbc, 260),
+    ip: c(String(req.headers["x-forwarded-for"] || "").split(",")[0].trim(), 45),
+    ua: c(req.headers["user-agent"], 220),
+    src: c(o.src, 60), med: c(o.med, 60), camp: c(o.camp, 90), cont: c(o.cont, 90),
+  };
+}
+
 module.exports = async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   if (req.method === "GET") {
@@ -94,9 +113,16 @@ module.exports = async (req, res) => {
       returnUrl: site + "/#lotes",
       completionUrl: site + "/obrigado?p=" + pedidoId,
       externalId: pedidoId,
-      metadata: { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum" },
+      metadata: { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum", ...rastreio(req, pedido) },
     };
-    const b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) });
+    let b;
+    try { b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) }); }
+    catch (e) {
+      // se a Abacate recusar os dados extras, a venda segue só com o essencial
+      console.error("[checkout] metadata completo recusado:", e.message);
+      corpo.metadata = { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum" };
+      b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) });
+    }
     return res.status(200).json({ url: b.data.url, pedido: pedidoId });
   } catch (e) {
     console.error("[checkout]", e.message);

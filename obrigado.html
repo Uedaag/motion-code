@@ -304,6 +304,16 @@ if (GRUPO) { document.getElementById('grupo').href = GRUPO; document.getElementB
   var pr = v.play(); if (pr && pr.catch) pr.catch(function(){});
 })();
 
+/* estatística do painel: chegada ao obrigado (uma vez por pedido) */
+(function(){
+  try {
+    var p = new URLSearchParams(location.search).get('p') || 'sem-pedido', k = 'mc-obrigado-' + p;
+    if (localStorage.getItem(k)) return; localStorage.setItem(k, '1');
+    var b = JSON.stringify({ t: 'obrigado', v: localStorage.getItem('mc-vid') || 'anonimo' });
+    if (!(navigator.sendBeacon && navigator.sendBeacon('/api/evento', b))) fetch('/api/evento', { method: 'POST', body: b, keepalive: true });
+  } catch (e) {}
+})();
+
 /* entradas: o topo entra ao carregar, o resto aparece ao rolar */
 (function(){
   function pronto(){ document.body.classList.add('pronto'); }

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0F0D13">
+<title>Painel · Motion Code</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0D13;--card:#1C1823;--card2:#241F2D;--ink:#F3EEE4;--ink2:#CBC3D6;--mut:#8E879A;--line:#2A2632;--acc:#FD6725;--ok:#3DD68C;--alerta:#F5B53F;--erro:#FF6B6B}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Instrument Sans",system-ui,sans-serif}
+a{color:inherit}
+.wrap{width:min(1240px,100%);margin:0 auto;padding:0 16px 60px}
+.k{font:500 11px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+h1{font:500 40px/1 "Handjet",sans-serif;margin:0}
+h2{font:500 28px/1 "Handjet",sans-serif;margin:0 0 4px}
+.sub{color:var(--mut);font-size:13.5px;margin:0 0 14px}
+button,.btn{font:700 13.5px "Instrument Sans",sans-serif;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink);padding:9px 13px;cursor:pointer;white-space:nowrap}
+button:hover{border-color:var(--acc)}
+button.pri{background:var(--acc);border-color:var(--acc);color:#140A05}
+button[disabled]{opacity:.5;pointer-events:none}
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:16px}
+.login form{width:min(380px,100%);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px}
+.login img{height:28px;display:block;margin-bottom:22px}
+.login input{display:block;width:100%;margin:8px 0 14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:500 16px "Instrument Sans",sans-serif;padding:12px 14px;outline:none}
+.login input:focus{border-color:var(--acc)}
+.login button{width:100%;padding:12px}
+.login .erro{color:var(--erro);font-size:13.5px;min-height:20px;margin:10px 0 0}
+/* topo */
+.topo{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:20px 0 18px}
+.topo .marca{display:flex;align-items:center;gap:14px}
+.topo img{height:28px;display:block}
+.per{display:flex;gap:6px;flex-wrap:wrap}
+.per button.on{background:var(--acc);border-color:var(--acc);color:#140A05}
+.atual{font-size:12px;color:var(--mut)}
+/* avisos de configuração */
+.cfg{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-bottom:18px}
+.cfg .it{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.cfg .dot{width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;font:700 12px "Instrument Sans";color:#0F0D13;margin-top:1px}
+.cfg .ok .dot{background:var(--ok)}
+.cfg .falta .dot{background:var(--alerta)}
+.cfg b{display:block;font-size:14px}
+.cfg p{margin:2px 0 0;font-size:13px;color:var(--ink2)}
+.cfg button{margin-top:8px}
+.manual{grid-column:1/-1;background:rgba(253,103,37,.07);border:1px dashed rgba(253,103,37,.55);border-radius:14px;padding:16px}
+.manual code{display:block;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0 10px;font:500 12.5px "JetBrains Mono",monospace;word-break:break-all;color:var(--ink)}
+/* números */
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.kpi b{display:block;font:600 40px/1 "Handjet",sans-serif;margin-top:8px}
+.kpi small{display:block;color:var(--mut);font-size:12.5px;margin-top:4px}
+.bloco{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:18px}
+.dois{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(360px,1fr))}
+.dois .bloco{margin-bottom:0}
+.linha-blocos{margin-bottom:18px}
+/* tabela de vendas */
+.tab{overflow-x:auto;margin:0 -4px}
+table{width:100%;border-collapse:collapse;min-width:820px}
+th{text-align:left;font:500 11px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+td small{display:block;color:var(--mut);font-size:12.5px}
+td .tag{display:inline-block;font:600 11.5px "Instrument Sans";padding:2px 8px;border-radius:99px;background:var(--card2);border:1px solid var(--line);margin:2px 4px 0 0}
+td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
+.st{font-size:12.5px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+.st.ok{color:var(--ok)}.st.no{color:var(--alerta)}
+.vazio{color:var(--mut);padding:22px 4px;text-align:center}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+/* barras */
+.barras{display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(120px,190px) 1fr 74px;gap:10px;align-items:center;font-size:13.5px}
+.bar .rot{color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .trilho{height:12px;border-radius:4px;background:var(--card2);position:relative}
+.bar .ench{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--acc);min-width:2px}
+.bar .val{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums;font-size:13px}
+.bar .val small{color:var(--mut)}
+.colunas{display:flex;align-items:flex-end;gap:2px;height:160px;padding-top:10px;border-bottom:1px solid var(--line)}
+.colunas .c{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;position:relative;cursor:default}
+.colunas .c i{display:block;background:var(--acc);border-radius:4px 4px 0 0;min-height:2px}
+.colunas .c:hover i{filter:brightness(1.2)}
+.eixo{display:flex;gap:2px;margin-top:6px}
+.eixo span{flex:1;text-align:center;font:500 10px "JetBrains Mono",monospace;color:var(--mut);overflow:hidden;white-space:nowrap}
+.tip{position:fixed;z-index:50;pointer-events:none;background:#0B0A0E;border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12.5px;color:var(--ink);box-shadow:0 10px 30px -10px #000;transform:translate(-50%,calc(-100% - 10px));opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}
+.carregando{color:var(--mut);padding:40px 0;text-align:center}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 15px;font-size:14px;z-index:60;box-shadow:0 20px 40px -20px #000}
+.toast[hidden]{display:none}
+@media (max-width:640px){h1{font-size:32px}.bar{grid-template-columns:110px 1fr 64px}.dois{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<section class="login" id="login" hidden>
+ <form id="fLogin">
+  <img src="assets/logo-horizontal.png" alt="Motion Code" width="136" height="28">
+  <h2>Painel de vendas</h2>
+  <p class="sub">Digite a senha definida em ADMIN_SENHA na Vercel.</p>
+  <label class="k" for="senha">Senha</label>
+  <input id="senha" type="password" autocomplete="current-password" required>
+  <button class="pri" type="submit">Entrar</button>
+  <p class="erro" id="loginErro" role="alert"></p>
+ </form>
+</section>
+
+<div class="wrap" id="app" hidden>
+ <header class="topo">
+  <div class="marca"><img src="assets/logo-horizontal.png" alt="Motion Code" width="136" height="28"><div><div class="k">Painel</div><h1>Vendas e acessos</h1></div></div>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+   <div class="per" id="per" role="group" aria-label="Período">
+    <button type="button" data-p="hoje">Hoje</button><button type="button" data-p="7">7 dias</button><button type="button" data-p="30">30 dias</button><button type="button" data-p="tudo">Desde o início</button>
+   </div>
+   <button type="button" id="bAtualizar">Atualizar</button>
+   <button type="button" id="bSair">Sair</button>
+  </div>
+ </header>
+ <p class="atual" id="atual"></p>
+ <div class="cfg" id="cfg"></div>
+ <div class="kpis" id="kpis"></div>
+ <section class="bloco">
+  <h2>Vendas</h2>
+  <p class="sub">Direto da Abacate Pay. A coluna Meta mostra se a compra já foi avisada à campanha.</p>
+  <div class="tab"><table><thead><tr><th>Pago em</th><th>Cliente</th><th>Itens</th><th>Valor</th><th>Origem</th><th>Meta</th></tr></thead><tbody id="tVendas"></tbody></table></div>
+ </section>
+ <div class="dois linha-blocos">
+  <section class="bloco"><h2>Funil</h2><p class="sub">Pessoas diferentes em cada etapa no período.</p><div class="barras" id="gFunil"></div></section>
+  <section class="bloco"><h2>Até onde rolam</h2><p class="sub">Parte das visitas que chegou a cada trecho da página, na ordem da página.</p><div class="barras" id="gSecoes"></div></section>
+ </div>
+ <div class="dois linha-blocos">
+  <section class="bloco"><h2>Pessoas por dia</h2><p class="sub">Visitantes diferentes em cada dia.</p><div id="gDias"></div></section>
+  <section class="bloco"><h2>Vendas por dia</h2><p class="sub">Vendas pagas em cada dia.</p><div id="gVendasDia"></div></section>
+ </div>
+ <div class="dois linha-blocos">
+  <section class="bloco"><h2>De onde vêm</h2><p class="sub">utm_source do anúncio ou o site de onde a pessoa veio.</p><div class="barras" id="gOrigens"></div></section>
+  <section class="bloco"><h2>Campanhas e anúncios</h2><p class="sub">utm_campaign | utm_content. Coloque esses parâmetros nos links dos anúncios.</p><div class="barras" id="gCampanhas"></div></section>
+ </div>
+ <div class="dois linha-blocos">
+  <section class="bloco"><h2>Aparelho</h2><p class="sub">Visitas por tipo de tela.</p><div class="barras" id="gDisp"></div></section>
+  <section class="bloco"><h2>Bônus vendidos</h2><p class="sub">Quantas vendas levaram cada oferta extra.</p><div class="barras" id="gBumps"></div></section>
+ </div>
+</div>
+<div class="tip" id="tip"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); };
+  var brl = function(v){ return 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+  var num = function(v){ return Number(v || 0).toLocaleString('pt-BR'); };
+  var pct = function(a, b){ return b ? Math.round(a / b * 1000) / 10 : 0; };
+  var SECOES = [['palco','Vídeo de abertura'],['apresentacao','Apresentação e preço'],['cliques','Poucos cliques'],['portfolio','Portfólio'],['feitos','Feito com Motion Code'],['muda','O que muda'],['virada','A virada'],['metodo','Método 3 Takes'],['comecar','Antes de começar'],['programa','Programa'],['paraquem','Para quem é'],['conduz','Quem conduz'],['lotes','Ingressos'],['duvidas','Perguntas frequentes'],['final','Chamada final']];
+  var BUMPS = { aula: 'Aula gravada', moldes: 'Biblioteca de Moldes', estilos: 'Mesa de Estilos' };
+  var senha = '', periodo = '7', dados = null, tTimer = 0;
+  try { senha = sessionStorage.getItem('mc-adm') || ''; periodo = localStorage.getItem('mc-adm-per') || '7'; } catch (e) {}
+
+  function toast(t){ var el = $('toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(function(){ el.hidden = true; }, 3500); }
+  function api(metodo, corpo){
+    return fetch('/api/admin' + (metodo === 'GET' ? '?periodo=' + encodeURIComponent(periodo) : ''), { method: metodo, headers: { 'x-senha': senha, 'Content-Type': 'application/json' }, body: corpo ? JSON.stringify(corpo) : undefined })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ if (r.status === 401) { sair('Senha incorreta.'); throw new Error('401'); } if (!r.ok) throw new Error(j.erro || ('Erro ' + r.status)); return j; }); });
+  }
+  function sair(msg){ senha = ''; try { sessionStorage.removeItem('mc-adm'); } catch (e) {} $('app').hidden = true; $('login').hidden = false; $('loginErro').textContent = msg || ''; $('senha').focus(); clearInterval(tTimer); }
+
+  $('fLogin').addEventListener('submit', function(e){ e.preventDefault(); senha = $('senha').value; try { sessionStorage.setItem('mc-adm', senha); } catch (x) {} $('loginErro').textContent = ''; carregar(true); });
+  $('bSair').addEventListener('click', function(){ sair(''); });
+  $('bAtualizar').addEventListener('click', function(){ carregar(); });
+  [].forEach.call(document.querySelectorAll('#per button'), function(b){ b.addEventListener('click', function(){ periodo = b.dataset.p; try { localStorage.setItem('mc-adm-per', periodo); } catch (e) {} carregar(); }); });
+
+  function carregar(doLogin){
+    if (!senha) { sair(''); return; }
+    [].forEach.call(document.querySelectorAll('#per button'), function(b){ b.classList.toggle('on', b.dataset.p === periodo); });
+    $('atual').textContent = 'Atualizando...';
+    api('GET').then(function(j){
+      dados = j; $('login').hidden = true; $('app').hidden = false; desenhar(j);
+      $('atual').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' · atualiza sozinho a cada minuto';
+      clearInterval(tTimer); tTimer = setInterval(carregar, 60000);
+    }).catch(function(e){
+      if (e.message === '401') return;
+      if (doLogin || $('app').hidden) { $('login').hidden = false; $('loginErro').textContent = e.message; }
+      else { $('atual').textContent = e.message; }
+    });
+  }
+
+  function barras(alvo, itens, total, vazio){
+    var el = $(alvo);
+    if (!itens.length) { el.innerHTML = '<p class="vazio">' + esc(vazio) + '</p>'; return; }
+    var max = Math.max.apply(null, itens.map(function(i){ return i[1]; }).concat([1]));
+    el.innerHTML = itens.map(function(i){
+      var w = Math.max(0, i[1] / max * 100), p = total ? pct(i[1], total) : null;
+      return '<div class="bar" data-tip="' + esc(i[0] + ': ' + num(i[1]) + (p !== null ? ' (' + String(p).replace('.', ',') + '%)' : '')) + '"><span class="rot">' + esc(i[0]) + '</span><span class="trilho"><span class="ench" style="width:' + w + '%"></span></span><span class="val">' + num(i[1]) + (p !== null ? ' <small>' + String(p).replace('.', ',') + '%</small>' : '') + '</span></div>';
+    }).join('');
+  }
+  function colunas(alvo, serie, rotulo, vazio){
+    var el = $(alvo);
+    if (!serie.length || !serie.some(function(s){ return s[1] > 0; })) { el.innerHTML = '<p class="vazio">' + esc(vazio) + '</p>'; return; }
+    var max = Math.max.apply(null, serie.map(function(s){ return s[1]; }).concat([1])), passo = Math.ceil(serie.length / 10);
+    el.innerHTML = '<div class="colunas">' + serie.map(function(s){
+      return '<div class="c" data-tip="' + esc(s[0].split('-').reverse().slice(0, 2).join('/') + ': ' + num(s[1]) + ' ' + rotulo) + '"><i style="height:' + (s[1] / max * 100) + '%"></i></div>';
+    }).join('') + '</div><div class="eixo">' + serie.map(function(s, i){ return '<span>' + (i % passo === 0 ? s[0].split('-').reverse().slice(0, 2).join('/') : '') + '</span>'; }).join('') + '</div>';
+  }
+  var ordena = function(o){ return Object.keys(o || {}).map(function(k){ return [k, o[k]]; }).sort(function(a, b){ return b[1] - a[1]; }); };
+
+  function desenhar(j){
+    var c = j.config, est = j.estat, v = j.vendas || [];
+    // configuração
+    var itens = [];
+    itens.push(j.config.webhook === 'ativo'
+      ? '<div class="it ok"><span class="dot">✓</span><div><b>Aviso de vendas ligado</b><p>A Abacate Pay avisa o site a cada PIX pago.</p></div></div>'
+      : '<div class="it falta"><span class="dot">!</span><div><b>Aviso de vendas ' + (j.config.webhook === 'desconhecido' ? 'não confirmado' : 'desligado') + '</b><p>Sem ele, a compra só chega ao Meta se o cliente voltar ao obrigado.</p><button class="pri" type="button" id="bWebhook">Ligar aviso de vendas</button></div></div>');
+    itens.push(c.meta
+      ? '<div class="it ok"><span class="dot">✓</span><div><b>Compras indo para o Meta' + (c.teste ? ' (modo teste)' : '') + '</b><p>Pela API de Conversões do pixel Workshop.</p></div></div>'
+      : '<div class="it falta"><span class="dot">!</span><div><b>Falta o token do Meta</b><p>Gere em Gerenciador de Eventos → pixel Workshop → Configurações → API de Conversões e salve como META_CAPI_TOKEN na Vercel.</p></div></div>');
+    itens.push(c.redis
+      ? '<div class="it ok"><span class="dot">✓</span><div><b>Estatísticas ligadas</b><p>Visitas, seções vistas e cliques estão sendo contados.</p></div></div>'
+      : '<div class="it falta"><span class="dot">!</span><div><b>Estatísticas desligadas</b><p>Na Vercel: projeto motion-code → Storage → Upstash Redis (gratuito) → conectar ao projeto.</p></div></div>');
+    $('cfg').innerHTML = itens.join('') + '<div id="manual"></div>';
+    var bw = $('bWebhook'); if (bw) bw.addEventListener('click', ligarWebhook);
+
+    // números
+    var fat = v.reduce(function(s, x){ return s + x.valor; }, 0), pessoas = est ? est.pessoas : 0;
+    var k = [
+      ['Vendas pagas', num(v.length), j.pixGerados ? num(j.pixGerados) + ' PIX gerados sem pagamento' : 'nenhum PIX pendente'],
+      ['Faturamento', brl(fat), v.length ? 'ticket médio ' + brl(fat / v.length) : '—'],
+      ['Pessoas no site', est ? num(pessoas) : '—', est ? num(est.tot.visitas || 0) + ' visitas' : 'estatísticas desligadas'],
+      ['Conversão', est && pessoas ? String(pct(v.length, pessoas)).replace('.', ',') + '%' : '—', 'vendas ÷ pessoas no site'],
+      ['Chegaram ao obrigado', est ? num(est.tot.obrigado || 0) : '—', 'clientes que voltaram depois do PIX'],
+    ];
+    $('kpis').innerHTML = k.map(function(x){ return '<div class="kpi"><div class="k">' + esc(x[0]) + '</div><b class="num">' + esc(x[1]) + '</b><small>' + esc(x[2]) + '</small></div>'; }).join('');
+
+    // vendas
+    $('tVendas').innerHTML = v.length ? v.map(function(x){
+      var cli = x.cliente, fone = cli && cli.fone ? String(cli.fone).replace(/\D/g, '') : '';
+      var cliHtml = cli ? '<b>' + esc(cli.nome || '—') + '</b><small>' + esc(cli.email || '') + '</small>' + (fone ? '<small><a href="https://wa.me/' + (fone.length <= 11 ? '55' : '') + fone + '" target="_blank" rel="noopener">' + esc(cli.fone) + '</a></small>' : '') : '<small>sem dados do cliente</small>';
+      var itensHtml = '<span class="tag">Ingresso ' + esc(x.lote || '') + '</span>' + x.bumps.map(function(b){ return '<span class="tag bump">' + esc(BUMPS[b] || b) + '</span>'; }).join('');
+      var o = x.origem || {}, origem = o.src || o.camp || o.cont ? esc(o.src || '—') + (o.camp ? '<small>' + esc(o.camp) + '</small>' : '') + (o.cont ? '<small>' + esc(o.cont) + '</small>' : '') : '<small>sem UTM</small>';
+      var meta = x.meta && x.meta.ok ? '<span class="st ok">✓ enviada</span><small>' + esc(x.meta.via === 'webhook' ? 'automática' : 'pelo painel') + '</small>'
+        : (x.meta ? '<span class="st no">! falhou</span><small>' + esc(x.meta.resposta || '') + '</small>' : '<span class="st no">não confirmada</span>');
+      if (!(x.meta && x.meta.ok) && x.podeMeta) meta += '<div><button type="button" data-meta="' + esc(x.pedido) + '" style="margin-top:6px">Enviar ao Meta</button></div>';
+      if (!(x.meta && x.meta.ok) && !x.podeMeta) meta += '<small>mais de 7 dias: o Meta não aceita</small>';
+      var d = new Date(x.pagoEm);
+      return '<tr><td class="num">' + d.toLocaleDateString('pt-BR') + '<small>' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '</small></td><td>' + cliHtml + '</td><td>' + itensHtml + '</td><td class="num"><b>' + brl(x.valor) + '</b></td><td>' + origem + '</td><td>' + meta + '</td></tr>';
+    }).join('') : '<tr><td colspan="6" class="vazio">Nenhuma venda paga neste período.</td></tr>';
+    [].forEach.call(document.querySelectorAll('[data-meta]'), function(b){ b.addEventListener('click', function(){ enviarMeta(b); }); });
+
+    // bônus
+    var cont = { aula: 0, moldes: 0, estilos: 0 };
+    v.forEach(function(x){ x.bumps.forEach(function(b){ if (b in cont) cont[b]++; }); });
+    barras('gBumps', Object.keys(cont).map(function(b){ return [BUMPS[b], cont[b]]; }), v.length, 'Sem vendas no período.');
+
+    // estatísticas
+    var semEst = 'Ligue as estatísticas (Upstash Redis) para ver este gráfico.';
+    if (!est) {
+      ['gFunil', 'gSecoes', 'gOrigens', 'gCampanhas', 'gDisp'].forEach(function(id){ barras(id, [], 0, semEst); });
+      colunas('gDias', [], '', semEst);
+    } else {
+      var f = est.funil;
+      barras('gFunil', [['Entraram no site', pessoas], ['Viram os ingressos', f.lotes], ['Clicaram em comprar', f.cta], ['Abriram a compra', f.modal], ['Clicaram em Pagar com PIX', f.pix], ['Pagaram', v.length]], pessoas, 'Ainda sem visitas no período.');
+      var vis = est.tot.visitas || 0;
+      barras('gSecoes', SECOES.map(function(s){ return [s[1], est.secoes[s[0]] || 0]; }), vis, 'Ainda sem visitas no período.');
+      barras('gOrigens', ordena(est.origens).slice(0, 12), vis, 'Ainda sem visitas no período.');
+      barras('gCampanhas', ordena(est.campanhas).slice(0, 12), vis, 'Nenhuma visita com utm_campaign ou utm_content no período.');
+      barras('gDisp', ordena(est.dispositivos), vis, 'Ainda sem visitas no período.');
+      colunas('gDias', est.porDia.map(function(d){ return [d.dia, d.pessoas]; }), 'pessoas', 'Ainda sem visitas no período.');
+    }
+    colunas('gVendasDia', (j.vendasPorDia || []).map(function(d){ return [d.dia, d.vendas]; }), 'vendas', 'Nenhuma venda paga no período.');
+  }
+
+  function ligarWebhook(){
+    var b = $('bWebhook'); b.disabled = true; b.textContent = 'Ligando...';
+    api('POST', { acao: 'webhook' }).then(function(r){
+      if (r.ok) { toast('Aviso de vendas ligado.'); carregar(); return; }
+      b.disabled = false; b.textContent = 'Ligar aviso de vendas';
+      var m = r.manual;
+      $('manual').innerHTML = '<div class="manual"><b>A chave da Abacate não tem permissão para criar o aviso. Crie à mão em 1 minuto:</b><p class="sub" style="margin:6px 0 10px">No painel da Abacate Pay → Webhooks → Criar. Use os dados abaixo e marque o evento <b>checkout.completed</b>.</p><span class="k">Nome</span><code>Motion Code · vendas</code><span class="k">URL</span><code>' + esc(m.endereco) + '</code><span class="k">Secret</span><code>' + esc(m.segredo) + '</code><button type="button" id="bConferir">Já criei, conferir</button></div>';
+      $('bConferir').addEventListener('click', function(){ carregar(); });
+    }).catch(function(e){ b.disabled = false; b.textContent = 'Ligar aviso de vendas'; if (e.message !== '401') toast(e.message); });
+  }
+  function enviarMeta(b){
+    b.disabled = true; b.textContent = 'Enviando...';
+    api('POST', { acao: 'meta', pedido: b.dataset.meta }).then(function(r){
+      toast(r.ok ? 'Compra enviada ao Meta.' : 'O Meta recusou: ' + r.resposta); carregar();
+    }).catch(function(e){ b.disabled = false; b.textContent = 'Enviar ao Meta'; if (e.message !== '401') toast(e.message); });
+  }
+
+  // dica ao passar o mouse nas barras
+  var tip = $('tip');
+  document.addEventListener('mousemove', function(e){
+    var el = e.target.closest && e.target.closest('[data-tip]');
+    if (!el) { tip.classList.remove('on'); return; }
+    tip.textContent = el.getAttribute('data-tip'); tip.style.left = e.clientX + 'px'; tip.style.top = e.clientY + 'px'; tip.classList.add('on');
+  });
+
+  if (senha) carregar(true); else sair('');
+})();
+</script>
+</body>
+</html>

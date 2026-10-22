@@ -70,7 +70,8 @@ const corta = (s, n) => String(s == null ? "" : s).slice(0, n);
 // o mesmo do pixel no obrigado, para o Meta não contar duas vezes.
 async function enviarCompraMeta(ck, cliente) {
   const token = process.env.META_CAPI_TOKEN;
-  if (!token) return { ok: false, resposta: "META_CAPI_TOKEN não configurado" };
+  // sem token, o webhook responde erro e a Abacate tenta de novo por até ~18 h
+  if (!token) return { ok: false, temporario: true, resposta: "META_CAPI_TOKEN não configurado" };
   const m = ck.metadata || {};
   const ud = { country: [sha("br")] };
   if (cliente && cliente.email) ud.em = [sha(cliente.email)];

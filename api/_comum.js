@@ -27,13 +27,21 @@ async function abacate(path, opts = {}) {
 }
 
 // Redis pela API REST da Upstash. Sem as variáveis, as estatísticas ficam desligadas.
-function redisLigado() {
-  return !!((process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL) && (process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN));
+// Aceita qualquer prefixo da integração da Vercel (KV_, STORAGE_, UPSTASH_REDIS_...).
+function redisCfg() {
+  const env = process.env;
+  let url = env.KV_REST_API_URL || env.UPSTASH_REDIS_REST_URL, token = env.KV_REST_API_TOKEN || env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) {
+    const k = Object.keys(env).find((n) => /_REST_API_URL$/.test(n) && env[n.replace(/_URL$/, "_TOKEN")]);
+    if (k) { url = env[k]; token = env[k.replace(/_URL$/, "_TOKEN")]; }
+  }
+  return url && token ? { url, token } : null;
 }
+function redisLigado() { return !!redisCfg(); }
 async function redis(cmds) {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token || !cmds.length) return null;
+  const cfg = redisCfg();
+  if (!cfg || !cmds.length) return null;
+  const { url, token } = cfg;
   const r = await fetch(url.replace(/\/$/, "") + "/pipeline", {
     method: "POST",
     headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },

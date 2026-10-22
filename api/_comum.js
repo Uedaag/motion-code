@@ -4,7 +4,7 @@
 const crypto = require("crypto");
 
 const ABACATE = "https://api.abacatepay.com/v2";
-const PIXEL = "1432467972410871";
+const PIXEL = "1312882030998403";
 const GRAPH = "https://graph.facebook.com/v23.0";
 const SITE = "https://workshopcode.uedaagency.com.br";
 

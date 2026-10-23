@@ -4,7 +4,7 @@
 const { redis, redisLigado, diaBR, corta } = require("./_comum");
 
 const TIPOS = ["visita", "secao", "cta", "modal", "pix", "obrigado"];
-const SECOES = ["palco", "apresentacao", "cliques", "portfolio", "feitos", "muda", "calculadora", "virada", "metodo", "comecar", "programa", "paraquem", "conduz", "aovivo", "lotes", "duvidas", "final"];
+const SECOES = ["vsl", "vslplay", "vsl25", "vsl50", "vsl75", "vsl100", "palco", "apresentacao", "cliques", "portfolio", "feitos", "muda", "calculadora", "virada", "metodo", "comecar", "programa", "paraquem", "conduz", "aovivo", "lotes", "duvidas", "final"];
 const VIDA = 34560000; // 400 dias
 
 const limpa = (s, n) => corta(s, n).toLowerCase().replace(/[^\p{L}\p{N} ._|:/-]/gu, "").trim();

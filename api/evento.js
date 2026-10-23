@@ -4,7 +4,7 @@
 const { redis, redisLigado, diaBR, corta } = require("./_comum");
 
 const TIPOS = ["visita", "secao", "cta", "modal", "pix", "obrigado"];
-const SECOES = ["palco", "apresentacao", "cliques", "portfolio", "feitos", "muda", "virada", "metodo", "comecar", "programa", "paraquem", "conduz", "lotes", "duvidas", "final"];
+const SECOES = ["palco", "apresentacao", "cliques", "portfolio", "feitos", "muda", "calculadora", "virada", "metodo", "comecar", "programa", "paraquem", "conduz", "aovivo", "lotes", "duvidas", "final"];
 const VIDA = 34560000; // 400 dias
 
 const limpa = (s, n) => corta(s, n).toLowerCase().replace(/[^\p{L}\p{N} ._|:/-]/gu, "").trim();
@@ -12,7 +12,8 @@ const limpa = (s, n) => corta(s, n).toLowerCase().replace(/[^\p{L}\p{N} ._|:/-]/
 module.exports = async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   if (req.method !== "POST") return res.status(405).end();
-  if (!redisLigado()) return res.status(204).end();
+  // só conta visitas do site oficial (prévias da Vercel não entram nas estatísticas)
+  if (!redisLigado() || (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== "production")) return res.status(204).end();
 
   let e = req.body;
   if (typeof e === "string") { try { e = JSON.parse(e); } catch (x) { e = null; } }

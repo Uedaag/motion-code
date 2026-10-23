@@ -324,6 +324,60 @@ body{margin:0;background:#0F0D13}
 #mcPf video{max-height:88vh;max-width:100%;border-radius:20px;background:#000}
 #mcPf button{position:absolute;right:18px;top:18px;width:46px;height:46px;border-radius:50%;border:1px solid #3a3045;background:#1C1823;color:#fff;font-size:22px;cursor:pointer}
 @media (max-width:820px){#mc .pf-it{width:72vw;max-width:290px}#mc .pf-nav{display:none}}
+/* abas por nicho */
+#mc .pf-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+#mc .pf-tabs button{font:600 14px "Instrument Sans",sans-serif;color:var(--ink2);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:10px 16px;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+#mc .pf-tabs button:hover{border-color:rgba(253,103,37,.6);color:var(--ink)}
+#mc .pf-tabs button.on{background:var(--acc);border-color:var(--acc);color:#140A05}
+#mc .pf-tabs + .pf-track{padding-top:26px}
+#mc .pf-it.foco .pf-ph{box-shadow:0 0 0 6px #0b0a0e,0 0 0 8px var(--acc),0 40px 80px -36px #000}
+#mc .pf-nota{margin:18px 0 0;font-size:13px;color:var(--mut)}
+@media (max-width:820px){#mc .pf-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-20px;padding-right:20px}#mc .pf-tabs::-webkit-scrollbar{display:none}#mc .pf-tabs button{flex:none}}
+/* calculadora */
+#mc .calc{margin-top:34px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px}
+#mc .calc-modos{display:inline-flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:4px;flex-wrap:wrap}
+#mc .calc-modos button{font:600 15px "Instrument Sans",sans-serif;color:var(--ink2);background:none;border:0;border-radius:10px;padding:11px 16px;cursor:pointer}
+#mc .calc-modos button.on{background:var(--acc);color:#140A05}
+#mc .calc-corpo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;margin-top:26px;align-items:stretch}
+#mc .calc-in{display:grid;gap:22px;align-content:start}
+#mc .calc-in[hidden]{display:none}
+#mc .campo{display:block}
+#mc .campo .rot{display:flex;justify-content:space-between;gap:12px;font:500 12px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+#mc .campo .rot b{font:600 24px/1 "Handjet",sans-serif;letter-spacing:0;color:var(--ink);text-transform:none}
+#mc .calc input[type=range]{width:100%;accent-color:var(--acc);height:28px;cursor:pointer}
+#mc .calc .qtd{display:flex;gap:8px;flex-wrap:wrap}
+#mc .calc .qtd button{min-width:52px;font:600 26px/1 "Handjet",sans-serif;color:var(--ink2);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+#mc .calc .qtd button.on{background:var(--acc);border-color:var(--acc);color:#140A05}
+#mc .calc-out{background:radial-gradient(120% 90% at 80% 0%,rgba(253,103,37,.16),transparent 60%),var(--bg);border:1px solid var(--line);border-radius:18px;padding:26px;display:flex;flex-direction:column;justify-content:center}
+#mc .calc-out .k{font:500 12px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+#mc .calc-out .big{font:600 clamp(58px,8vw,96px)/1 "Handjet",sans-serif;color:var(--acc);margin:10px 0 6px;font-variant-numeric:tabular-nums}
+#mc .calc-out .sub{color:var(--ink2);font-size:15px}
+#mc .calc-out .pill{align-self:flex-start;margin-top:18px;font:600 14px "Instrument Sans",sans-serif;color:var(--ink);background:rgba(253,103,37,.12);border:1px solid rgba(253,103,37,.45);border-radius:99px;padding:9px 14px}
+#mc .calc .aviso{margin:20px 0 0;font-size:13px;color:var(--mut)}
+@media (max-width:820px){#mc .calc{padding:20px}#mc .calc-corpo{grid-template-columns:1fr}#mc .calc-modos{display:flex}#mc .calc-modos button{flex:1;padding:11px 10px;font-size:14px}}
+/* ao vivo x gravado */
+#mc .vs{margin-top:34px;display:grid;grid-template-columns:minmax(0,1.1fr) repeat(2,minmax(0,1fr)) minmax(0,1.25fr);border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--card)}
+#mc .vs>div{padding:16px 18px;border-top:1px solid var(--line);font-size:14.5px;color:var(--ink2)}
+#mc .vs .cab{border-top:0;font:500 12px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);padding-top:20px;padding-bottom:14px}
+#mc .vs .cab.ao{color:var(--acc)}
+#mc .vs .crit{color:var(--ink);font-weight:600}
+#mc .vs .ao{background:rgba(253,103,37,.08);color:var(--ink);border-left:1px solid rgba(253,103,37,.45);border-right:0}
+#mc .vs>div[role=cell]{display:flex;gap:9px;align-items:flex-start}
+#mc .vs .ic{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font:700 12px/1 "Instrument Sans",sans-serif;margin-top:1px;flex:none}
+#mc .vs .sim{background:var(--ok);color:#06210F}
+#mc .vs .nao{background:#3a3445;color:var(--ink2)}
+#mc .vs .talvez{background:#5a4a2a;color:#F5D58A}
+#mc .vs .vazio{padding:0;border-top:0}
+#mc .vs-cta{margin-top:30px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+#mc .vs-cta p{margin:0;color:var(--mut);font-size:14px}
+@media (max-width:820px){
+ #mc .vs{grid-template-columns:repeat(3,minmax(0,1fr))}
+ #mc .vs .cab.c0{display:none}
+ #mc .vs .crit{grid-column:1/-1;background:var(--bg2);padding:12px 14px}
+ #mc .vs>div{padding:12px 10px;font-size:12.5px;line-height:1.4}
+ #mc .vs>div[role=cell]{flex-direction:column;gap:6px}
+ #mc .vs .cab{font-size:10px;letter-spacing:.06em;padding:14px 10px 10px}
+}
 </style>
 <!-- Meta Pixel - Workshop -->
 <script>
@@ -424,42 +478,76 @@ fbq('track', 'PageView');
 <section class="pf" id="portfolio"><div class="wrap">
  <div class="pf-head">
   <div>
-   <div class="kick rv">Portfólio</div>
-   <h3 class="t rv">Veja o que você vai aprender a fazer.</h3>
-   <p class="lead rv">Vídeos de verdade, feitos para marcas de verdade, com o mesmo processo que você vai ver no workshop. Toque em "tela cheia" para assistir com som.</p>
+   <div class="kick rv">Para cada negócio</div>
+   <h3 class="t rv">Um vídeo para cada tipo de negócio.</h3>
+   <p class="lead rv">O mesmo processo, com a cara de cada cliente. Toque num nicho para ver o vídeo e em "tela cheia" para ouvir com som.</p>
   </div>
   <div class="pf-nav rv"><button type="button" data-d="-1" aria-label="Vídeo anterior">←</button><button type="button" data-d="1" aria-label="Próximo vídeo">→</button></div>
+ </div>
+ <div class="pf-tabs rv" id="mcPfTabs" role="tablist" aria-label="Escolha um nicho">
+  <button type="button" role="tab" data-n="restaurante" class="on" aria-selected="true">Restaurante</button>
+  <button type="button" role="tab" data-n="clinica" aria-selected="false">Clínica e estética</button>
+  <button type="button" role="tab" data-n="academia" aria-selected="false">Academia</button>
+  <button type="button" role="tab" data-n="loja" aria-selected="false">Loja</button>
+  <button type="button" role="tab" data-n="infoproduto" aria-selected="false">Infoproduto e eventos</button>
+  <button type="button" role="tab" data-n="agencia" aria-selected="false">Agência</button>
  </div>
  <div class="pf-track" id="mcPfTrack">
   <!--
     PARA ADICIONAR UM VÍDEO: copie um bloco <article class="pf-it"> abaixo,
-    coloque o arquivo em assets/ (ex.: pf-nome.mp4 e pf-nome.jpg) e troque título, tags e texto.
+    coloque o arquivo em assets/ (ex.: pf-nome.mp4 e pf-nome.jpg), troque título, tags e texto
+    e, se for um nicho novo, crie a aba correspondente em #mcPfTabs com o mesmo data-n.
   -->
-  <article class="pf-it rv">
-   <div class="pf-ph"><video poster="assets/pf-cada.jpg" muted loop playsinline preload="none"><source src="assets/pf-cada.mp4" type="video/mp4"></video>
+  <article class="pf-it rv" data-nicho="restaurante">
+   <div class="pf-ph"><video poster="assets/nicho-restaurante.jpg" muted loop playsinline preload="none"><source src="assets/nicho-restaurante.mp4" type="video/mp4"></video>
     <button class="pf-full" type="button">⤢ tela cheia</button>
     <button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div>
-   <div class="pf-meta"><div class="tg"><span>9:16</span><span>Reels</span><span>Convite de evento</span></div>
-    <h4>CADA · Câmbio Automático das Américas</h4>
-    <p>Convite para workshop técnico: personagem recortado, texto cinético, lista de tópicos e vinheta da marca no fim.</p></div>
+   <div class="pf-meta"><div class="tg"><span>Restaurante</span><span>9:16</span><span>Cupom de delivery</span></div>
+    <h4>Burger do Bairro · cupom de delivery</h4>
+    <p>O pedido: "cupom de 15% para o delivery, o código sendo digitado, confete e um botão de pedir agora".</p></div>
   </article>
-  <article class="pf-it rv">
+  <article class="pf-it rv" data-nicho="clinica">
+   <div class="pf-ph"><video poster="assets/nicho-clinica.jpg" muted loop playsinline preload="none"><source src="assets/nicho-clinica.mp4" type="video/mp4"></video>
+    <button class="pf-full" type="button">⤢ tela cheia</button>
+    <button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div>
+   <div class="pf-meta"><div class="tg"><span>Clínica e estética</span><span>9:16</span><span>Agenda aberta</span></div>
+    <h4>Clínica Lírio · agenda aberta</h4>
+    <p>O pedido: "carimbo de agenda aberta, três serviços com preço e um botão para chamar no WhatsApp".</p></div>
+  </article>
+  <article class="pf-it rv" data-nicho="academia">
+   <div class="pf-ph"><video poster="assets/nicho-academia.jpg" muted loop playsinline preload="none"><source src="assets/nicho-academia.mp4" type="video/mp4"></video>
+    <button class="pf-full" type="button">⤢ tela cheia</button>
+    <button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div>
+   <div class="pf-meta"><div class="tg"><span>Academia</span><span>9:16</span><span>Texto cinético</span></div>
+    <h4>Força Total · chamada para treinar</h4>
+    <p>O pedido: "frases batendo na tela, uma de cada vez, e o convite para a primeira aula no final".</p></div>
+  </article>
+  <article class="pf-it rv" data-nicho="loja">
    <div class="pf-ph"><video poster="assets/pf-tenis.jpg" muted loop playsinline preload="none"><source src="assets/pf-tenis.mp4" type="video/mp4"></video>
     <button class="pf-full" type="button">⤢ tela cheia</button>
     <button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div>
-   <div class="pf-meta"><div class="tg"><span>9:16</span><span>Reels</span><span>Anúncio de produto</span></div>
+   <div class="pf-meta"><div class="tg"><span>Loja</span><span>9:16</span><span>Anúncio de produto</span></div>
     <h4>Anúncio de tênis · 5 vantagens</h4>
     <p>Produto em destaque, texto cinético com brilho, contador de cenas e uma vantagem por tela: conforto, leveza, durabilidade e ajuste.</p></div>
   </article>
-  <article class="pf-it rv">
+  <article class="pf-it rv" data-nicho="infoproduto">
+   <div class="pf-ph"><video poster="assets/pf-cada.jpg" muted loop playsinline preload="none"><source src="assets/pf-cada.mp4" type="video/mp4"></video>
+    <button class="pf-full" type="button">⤢ tela cheia</button>
+    <button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div>
+   <div class="pf-meta"><div class="tg"><span>Infoproduto e eventos</span><span>9:16</span><span>Convite de evento</span></div>
+    <h4>CADA · Câmbio Automático das Américas</h4>
+    <p>Convite para workshop técnico: personagem recortado, texto cinético, lista de tópicos e vinheta da marca no fim.</p></div>
+  </article>
+  <article class="pf-it rv" data-nicho="agencia">
    <div class="pf-ph"><video poster="assets/pf-ueda-reels.jpg" muted loop playsinline preload="none"><source src="assets/pf-ueda-reels.mp4" type="video/mp4"></video>
     <button class="pf-full" type="button">⤢ tela cheia</button>
     <button class="snd" type="button" aria-label="Ativar som"><span class="bars"><i></i><i></i><i></i></span><span class="lb">Ouvir com som</span></button></div>
-   <div class="pf-meta"><div class="tg"><span>9:16</span><span>Reels</span><span>Captação de clientes</span></div>
+   <div class="pf-meta"><div class="tg"><span>Agência</span><span>9:16</span><span>Captação de clientes</span></div>
     <h4>Ueda Agency · Reels de captação</h4>
     <p>Feed simulado, mira, contador, números subindo e o antes e depois da edição, tudo com a identidade da agência.</p></div>
   </article>
  </div>
+ <p class="pf-nota rv">Burger do Bairro, Clínica Lírio e Força Total são marcas fictícias, criadas para os exemplos.</p>
 </div></section>
 <div id="mcPf" role="dialog" aria-modal="true" aria-label="Vídeo do portfólio"><button type="button" aria-label="Fechar">×</button><video controls playsinline></video></div>
 
@@ -489,6 +577,37 @@ fbq('track', 'PageView');
   <div class="cd rv"><div class="n">02</div><h4>Texto</h4><p><span class="from">Letras distorcidas do vídeo IA.</span><br>Cada letra e cor exatas da sua marca.</p></div>
   <div class="cd rv"><div class="n">03</div><h4>Volume</h4><p><span class="from">Dois criativos por mês.</span><br>Um molde que gera dezenas de versões.</p></div>
   <div class="cd rv"><div class="n">04</div><h4>Controle</h4><p><span class="from">"Preciso pedir para alguém."</span><br>Você dirige a sua produção.</p></div>
+ </div>
+</div></section>
+<!-- CALCULADORA: quanto vale saber fazer motion (dois modos) -->
+<section class="blk" id="calculadora"><div class="wrap">
+ <div class="kick rv">Faça a conta</div>
+ <h3 class="t rv">Quanto vale saber fazer motion?</h3>
+ <p class="lead rv">Escolha o seu caso e mexa nos números. Comece pelo exemplo e troque pelos seus.</p>
+ <div class="calc rv" id="mcCalc">
+  <div class="calc-modos" role="tablist" aria-label="Escolha o seu caso">
+   <button type="button" role="tab" data-m="cli" class="on" aria-selected="true">Vou vender para clientes</button>
+   <button type="button" role="tab" data-m="neg" aria-selected="false">Uso no meu negócio</button>
+  </div>
+  <div class="calc-corpo">
+   <div class="calc-in" data-p="cli">
+    <div class="campo"><span class="rot">Clientes por mês</span><div class="qtd" role="group" aria-label="Clientes por mês"><button type="button" data-q="1">1</button><button type="button" data-q="2">2</button><button type="button" data-q="3" class="on">3</button><button type="button" data-q="5">5</button><button type="button" data-q="8">8</button></div></div>
+    <label class="campo"><span class="rot">Vídeos por cliente no mês <b data-v="cVid">4</b></span><input type="range" id="cVid" min="1" max="12" step="1" value="4"></label>
+    <label class="campo"><span class="rot">Quanto você cobra por vídeo <b data-v="cPreco">R$ 150</b></span><input type="range" id="cPreco" min="50" max="600" step="10" value="150"></label>
+   </div>
+   <div class="calc-in" data-p="neg" hidden>
+    <label class="campo"><span class="rot">Vídeos que você precisa por mês <b data-v="nVid">8</b></span><input type="range" id="nVid" min="2" max="40" step="1" value="8"></label>
+    <label class="campo"><span class="rot">Quanto um editor cobra por vídeo <b data-v="nEditor">R$ 200</b></span><input type="range" id="nEditor" min="50" max="800" step="10" value="200"></label>
+    <label class="campo"><span class="rot">Horas que você levaria editando cada um <b data-v="nHoras">3 h</b></span><input type="range" id="nHoras" min="1" max="8" step="1" value="3"></label>
+   </div>
+   <div class="calc-out" aria-live="polite">
+    <div class="k" id="cRot">Faturamento por mês</div>
+    <div class="big" id="cVal">R$ 1.800</div>
+    <div class="sub" id="cSub">3 clientes × 4 vídeos × R$ 150</div>
+    <div class="pill" id="cPill">1 cliente paga o workshop 16 vezes</div>
+   </div>
+  </div>
+  <p class="aviso">Simulação com os números que você escolheu. Não é promessa de ganho: o resultado depende do seu trabalho, do seu preço e do seu mercado.</p>
  </div>
 </div></section>
 
@@ -571,6 +690,52 @@ fbq('track', 'PageView');
    <div class="stats"><div><b data-to="15" data-suf="+">15+</b><span>anos de design</span></div><div><b data-to="500" data-suf="+">500+</b><span>clientes atendidos</span></div><div><b data-to="4">4</b><span>produtos digitais próprios</span></div></div>
   </div>
  </div>
+</div></section>
+
+<!-- AO VIVO x GRAVADO -->
+<section class="blk" id="aovivo"><div class="wrap">
+ <div class="kick rv">Por que ao vivo</div>
+ <h3 class="t rv">Curso gravado você assiste. Ao vivo você faz junto.</h3>
+ <p class="lead rv">Ferramenta de IA muda toda semana. Ao vivo, a Magda mostra na versão de hoje, responde na hora e você sai com o vídeo feito.</p>
+ <div class="vs rv" role="table" aria-label="Comparação entre tutorial solto, curso gravado e workshop ao vivo">
+  <div class="cab c0" role="columnheader"></div><div class="cab" role="columnheader">Tutorial solto</div><div class="cab" role="columnheader">Curso gravado</div><div class="cab ao" role="columnheader">Workshop ao vivo</div>
+
+  <div class="crit" role="rowheader">Faz junto, no mesmo ritmo</div>
+  <div role="cell"><span class="ic nao" aria-label="Não">✕</span>Você pausa e tenta copiar</div>
+  <div role="cell"><span class="ic nao" aria-label="Não">✕</span>Você assiste sozinho</div>
+  <div class="ao" role="cell"><span class="ic sim" aria-label="Sim">✓</span>Passo a passo, junto com a Magda</div>
+
+  <div class="crit" role="rowheader">Tira a dúvida na hora</div>
+  <div role="cell"><span class="ic nao" aria-label="Não">✕</span>Comentário sem resposta</div>
+  <div role="cell"><span class="ic talvez" aria-label="Depende">~</span>Fica para o fórum ou o e-mail</div>
+  <div class="ao" role="cell"><span class="ic sim" aria-label="Sim">✓</span>Você pergunta e a resposta vem na hora</div>
+
+  <div class="crit" role="rowheader">Ferramentas na versão de hoje</div>
+  <div role="cell"><span class="ic talvez" aria-label="Depende">~</span>Pode estar desatualizado</div>
+  <div role="cell"><span class="ic talvez" aria-label="Depende">~</span>Gravado meses antes</div>
+  <div class="ao" role="cell"><span class="ic sim" aria-label="Sim">✓</span>Mostrado ao vivo, na versão atual</div>
+
+  <div class="crit" role="rowheader">Vê o erro e como resolver</div>
+  <div role="cell"><span class="ic nao" aria-label="Não">✕</span>Editado para parecer perfeito</div>
+  <div role="cell"><span class="ic nao" aria-label="Não">✕</span>O erro fica na edição</div>
+  <div class="ao" role="cell"><span class="ic sim" aria-label="Sim">✓</span>Sem cortes: o erro aparece e se resolve na sua frente</div>
+
+  <div class="crit" role="rowheader">Sai com o primeiro vídeo pronto</div>
+  <div role="cell"><span class="ic nao" aria-label="Não">✕</span>Se você conseguir sozinho</div>
+  <div role="cell"><span class="ic talvez" aria-label="Depende">~</span>Depende de você terminar</div>
+  <div class="ao" role="cell"><span class="ic sim" aria-label="Sim">✓</span>Feito durante a aula, com garantia</div>
+
+  <div class="crit" role="rowheader">Ajuda depois</div>
+  <div role="cell"><span class="ic nao" aria-label="Não">✕</span>Nenhuma</div>
+  <div role="cell"><span class="ic talvez" aria-label="Depende">~</span>Varia de curso para curso</div>
+  <div class="ao" role="cell"><span class="ic sim" aria-label="Sim">✓</span>Grupo até o seu vídeo rodar</div>
+
+  <div class="crit" role="rowheader">Rever depois</div>
+  <div role="cell"><span class="ic sim" aria-label="Sim">✓</span>Quando quiser</div>
+  <div role="cell"><span class="ic sim" aria-label="Sim">✓</span>Quando quiser</div>
+  <div class="ao" role="cell"><span class="ic sim" aria-label="Sim">✓</span>Replay por 72 horas ou a aula gravada</div>
+ </div>
+ <div class="vs-cta rv"><a href="#lotes" class="btn">Quero fazer junto com a Magda</a><p>Ao vivo · 29/10 · 20h · garantia de 7 dias</p></div>
 </div></section>
 
 <!-- LOTES -->
@@ -803,6 +968,14 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
 /* portfólio: setas, tela cheia com som */
 (function(){var tr=document.getElementById('mcPfTrack');if(!tr)return;
   document.querySelectorAll('#portfolio .pf-nav button').forEach(function(b){b.addEventListener('click',function(){var it=tr.querySelector('.pf-it');tr.scrollBy({left:(+b.dataset.d)*((it?it.offsetWidth:300)+22),behavior:'smooth'})})});
+  /* abas por nicho: levam o vídeo do nicho para o começo da faixa e acompanham a rolagem */
+  var tabs=[].slice.call(document.querySelectorAll('#mcPfTabs button')),its=[].slice.call(tr.querySelectorAll('.pf-it')),auto=0,rq=0;
+  function marca(n){tabs.forEach(function(t){var on=t.dataset.n===n;t.classList.toggle('on',on);t.setAttribute('aria-selected',on)});its.forEach(function(it){it.classList.toggle('foco',it.dataset.nicho===n)})}
+  tabs.forEach(function(t){t.addEventListener('click',function(){var it=tr.querySelector('.pf-it[data-nicho="'+t.dataset.n+'"]');if(!it)return;marca(t.dataset.n);auto=Date.now();
+    tr.scrollTo({left:it.offsetLeft-tr.offsetLeft-4,behavior:reduce?'auto':'smooth'});var row=t.parentNode;row.scrollTo({left:t.offsetLeft-row.offsetLeft-20,behavior:'smooth'})})});
+  tr.addEventListener('scroll',function(){if(rq||Date.now()-auto<800)return;rq=requestAnimationFrame(function(){rq=0;var x=tr.scrollLeft,best=null,d=1e9;
+    its.forEach(function(it){var dd=Math.abs(it.offsetLeft-tr.offsetLeft-4-x);if(dd<d){d=dd;best=it}});if(best)marca(best.dataset.nicho)})},{passive:true});
+  if(tabs.length)marca(tabs[0].dataset.n);
   var bx=document.getElementById('mcPf'),bv=bx.querySelector('video');
   function fecha(){bx.classList.remove('on');bv.pause();bv.removeAttribute('src');bv.load();document.body.style.overflow=''}
   tr.querySelectorAll('.pf-full').forEach(function(b){b.addEventListener('click',function(){var v=b.parentNode.querySelector('video');
@@ -811,6 +984,36 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
   bx.querySelector('button').addEventListener('click',fecha);
   bx.addEventListener('click',function(e){if(e.target===bx)fecha()});
   addEventListener('keydown',function(e){if(e.key==='Escape'&&bx.classList.contains('on'))fecha()})})();
+
+/* calculadora: dois modos, com o número contando até o resultado */
+(function(){var c=document.getElementById('mcCalc');if(!c)return;
+  var $=function(id){return document.getElementById(id)},modo='cli',qtd=3,atual=0,raf=0;
+  var loteEl=document.querySelector('#mc .lote.on .pr'),lote=loteEl?parseInt(loteEl.textContent.replace(/\D/g,''),10)||37:37;
+  var brl=function(v){return 'R$ '+Math.round(v).toLocaleString('pt-BR')};
+  var fim=0;
+  function anima(alvo){cancelAnimationFrame(raf);clearTimeout(fim);if(reduce){atual=alvo;$('cVal').textContent=brl(alvo);return}var de=atual,t0=null;
+    fim=setTimeout(function(){cancelAnimationFrame(raf);atual=alvo;$('cVal').textContent=brl(alvo)},520); /* garante o valor final mesmo com a aba em segundo plano */
+    raf=requestAnimationFrame(function p(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/450),e=1-Math.pow(1-k,3);atual=de+(alvo-de)*e;$('cVal').textContent=brl(atual);if(k<1)raf=requestAnimationFrame(p)})}
+  function conta(){
+    c.querySelectorAll('[data-v]').forEach(function(b){var v=+$(b.dataset.v).value;b.textContent=/Preco|Editor/.test(b.dataset.v)?brl(v):b.dataset.v==='nHoras'?v+' h':v});
+    if(modo==='cli'){var vid=+$('cVid').value,pr=+$('cPreco').value,porCli=vid*pr,vezes=Math.floor(porCli/lote);
+      $('cRot').textContent='Faturamento por mês';
+      $('cSub').textContent=qtd+(qtd>1?' clientes':' cliente')+' × '+vid+(vid>1?' vídeos':' vídeo')+' × '+brl(pr);
+      $('cPill').textContent=vezes>=2?'1 cliente paga o workshop '+vezes+' vezes':vezes===1?'1 cliente já paga o workshop':'Aumente o preço ou os vídeos para pagar o workshop';
+      anima(qtd*porCli)}
+    else{var nv=+$('nVid').value,ed=+$('nEditor').value,h=+$('nHoras').value;
+      $('cRot').textContent='Fica no seu caixa por mês';
+      $('cSub').textContent=nv+(nv>1?' vídeos':' vídeo')+' × '+brl(ed)+' que você deixa de pagar a um editor';
+      $('cPill').textContent='e até '+(nv*h)+' horas de edição a menos no mês';
+      anima(nv*ed)}
+  }
+  c.querySelectorAll('.calc-modos button').forEach(function(b){b.addEventListener('click',function(){modo=b.dataset.m;
+    c.querySelectorAll('.calc-modos button').forEach(function(o){var on=o===b;o.classList.toggle('on',on);o.setAttribute('aria-selected',on)});
+    c.querySelectorAll('.calc-in').forEach(function(p){p.hidden=p.dataset.p!==modo});conta()})});
+  c.querySelectorAll('.qtd button').forEach(function(b){b.addEventListener('click',function(){qtd=+b.dataset.q;c.querySelectorAll('.qtd button').forEach(function(o){o.classList.toggle('on',o===b)});conta()})});
+  c.querySelectorAll('input[type=range]').forEach(function(i){i.addEventListener('input',conta)});
+  conta();
+})();
 })();
 </script>
 <script>
@@ -835,7 +1038,7 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
   if(!ss.v){ss.v=1;guarda();var mc=document.getElementById('mc');
     mcEvento('visita',{src:ss.o.src,camp:ss.o.camp,cont:ss.o.cont,ref:ss.o.ref,dev:matchMedia('(max-width:820px)').matches?'celular':'computador',perfil:mc?mc.getAttribute('data-p'):''})}
   /* seções: conta quando a seção passa pelo meio da tela, uma vez por sessão */
-  var nomes=['palco','apresentacao','cliques','portfolio','feitos','muda','virada','metodo','comecar','programa','paraquem','conduz','lotes','duvidas','final'];
+  var nomes=['palco','apresentacao','cliques','portfolio','feitos','muda','calculadora','virada','metodo','comecar','programa','paraquem','conduz','aovivo','lotes','duvidas','final'];
   var els=[document.getElementById('mcStage')].concat([].slice.call(document.querySelectorAll('#mc main > section')));
   if(!('IntersectionObserver' in window)||els.length!==nomes.length||!els[0])return;
   ss.s=ss.s||{};

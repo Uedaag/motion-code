@@ -154,7 +154,7 @@ td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
   var brl = function(v){ return 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
   var num = function(v){ return Number(v || 0).toLocaleString('pt-BR'); };
   var pct = function(a, b){ return b ? Math.round(a / b * 1000) / 10 : 0; };
-  var SECOES = [['palco','Vídeo de abertura'],['apresentacao','Apresentação e preço'],['cliques','Poucos cliques'],['portfolio','Portfólio'],['feitos','Feito com Motion Code'],['muda','O que muda'],['virada','A virada'],['metodo','Método 3 Takes'],['comecar','Antes de começar'],['programa','Programa'],['paraquem','Para quem é'],['conduz','Quem conduz'],['lotes','Ingressos'],['duvidas','Perguntas frequentes'],['final','Chamada final']];
+  var SECOES = [['palco','Vídeo de abertura'],['apresentacao','Apresentação e preço'],['cliques','Poucos cliques'],['portfolio','Vídeos por nicho'],['feitos','Feito com Motion Code'],['muda','O que muda'],['calculadora','Calculadora'],['virada','A virada'],['metodo','Método 3 Takes'],['comecar','Antes de começar'],['programa','Programa'],['paraquem','Para quem é'],['conduz','Quem conduz'],['aovivo','Ao vivo × gravado'],['lotes','Ingressos'],['duvidas','Perguntas frequentes'],['final','Chamada final']];
   var BUMPS = { aula: 'Aula gravada', moldes: 'Biblioteca de Moldes', estilos: 'Mesa de Estilos' };
   var senha = '', periodo = '7', dados = null, tTimer = 0;
   try { senha = sessionStorage.getItem('mc-adm') || ''; periodo = localStorage.getItem('mc-adm-per') || '7'; } catch (e) {}

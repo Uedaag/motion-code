@@ -3,6 +3,14 @@
 // Variável de ambiente necessária na Vercel: ABACATEPAY_API_KEY
 
 const API = "https://api.abacatepay.com/v2";
+const { redis } = require("./_comum");
+
+// Afiliado que trouxe o comprador: só vale se estiver cadastrado no painel
+async function afiliadoValido(af) {
+  af = String(af || "").toLowerCase();
+  if (!/^[a-z0-9-]{2,40}$/.test(af)) return "";
+  try { const r = await redis([["HEXISTS", "mc:af", af]]); return r === null || r[0] ? af : ""; } catch (e) { return af; }
+}
 
 // Lotes: válidos até a data indicada (horário de Brasília)
 const LOTES = [
@@ -115,12 +123,14 @@ module.exports = async (req, res) => {
       externalId: pedidoId,
       metadata: { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum", ...rastreio(req, pedido) },
     };
+    const af = await afiliadoValido(pedido && pedido.af);
+    if (af) corpo.metadata.af = af;
     let b;
     try { b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) }); }
     catch (e) {
       // se a Abacate recusar os dados extras, a venda segue só com o essencial
       console.error("[checkout] metadata completo recusado:", e.message);
-      corpo.metadata = { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum" };
+      corpo.metadata = { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum", ...(af ? { af } : {}) };
       b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) });
     }
     return res.status(200).json({ url: b.data.url, pedido: pedidoId });

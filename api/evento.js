@@ -3,7 +3,7 @@
 
 const { redis, redisLigado, diaBR, corta } = require("./_comum");
 
-const TIPOS = ["visita", "secao", "cta", "modal", "pix", "obrigado"];
+const TIPOS = ["visita", "secao", "cta", "modal", "pix", "obrigado", "afiliado"];
 const SECOES = ["vsl", "vslplay", "vsl25", "vsl50", "vsl75", "vsl100", "palco", "apresentacao", "cliques", "portfolio", "feitos", "muda", "calculadora", "virada", "metodo", "comecar", "programa", "paraquem", "conduz", "aovivo", "lotes", "duvidas", "final"];
 const VIDA = 34560000; // 400 dias
 
@@ -33,6 +33,13 @@ module.exports = async (req, res) => {
     if (camp || cont) soma("mc:c:" + d, (camp || "sem campanha") + " | " + (cont || "sem anúncio"));
     soma("mc:dev:" + d, e.dev === "celular" ? "celular" : "computador");
     if (e.perfil) soma("mc:p:" + d, limpa(e.perfil, 30));
+  } else if (e.t === "afiliado") {
+    // chegada pelo link de um afiliado cadastrado no painel
+    const af = String(e.af || "").toLowerCase();
+    if (!/^[a-z0-9-]{2,40}$/.test(af)) return res.status(400).end();
+    try { const r = await redis([["HEXISTS", "mc:af", af]]); if (!r || !r[0]) return res.status(204).end(); } catch (x) { return res.status(204).end(); }
+    soma("mc:afv:" + d, af);
+    unico("mc:afu:" + d + ":" + af);
   } else if (e.t === "secao") {
     if (!SECOES.includes(e.s)) return res.status(400).end();
     soma("mc:s:" + d, e.s);

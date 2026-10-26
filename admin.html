@@ -68,6 +68,17 @@ td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top;font
 td small{display:block;color:var(--mut);font-size:12.5px}
 td .tag{display:inline-block;font:600 11.5px "Instrument Sans";padding:2px 8px;border-radius:99px;background:var(--card2);border:1px solid var(--line);margin:2px 4px 0 0}
 td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
+td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);color:var(--ink);margin:0 0 4px}
+.af-form{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.af-form label{display:block;font:500 11px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.af-form input{display:block;margin-top:6px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:500 15px "Instrument Sans",sans-serif;padding:10px 12px;outline:none;width:240px;text-transform:none;letter-spacing:0}
+.af-form input#afCom{width:110px}
+.af-form input:focus{border-color:var(--acc)}
+.af-ok{background:rgba(61,214,140,.08);border:1px solid rgba(61,214,140,.45);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:14px}
+.af-ok code,.af-tab code{font:500 12.5px "JetBrains Mono",monospace;color:var(--ink);word-break:break-all}
+.af-tab{min-width:760px}
+.af-tab .lnk{display:flex;gap:8px;align-items:center}
+.af-tab button{padding:6px 10px;font-size:12.5px}
 .st{font-size:12.5px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
 .st.ok{color:var(--ok)}.st.no{color:var(--alerta)}
 .vazio{color:var(--mut);padding:22px 4px;text-align:center}
@@ -126,6 +137,17 @@ td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
   <h2>Vendas</h2>
   <p class="sub">Direto da Abacate Pay. A coluna Meta mostra se a compra já foi avisada à campanha.</p>
   <div class="tab"><table><thead><tr><th>Pago em</th><th>Cliente</th><th>Itens</th><th>Valor</th><th>Origem</th><th>Meta</th></tr></thead><tbody id="tVendas"></tbody></table></div>
+ </section>
+ <section class="bloco" id="blocoAf">
+  <h2>Afiliados</h2>
+  <p class="sub">Cadastre o afiliado e mande o link para ele. Quem entra pelo link fica marcado por 30 dias, e toda compra dessa pessoa aparece aqui no nome dele.</p>
+  <form class="af-form" id="fAf">
+   <label>Nome do afiliado<input type="text" id="afNome" maxlength="60" placeholder="Ex.: João Silva" required></label>
+   <label>Comissão (%)<input type="text" id="afCom" inputmode="decimal" maxlength="5" placeholder="Ex.: 40"></label>
+   <button class="pri" type="submit" id="afCriar">Criar link</button>
+  </form>
+  <div id="afNovo"></div>
+  <div class="tab"><table class="af-tab"><thead><tr><th>Afiliado</th><th>Link</th><th>Visitas</th><th>Vendas</th><th>Faturamento</th><th>A pagar</th><th></th></tr></thead><tbody id="tAf"></tbody></table></div>
  </section>
  <div class="dois linha-blocos">
   <section class="bloco"><h2>Funil</h2><p class="sub">Pessoas diferentes em cada etapa no período.</p><div class="barras" id="gFunil"></div></section>
@@ -238,6 +260,7 @@ td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
       var cliHtml = cli ? '<b>' + esc(cli.nome || '—') + '</b><small>' + esc(cli.email || '') + '</small>' + (fone ? '<small><a href="https://wa.me/' + (fone.length <= 11 ? '55' : '') + fone + '" target="_blank" rel="noopener">' + esc(cli.fone) + '</a></small>' : '') : '<small>sem dados do cliente</small>';
       var itensHtml = '<span class="tag">Ingresso ' + esc(x.lote || '') + '</span>' + x.bumps.map(function(b){ return '<span class="tag bump">' + esc(BUMPS[b] || b) + '</span>'; }).join('');
       var o = x.origem || {}, origem = o.src || o.camp || o.cont ? esc(o.src || '—') + (o.camp ? '<small>' + esc(o.camp) + '</small>' : '') + (o.cont ? '<small>' + esc(o.cont) + '</small>' : '') : '<small>sem UTM</small>';
+      if (x.afiliado) origem = '<span class="tag af">Afiliado · ' + esc(x.afiliado.nome) + '</span>' + origem;
       var meta = x.meta && x.meta.ok ? '<span class="st ok">✓ enviada</span><small>' + esc(x.meta.via === 'webhook' ? 'automática' : 'pelo painel') + '</small>'
         : (x.meta ? '<span class="st no">! falhou</span><small>' + esc(x.meta.resposta || '') + '</small>' : '<span class="st no">não confirmada</span>');
       if (!(x.meta && x.meta.ok) && x.podeMeta) meta += '<div><button type="button" data-meta="' + esc(x.pedido) + '" style="margin-top:6px">Enviar ao Meta</button></div>';
@@ -246,6 +269,7 @@ td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
       return '<tr><td class="num">' + d.toLocaleDateString('pt-BR') + '<small>' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '</small></td><td>' + cliHtml + '</td><td>' + itensHtml + '</td><td class="num"><b>' + brl(x.valor) + '</b></td><td>' + origem + '</td><td>' + meta + '</td></tr>';
     }).join('') : '<tr><td colspan="6" class="vazio">Nenhuma venda paga neste período.</td></tr>';
     [].forEach.call(document.querySelectorAll('[data-meta]'), function(b){ b.addEventListener('click', function(){ enviarMeta(b); }); });
+    desenharAfiliados(j.afiliados);
 
     // bônus
     var cont = { aula: 0, moldes: 0, estilos: 0 };
@@ -280,6 +304,39 @@ td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
       $('bConferir').addEventListener('click', function(){ carregar(); });
     }).catch(function(e){ b.disabled = false; b.textContent = 'Ligar aviso de vendas'; if (e.message !== '401') toast(e.message); });
   }
+  // afiliados: tabela, copiar link, remover e cadastrar
+  function copiar(txt){ (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){ toast('Link copiado.'); }, function(){ window.prompt('Copie o link:', txt); }); }
+  function desenharAfiliados(lista){
+    var t = $('tAf'), f = $('fAf');
+    if (lista === null || lista === undefined) { f.hidden = true; t.innerHTML = '<tr><td colspan="7" class="vazio">Ligue o armazenamento (Upstash) para cadastrar afiliados.</td></tr>'; return; }
+    f.hidden = false;
+    t.innerHTML = lista.length ? lista.map(function(a){
+      var info = a.removido ? '<small>removido</small>' : (a.comissao ? '<small>comissão de ' + String(a.comissao).replace('.', ',') + '%</small>' : '<small>sem comissão definida</small>');
+      return '<tr><td><b>' + esc(a.nome) + '</b>' + info + '</td>'
+        + '<td><div class="lnk"><code>' + esc(a.link.replace(/^https?:\/\//, '')) + '</code><button type="button" data-copiar="' + esc(a.link) + '">Copiar</button></div></td>'
+        + '<td class="num">' + num(a.visitas) + '<small>' + num(a.pessoas) + (a.pessoas === 1 ? ' pessoa' : ' pessoas') + '</small></td>'
+        + '<td class="num">' + num(a.vendas) + '</td><td class="num">' + brl(a.faturamento) + '</td>'
+        + '<td class="num"><b>' + (a.comissao ? brl(a.aPagar) : '—') + '</b></td>'
+        + '<td>' + (a.removido ? '' : '<button type="button" data-remover="' + esc(a.slug) + '" data-nome="' + esc(a.nome) + '">Remover</button>') + '</td></tr>';
+    }).join('') : '<tr><td colspan="7" class="vazio">Nenhum afiliado cadastrado ainda.</td></tr>';
+    [].forEach.call(t.querySelectorAll('[data-copiar]'), function(b){ b.addEventListener('click', function(){ copiar(b.dataset.copiar); }); });
+    [].forEach.call(t.querySelectorAll('[data-remover]'), function(b){ b.addEventListener('click', function(){
+      if (!confirm('Remover ' + b.dataset.nome + '? O link para de marcar novas visitas; as vendas que já vieram dele continuam aparecendo.')) return;
+      b.disabled = true;
+      api('POST', { acao: 'afiliado-remover', slug: b.dataset.remover }).then(function(){ toast('Afiliado removido.'); carregar(); })
+        .catch(function(e){ b.disabled = false; if (e.message !== '401') toast(e.message); });
+    }); });
+  }
+  $('fAf').addEventListener('submit', function(e){
+    e.preventDefault(); var b = $('afCriar'); b.disabled = true;
+    api('POST', { acao: 'afiliado-novo', nome: $('afNome').value, comissao: $('afCom').value }).then(function(r){
+      b.disabled = false; $('afNome').value = ''; $('afCom').value = '';
+      $('afNovo').innerHTML = '<div class="af-ok">Link criado. Mande para o afiliado: <code>' + esc(r.link) + '</code> <button type="button" id="afCopiarNovo">Copiar</button></div>';
+      $('afCopiarNovo').addEventListener('click', function(){ copiar(r.link); });
+      carregar();
+    }).catch(function(e2){ b.disabled = false; if (e2.message !== '401') toast(e2.message); });
+  });
+
   function enviarMeta(b){
     b.disabled = true; b.textContent = 'Enviando...';
     api('POST', { acao: 'meta', pedido: b.dataset.meta }).then(function(r){

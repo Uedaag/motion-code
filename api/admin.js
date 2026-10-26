@@ -36,6 +36,35 @@ async function listar(status) {
 
 const webhookEndereco = () => SITE + "/api/abacate-webhook?webhookSecret=" + segredoWebhook();
 
+/* ---------- afiliados: cadastrados no Redis (mc:af), link /a/<slug> ---------- */
+const slugDe = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30);
+async function afiliados() {
+  if (!redisLigado()) return {};
+  const r = await redis([["HGETALL", "mc:af"]]);
+  const arr = (r && r[0]) || [], o = {};
+  for (let i = 0; i < arr.length; i += 2) { try { o[arr[i]] = JSON.parse(arr[i + 1]); } catch (e) { /* registro inválido */ } }
+  return o;
+}
+// visitas pelo link, pessoas diferentes, vendas e comissão de cada afiliado no período
+async function resumoAfiliados(afs, ds, vendas) {
+  const slugs = Object.keys(afs);
+  vendas.forEach((v) => { if (v.afiliado && !slugs.includes(v.afiliado.slug)) slugs.push(v.afiliado.slug); });
+  if (!slugs.length) return [];
+  const cmds = ds.map((d) => ["HGETALL", "mc:afv:" + d]).concat(slugs.map((s) => ["PFCOUNT", ...ds.map((d) => "mc:afu:" + d + ":" + s)]));
+  const r = await redis(cmds);
+  const visitas = {};
+  ds.forEach((d, i) => somaEm(visitas, hash(r[i])));
+  return slugs.map((s, i) => {
+    const a = afs[s] || null, minhas = vendas.filter((v) => v.afiliado && v.afiliado.slug === s);
+    const faturamento = minhas.reduce((t, v) => t + v.valor, 0), comissao = a ? a.comissao || 0 : 0;
+    return {
+      slug: s, nome: a ? a.nome : s, removido: !a, comissao, criado: a ? a.criado : null, link: SITE + "/a/" + s,
+      visitas: visitas[s] || 0, pessoas: r[ds.length + i] || 0, vendas: minhas.length,
+      faturamento, aPagar: Math.round(faturamento * comissao) / 100,
+    };
+  }).sort((x, y) => y.faturamento - x.faturamento || y.visitas - x.visitas);
+}
+
 async function estadoWebhook() {
   try {
     const b = await abacate("/webhooks/list", { method: "GET" });
@@ -89,6 +118,26 @@ module.exports = async (req, res) => {
         }
       }
 
+      if (b.acao === "afiliado-novo") {
+        if (!redisLigado()) return res.status(400).json({ erro: "Ligue o armazenamento (Upstash) para cadastrar afiliados." });
+        const nome = String(b.nome || "").trim().slice(0, 60);
+        if (nome.length < 2) return res.status(400).json({ erro: "Digite o nome do afiliado." });
+        const comissao = Math.max(0, Math.min(100, Number(String(b.comissao || "0").replace(",", ".")) || 0));
+        const atuais = await afiliados();
+        const base = slugDe(b.slug || nome) || "afiliado";
+        let slug = base;
+        for (let n = 2; atuais[slug]; n++) slug = base.slice(0, 27) + "-" + n;
+        await redis([["HSET", "mc:af", slug, JSON.stringify({ nome, comissao, criado: Date.now() })]]);
+        return res.status(200).json({ ok: true, slug, link: SITE + "/a/" + slug });
+      }
+
+      if (b.acao === "afiliado-remover") {
+        const slug = String(b.slug || "");
+        if (!/^[a-z0-9-]{2,40}$/.test(slug)) return res.status(400).json({ erro: "Afiliado inválido." });
+        await redis([["HDEL", "mc:af", slug]]);
+        return res.status(200).json({ ok: true });
+      }
+
       if (b.acao === "meta") {
         const p = String(b.pedido || "");
         if (!/^mc-\d{10,}-[a-z0-9]{1,12}$/.test(p)) return res.status(400).json({ erro: "Pedido inválido." });
@@ -108,11 +157,12 @@ module.exports = async (req, res) => {
     const ini = ds[0], fim = ds[ds.length - 1];
     const noPeriodo = (iso) => { const d = diaBR(new Date(iso).getTime()); return d >= ini && d <= fim; };
 
-    const [pagos, pendentes, webhook, est] = await Promise.all([
+    const [pagos, pendentes, webhook, est, afs] = await Promise.all([
       listar("PAID"),
       listar("PENDING").catch(() => []),
       estadoWebhook(),
       estatisticas(ds).catch((e) => { console.error("[admin] redis", e.message); return null; }),
+      afiliados().catch(() => ({})),
     ]);
 
     const doPeriodo = pagos.filter((c) => noPeriodo(c.updatedAt || c.createdAt));
@@ -131,6 +181,7 @@ module.exports = async (req, res) => {
         lote: String(m.lote || "").replace("mc-ingresso-", "").replace("-", " "),
         bumps: String(m.bumps || "").split(",").filter((b) => b && b !== "nenhum"),
         origem: { src: m.src || "", camp: m.camp || "", cont: m.cont || "" },
+        afiliado: m.af ? { slug: m.af, nome: (afs[m.af] && afs[m.af].nome) || m.af } : null,
         cliente: cli ? { nome: cli.name || "", email: cli.email || "", fone: cli.cellphone || "" } : null,
         meta,
         podeMeta: Date.now() - new Date(c.updatedAt || c.createdAt).getTime() < 6.9 * 864e5,
@@ -145,6 +196,7 @@ module.exports = async (req, res) => {
       periodo, inicio: ini, fim,
       config: { redis: redisLigado(), meta: !!process.env.META_CAPI_TOKEN, teste: !!process.env.META_TEST_CODE, webhook },
       vendas,
+      afiliados: redisLigado() ? await resumoAfiliados(afs, ds, vendas).catch((e) => { console.error("[admin] afiliados", e.message); return []; }) : null,
       pixGerados: pendentes.filter((c) => noPeriodo(c.createdAt)).length,
       vendasPorDia: ds.map((d) => ({ dia: d, vendas: vendasPorDia[d] || 0 })),
       estat: est,

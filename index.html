@@ -986,7 +986,7 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
     if(window.fbq)fbq('track','AddPaymentInfo',{value:t/100,currency:'BRL',num_items:1+bumps.length});
     mcEv('pix');
     go.disabled=true;go.textContent='Abrindo o pagamento...';err.style.display='none';
-    fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bumps:bumps,vid:window.mcVid||'',origem:window.mcOrigem||{}})})
+    fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bumps:bumps,vid:window.mcVid||'',origem:window.mcOrigem||{},af:window.mcAfiliado||''})})
       .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
       .then(function(x){if(x.ok&&x.j.url){location.href=x.j.url}else{throw new Error(x.j.erro||'Erro')}})
       .catch(function(e){err.textContent=e.message&&e.message!=='Failed to fetch'?e.message:'Não foi possível abrir o pagamento. Verifique sua conexão e tente de novo.';err.style.display='block';go.disabled=false;go.textContent='Pagar com PIX'});
@@ -1083,6 +1083,12 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
   }
   window.mcVid=vid;window.mcOrigem=ss.o;
   window.mcEvento=function(t,x){var o={t:t,v:vid};for(var k in x)o[k]=x[k];envia(o)};
+  /* afiliado: quem chega por /a/nome (ou ?af=nome) fica marcado por 30 dias; vale o último link clicado */
+  var afNovo=(q.get('af')||'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40),afGuardado=null;
+  try{afGuardado=JSON.parse(localStorage.getItem('mc-af')||'null')}catch(e){}
+  if(afNovo){afGuardado={s:afNovo,t:Date.now()};try{localStorage.setItem('mc-af',JSON.stringify(afGuardado))}catch(e){}}
+  window.mcAfiliado=afGuardado&&afGuardado.s&&Date.now()-afGuardado.t<30*864e5?afGuardado.s:'';
+  if(afNovo&&ss.af!==afNovo){ss.af=afNovo;guarda();mcEvento('afiliado',{af:afNovo})}
   if(!ss.v){ss.v=1;guarda();var mc=document.getElementById('mc');
     mcEvento('visita',{src:ss.o.src,camp:ss.o.camp,cont:ss.o.cont,ref:ss.o.ref,dev:matchMedia('(max-width:820px)').matches?'celular':'computador',perfil:mc?mc.getAttribute('data-p'):''})}
   /* seções: conta quando a seção passa pelo meio da tela, uma vez por sessão */

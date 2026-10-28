@@ -69,6 +69,18 @@ td small{display:block;color:var(--mut);font-size:12.5px}
 td .tag{display:inline-block;font:600 11.5px "Instrument Sans";padding:2px 8px;border-radius:99px;background:var(--card2);border:1px solid var(--line);margin:2px 4px 0 0}
 td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
 td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);color:var(--ink);margin:0 0 4px}
+/* fechar/abrir blocos e ver mais/menos */
+.bh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.bh .acoes{display:flex;gap:8px;flex:none}
+.btog{background:transparent;border:1px solid var(--line);color:var(--ink2);font:600 12.5px "Instrument Sans",sans-serif;padding:6px 11px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.btog:hover{border-color:var(--acc);color:var(--ink)}
+.bloco.fechado{padding-bottom:14px}
+.bloco.fechado > :not(.bh){display:none}
+.bloco.fechado .bh .sub,.bloco.fechado .bh .acoes > :not(.btog){display:none}
+.mais{display:block;margin:12px auto 0;background:transparent;border:1px solid var(--line);color:var(--ink2);font:600 13px "Instrument Sans",sans-serif;padding:8px 14px;border-radius:10px;cursor:pointer}
+.mais:hover{border-color:var(--acc);color:var(--ink)}
+.dia-tab tr.extra{display:none}
+.dia-tab.todos tr.extra{display:table-row}
 .dia-tab td,.dia-tab th{text-align:right}
 .dia-tab td:first-child,.dia-tab th:first-child{text-align:left;white-space:nowrap}
 .dia-tab tr.tot td{font-weight:700;border-top:2px solid var(--line)}
@@ -153,6 +165,7 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
   <h2>Desempenho por dia</h2>
   <p class="sub">Cada dia do período, do mais recente para o mais antigo. Pessoas = visitantes diferentes; as etapas contam cada pessoa uma vez por dia.</p>
   <div class="tab"><table class="dia-tab"><thead><tr><th>Dia</th><th>Pessoas</th><th>Viram a VSL</th><th>Ligaram o som</th><th>Clicaram comprar</th><th>Pagar com PIX</th><th>PIX gerados</th><th>Vendas</th><th>Faturamento</th><th>Conversão</th></tr></thead><tbody id="tDia"></tbody></table></div>
+  <button type="button" class="mais" id="bDiasMais" hidden></button>
  </section>
  <section class="bloco" id="blocoPix">
   <div class="pix-top"><div><h2>PIX gerados sem pagamento</h2>
@@ -331,21 +344,56 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
   }
   // afiliados: tabela, copiar link, remover e cadastrar
   // desempenho por dia: uma linha por dia + total do período
+  function prepararBlocos(){
+    var fech = {};
+    try { fech = JSON.parse(localStorage.getItem('mc-adm-fech') || '{}'); } catch (e) {}
+    [].forEach.call(document.querySelectorAll('#app .bloco'), function(sec){
+      var h = sec.querySelector('h2');
+      if (!h || sec.querySelector('.btog')) return;
+      var chave = h.textContent.trim(), topo = h;
+      while (topo.parentNode !== sec) topo = topo.parentNode;
+      var bh, acoes;
+      if (topo === h) {
+        bh = document.createElement('div'); bh.className = 'bh';
+        sec.insertBefore(bh, h);
+        var tit = document.createElement('div'); bh.appendChild(tit); tit.appendChild(h);
+        var sub = bh.nextElementSibling;
+        if (sub && sub.classList.contains('sub')) tit.appendChild(sub);
+        acoes = document.createElement('div'); acoes.className = 'acoes'; bh.appendChild(acoes);
+      } else {
+        bh = topo; bh.classList.add('bh');
+        acoes = document.createElement('div'); acoes.className = 'acoes';
+        [].slice.call(bh.children).forEach(function(c){ if (c.tagName === 'BUTTON') acoes.appendChild(c); });
+        bh.appendChild(acoes);
+      }
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'btog'; acoes.appendChild(b);
+      var aplica = function(){ var f = !!fech[chave]; sec.classList.toggle('fechado', f); b.textContent = f ? 'Abrir' : 'Fechar'; b.setAttribute('aria-expanded', String(!f)); };
+      b.addEventListener('click', function(){ fech[chave] = !fech[chave]; try { localStorage.setItem('mc-adm-fech', JSON.stringify(fech)); } catch (e) {} aplica(); });
+      aplica();
+    });
+  }
+  prepararBlocos();
   function desenharDias(j){
     var est = j.estat, porDia = est ? est.porDia : (j.vendasPorDia || []).map(function(d){ return { dia: d.dia, vendas: d.vendas, faturamento: d.faturamento, pixGerados: d.pixGerados }; });
     var cel = function(v, f){ return '<td class="num' + (v ? '' : ' zero') + '">' + (v == null ? '—' : (f ? f(v) : num(v))) + '</td>'; };
     var conv = function(vd, ps){ if (!ps) return '<td class="num zero">—</td>'; var p = pct(vd, ps); return '<td class="num"><span class="cv' + (p >= 1 ? ' bom' : '') + '">' + String(p).replace('.', ',') + '%</span></td>'; };
     var t = { pessoas: 0, vsl: 0, vslplay: 0, cta: 0, pix: 0, pixGerados: 0, vendas: 0, faturamento: 0 };
-    var linhas = porDia.slice().reverse().map(function(d){
+    var MOSTRA = 7, total = porDia.length;
+    var linhas = porDia.slice().reverse().map(function(d, i){
       Object.keys(t).forEach(function(k){ t[k] += d[k] || 0; });
       var dt = new Date(d.dia + 'T12:00:00'), nome = dt.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
-      return '<tr><td>' + esc(nome) + '</td>' + (est ? cel(d.pessoas) + cel(d.vsl) + cel(d.vslplay) + cel(d.cta) + cel(d.pix) : '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
+      return '<tr' + (i >= MOSTRA ? ' class="extra"' : '') + '><td>' + esc(nome) + '</td>' + (est ? cel(d.pessoas) + cel(d.vsl) + cel(d.vslplay) + cel(d.cta) + cel(d.pix) : '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
         + cel(d.pixGerados) + cel(d.vendas) + cel(d.faturamento, brl) + conv(d.vendas || 0, est ? d.pessoas : 0) + '</tr>';
     });
     var pessoasTot = est ? est.pessoas : 0;
     linhas.push('<tr class="tot"><td>Período</td>' + (est ? cel(pessoasTot) + cel(t.vsl) + cel(t.vslplay) + cel(t.cta) + cel(t.pix) : '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
       + cel(t.pixGerados) + cel(t.vendas) + cel(t.faturamento, brl) + conv(t.vendas, pessoasTot) + '</tr>');
     $('tDia').innerHTML = porDia.length ? linhas.join('') : '<tr><td colspan="10" class="vazio">Sem dados no período.</td></tr>';
+    var tab = $('tDia').parentNode, bm = $('bDiasMais');
+    var rotulo = function(){ bm.textContent = tab.classList.contains('todos') ? 'Ver menos' : 'Ver todos os ' + total + ' dias'; };
+    bm.hidden = total <= MOSTRA;
+    bm.onclick = function(){ tab.classList.toggle('todos'); rotulo(); };
+    rotulo();
   }
   // recuperação de PIX: WhatsApp e e-mail com a mensagem pronta (a pessoa revisa antes de enviar)
   var SITE_LOTES = 'https://workshopcode.uedaagency.com.br/#lotes';

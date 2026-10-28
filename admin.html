@@ -269,6 +269,8 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
     var itens = [];
     itens.push(j.config.webhook === 'ativo'
       ? '<div class="it ok"><span class="dot">✓</span><div><b>Aviso de vendas ligado</b><p>A Abacate Pay avisa o site a cada PIX pago.</p></div></div>'
+      : j.config.webhook === 'parcial'
+      ? '<div class="it falta"><span class="dot">!</span><div><b>Aviso de vendas incompleto</b><p>Falta o aviso do PIX gerado na página de pagamento. Sem ele, essa compra só chega ao Meta se a pessoa esperar a confirmação na página.</p><button class="pri" type="button" id="bWebhook">Completar aviso de vendas</button></div></div>'
       : '<div class="it falta"><span class="dot">!</span><div><b>Aviso de vendas ' + (j.config.webhook === 'desconhecido' ? 'não confirmado' : 'desligado') + '</b><p>Sem ele, a compra só chega ao Meta se o cliente voltar ao obrigado.</p><button class="pri" type="button" id="bWebhook">Ligar aviso de vendas</button></div></div>');
     itens.push(c.meta
       ? '<div class="it ok"><span class="dot">✓</span><div><b>Compras indo para o Meta' + (c.teste ? ' (modo teste)' : '') + '</b><p>Pela API de Conversões do pixel Workshop.</p></div></div>'
@@ -338,7 +340,7 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
       if (r.ok) { toast('Aviso de vendas ligado.'); carregar(); return; }
       b.disabled = false; b.textContent = 'Ligar aviso de vendas';
       var m = r.manual;
-      $('manual').innerHTML = '<div class="manual"><b>A chave da Abacate não tem permissão para criar o aviso. Crie à mão em 1 minuto:</b><p class="sub" style="margin:6px 0 10px">No painel da Abacate Pay → Webhooks → Criar. Use os dados abaixo e marque o evento <b>checkout.completed</b>.</p><span class="k">Nome</span><code>Motion Code · vendas</code><span class="k">URL</span><code>' + esc(m.endereco) + '</code><span class="k">Secret</span><code>' + esc(m.segredo) + '</code><button type="button" id="bConferir">Já criei, conferir</button></div>';
+      $('manual').innerHTML = '<div class="manual"><b>A chave da Abacate não tem permissão para criar o aviso. Crie à mão em 1 minuto:</b><p class="sub" style="margin:6px 0 10px">No painel da Abacate Pay → Webhooks → Criar. Use os dados abaixo e marque os eventos <b>checkout.completed</b> e <b>transparent.completed</b>.</p><span class="k">Nome</span><code>Motion Code · vendas</code><span class="k">URL</span><code>' + esc(m.endereco) + '</code><span class="k">Secret</span><code>' + esc(m.segredo) + '</code><button type="button" id="bConferir">Já criei, conferir</button></div>';
       $('bConferir').addEventListener('click', function(){ carregar(); });
     }).catch(function(e){ b.disabled = false; b.textContent = 'Ligar aviso de vendas'; if (e.message !== '401') toast(e.message); });
   }

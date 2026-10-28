@@ -237,32 +237,6 @@ body{margin:0;background:#0F0D13}
 #mc .mascot{position:absolute;left:50%;bottom:0;height:calc(100% - 96px);width:auto;max-width:100%;pointer-events:none;transform-origin:50% 100%;filter:drop-shadow(0 24px 50px rgba(253,103,37,.28))}
 #mc .mglow{position:absolute;left:50%;bottom:4%;width:80%;height:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(253,103,37,.22),transparent);pointer-events:none}
 
-/* janela de compra */
-#mc .buy{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:rgba(8,7,11,.72);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s}
-#mc .buy.open{opacity:1;pointer-events:auto}
-#mc .buy-box{width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px;transform:translateY(18px) scale(.98);transition:transform .35s cubic-bezier(.2,.8,.2,1);box-shadow:0 40px 80px -30px #000}
-#mc .buy.open .buy-box{transform:none}
-#mc .buy-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-#mc .buy-h h4{font:500 40px/1 "Handjet",sans-serif;margin:6px 0 0}
-#mc .buy-x{background:none;border:1px solid var(--line);color:var(--ink2);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:18px;flex:none}
-#mc .buy-item{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px}
-#mc .buy-item b{font-weight:600}
-#mc .bump{display:flex;gap:12px;align-items:flex-start;margin-top:12px;padding:14px;border:1px dashed rgba(253,103,37,.5);border-radius:14px;background:rgba(253,103,37,.06);cursor:pointer;transition:background .2s,border-color .2s}
-#mc .bump:hover{background:rgba(253,103,37,.1)}
-#mc .bump input{appearance:none;width:22px;height:22px;flex:none;border:2px solid var(--acc);border-radius:6px;margin-top:2px;display:grid;place-items:center;cursor:pointer}
-#mc .bump input:checked{background:var(--acc)}
-#mc .bump input:checked::after{content:"✓";color:#140A05;font-weight:800;font-size:14px}
-#mc .bump .bt{font:700 15px/1.3 "JetBrains Mono",monospace;letter-spacing:-.02em}
-#mc .bump .bt em{font-style:normal;color:var(--acc)}
-#mc .bump p{margin:4px 0 0;font-size:13.5px;color:var(--ink2);line-height:1.45}
-#mc .buy-tot{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 14px}
-#mc .buy-tot span{color:var(--ink2);font-size:14px}
-#mc .buy-tot b{font:600 46px/1 "Handjet",sans-serif;color:var(--acc)}
-#mc .buy .btn{width:100%;justify-content:center}
-#mc .buy .btn[disabled]{opacity:.6;pointer-events:none}
-#mc .buy-note{font-size:12.5px;color:var(--mut);margin:12px 0 0;text-align:center}
-#mc .buy-err{display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(214,69,61,.14);color:#ffb4ae;font-size:13.5px}
-
 /* destaque: poucos cliques + referências */
 #mc .clk{padding:110px 0;border-top:1px solid var(--line);position:relative;overflow:hidden}
 #mc .clk h2.big{font:500 clamp(48px,8.4vw,116px)/.9 "Handjet",sans-serif;margin:14px 0 22px;max-width:1040px}
@@ -817,26 +791,11 @@ fbq('track', 'PageView');
 
 <footer><div class="wrap">Motion Code é um workshop da Ueda Agency · uedaagency.com.br · Claude é uma marca da Anthropic. Este workshop não é afiliado à Anthropic.</div></footer>
 </main>
-<div class="buy" id="mcBuy" role="dialog" aria-modal="true" aria-labelledby="mcBuyT" aria-hidden="true">
- <div class="buy-box">
-  <div class="buy-h"><div><div class="kick">Sua inscrição</div><h4 id="mcBuyT">Workshop Motion Code</h4></div><button class="buy-x" type="button" aria-label="Fechar" data-buy-close>✕</button></div>
-  <div class="buy-item"><span>Ingresso <b id="mcBuyLote">Lote 1</b> + 4 bônus</span><b id="mcBuyLoteP">R$ 37</b></div>
-  <label class="bump"><input type="checkbox" value="aula"><div><div class="bt">Sim, quero a Aula Gravada <em>+ R$ 19,90</em></div><p>O replay gratuito sai do ar em 72 horas. Com a aula gravada, você guarda o workshop completo e revê cada passo no seu ritmo.</p></div></label>
-  <label class="bump"><input type="checkbox" value="moldes"><div><div class="bt">Sim, quero a Biblioteca de Moldes <em>+ R$ 47</em></div><p>12 moldes de anúncio em motion (9:16, 1:1 e 16:9) prontos para trocar o texto e usar. Você já sai do workshop com criativos na mão.</p></div></label>
-  <label class="bump"><input type="checkbox" value="estilos"><div><div class="bt">Sim, quero a Mesa de Estilos <em>+ R$ 27</em></div><p>30 estilos visuais com o prompt de cada um, para seus vídeos nunca terem cara de template.</p></div></label>
-  <div class="buy-tot"><span>Total</span><b id="mcBuyTot">R$ 37</b></div>
-  <button class="btn" type="button" id="mcBuyGo">Pagar com PIX</button>
-  <div class="buy-err" id="mcBuyErr"></div>
-  <p class="buy-note">Pagamento seguro pela Abacate Pay · PIX com aprovação na hora · Garantia de 7 dias</p>
- </div>
-</div>
 <div class="sticky" id="mcSticky"><span><span class="mcFecha">Motion Code · 29/10</span> · <b class="mcPreco">R$ 37</b></span><a href="#lotes" class="btn sm">Garantir vaga</a></div>
 </div>
 
 <script>
 (function(){
-var CHECKOUT = {};
-/* ============================================ */
 var root=document.getElementById('mc');
 var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -847,10 +806,10 @@ try{var pf=new URLSearchParams(location.search).get('perfil');if(['abertura','co
 var now=Date.now(),ativo=null;
 document.querySelectorAll('#mc .lote').forEach(function(l){
   var fim=new Date(l.dataset.ate).getTime(),a=l.querySelector('a'),k=a.dataset.link;
-  if(CHECKOUT[k])a.href=CHECKOUT[k];else a.href='#lotes';
-  if(now>fim){l.classList.add('off');a.textContent='Encerrado';}
-  else if(!ativo){ativo=l;l.classList.add('on');l.querySelector('.st').textContent='LOTE '+l.dataset.lote+' · ABERTO';}
-  else{l.classList.add('next');a.textContent='Em breve';}
+  a.href='#lotes';
+  if(now>fim){l.classList.add('off');a.textContent='Encerrado';a.removeAttribute('href');a.setAttribute('aria-disabled','true');}
+  else if(!ativo){ativo=l;l.classList.add('on');l.querySelector('.st').textContent='LOTE '+l.dataset.lote+' · ABERTO';a.href='/pagamento';}
+  else{l.classList.add('next');a.textContent='Em breve';a.removeAttribute('href');a.setAttribute('aria-disabled','true');}
 });
 /* contagem real até o fim do lote aberto (data do próprio lote) */
 if(ativo){var fimLote=new Date(ativo.dataset.ate).getTime(),nLote=ativo.dataset.lote;
@@ -859,7 +818,8 @@ if(ativo){var fimLote=new Date(ativo.dataset.ate).getTime(),nLote=ativo.dataset.
     document.querySelectorAll('#mc .mcFecha').forEach(function(e){e.textContent='Lote '+nLote+' fecha em '+txt})};
   fecha();setInterval(fecha,30000)}
 if(ativo){var p='R$ '+ativo.querySelector('.pr').textContent.replace('R$','').trim();document.querySelectorAll('#mc .mcPreco').forEach(function(e){e.textContent=p});
-  var lk=CHECKOUT[ativo.querySelector('a').dataset.link];if(lk)document.querySelectorAll('#mc a[href="#lotes"]').forEach(function(a){a.href=lk})}
+  /* com lote aberto, todo botão de compra vai direto para a página de pagamento */
+  document.querySelectorAll('#mc a[href="#lotes"]').forEach(function(a){a.href='/pagamento'})}
 
 /* revelar ao rolar */
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
@@ -972,38 +932,14 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
 /* personagem: webm com transparência; Safari usa a versão com o fundo do site já aplicado */
 (function(){var v=document.getElementById('mcMascot');var ua=navigator.userAgent;var safari=/Safari/.test(ua)&&!/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua)||/iPhone|iPad|iPod/.test(ua);v.src=safari?'assets/personagem-safari.mp4':'assets/personagem.webm';if(reduce){v.removeAttribute('autoplay');v.pause()}else{var pr=v.play();if(pr&&pr.catch)pr.catch(function(){})}})();
 
-/* ===== COMPRA: janela com order bumps + checkout Abacate Pay ===== */
+/* ===== COMPRA: os botões levam para a página de pagamento (/pagamento) ===== */
 (function(){
-  var buy=document.getElementById('mcBuy'),go=document.getElementById('mcBuyGo'),err=document.getElementById('mcBuyErr'),tot=document.getElementById('mcBuyTot');
-  var ativoEl=document.querySelector('#mc .lote.on');
-  var base=ativoEl?parseInt(ativoEl.querySelector('.pr').textContent.replace(/\D/g,''),10):0;
-  var PRECO={aula:1990,moldes:4700,estilos:2700}; /* em centavos */
-  function brl(c){return 'R$ '+(c%100?(c/100).toFixed(2).replace('.',','):c/100)}
-  if(ativoEl){document.getElementById('mcBuyLote').textContent='Lote '+ativoEl.dataset.lote;document.getElementById('mcBuyLoteP').textContent='R$ '+base}
-  function soma(){var t=base*100;buy.querySelectorAll('.bump input').forEach(function(i){if(i.checked)t+=PRECO[i.value]});tot.textContent=brl(t)}
-  buy.querySelectorAll('.bump input').forEach(function(i){i.addEventListener('change',soma)});
   function mcEv(t,x){if(window.mcEvento)window.mcEvento(t,x)}
-  function abrir(e){if(e)e.preventDefault();if(!ativoEl){location.hash='lotes';return}err.style.display='none';buy.classList.add('open');buy.setAttribute('aria-hidden','false');mcEv('modal');setTimeout(function(){go.focus()},50)}
-  function fechar(){buy.classList.remove('open');buy.setAttribute('aria-hidden','true')}
-  buy.addEventListener('click',function(e){if(e.target===buy||e.target.hasAttribute('data-buy-close'))fechar()});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')fechar()});
-  document.querySelectorAll('#mc .lote.on .btn').forEach(function(b){b.addEventListener('click',abrir)});
-  /* pixel: clique em "Garantir vaga" e nos outros botões de compra = InitiateCheckout (uma vez por visita, com o preço do lote aberto) */
+  /* clique em "Garantir vaga" e nos outros botões de compra: etapa do funil, uma vez por visita.
+     O InitiateCheckout do pixel dispara na própria página de pagamento, que não se perde na troca de página. */
   var iniciou=false;
-  document.querySelectorAll('a[href="#lotes"], #mc .lote .btn').forEach(function(a){a.addEventListener('click',function(){
-    if(iniciou)return;iniciou=true;mcEv('cta');if(window.fbq)fbq('track','InitiateCheckout',{value:base||37,currency:'BRL'})})});
-  go.addEventListener('click',function(){
-    var bumps=[].slice.call(buy.querySelectorAll('.bump input:checked')).map(function(i){return i.value});
-    var t=base*100;bumps.forEach(function(b){t+=PRECO[b]});
-    /* pixel: "Pagar com PIX" = AddPaymentInfo com o total escolhido (não repete o InitiateCheckout) */
-    if(window.fbq)fbq('track','AddPaymentInfo',{value:t/100,currency:'BRL',num_items:1+bumps.length});
-    mcEv('pix');
-    go.disabled=true;go.textContent='Abrindo o pagamento...';err.style.display='none';
-    fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bumps:bumps,vid:window.mcVid||'',origem:window.mcOrigem||{},af:window.mcAfiliado||''})})
-      .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
-      .then(function(x){if(x.ok&&x.j.url){try{localStorage.setItem('mc-pix',JSON.stringify({p:x.j.pedido,u:x.j.url,t:Date.now()}))}catch(e){}location.href=x.j.url}else{throw new Error(x.j.erro||'Erro')}})
-      .catch(function(e){err.textContent=e.message&&e.message!=='Failed to fetch'?e.message:'Não foi possível abrir o pagamento. Verifique sua conexão e tente de novo.';err.style.display='block';go.disabled=false;go.textContent='Pagar com PIX'});
-  });
+  document.querySelectorAll('#mc a[href="/pagamento"]').forEach(function(a){a.addEventListener('click',function(){
+    if(iniciou)return;iniciou=true;mcEv('cta')})});
 })();
 
 /* destaque dos passos: acende um por vez */

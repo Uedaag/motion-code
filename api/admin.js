@@ -2,7 +2,7 @@
 // (Redis) e ações (ativar o aviso de vendas, mandar uma venda para o Meta).
 // Protegido pela senha da variável ADMIN_SENHA na Vercel.
 
-const { abacate, redis, redisLigado, segredoWebhook, iguais, diaBR, enviarCompraMeta, clienteDo, SITE } = require("./_comum");
+const { abacate, redis, redisLigado, segredoWebhook, iguais, diaBR, enviarCompraMeta, clienteDo, listarPix, buscarPedido, SITE } = require("./_comum");
 
 const INICIO = "2026-10-16"; // site no ar
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -35,6 +35,7 @@ async function listar(status) {
 }
 
 const webhookEndereco = () => SITE + "/api/abacate-webhook?webhookSecret=" + segredoWebhook();
+const EVENTOS = ["checkout.completed", "transparent.completed"]; // tela da Abacate e PIX direto da página /pagamento
 
 /* ---------- afiliados: cadastrados no Redis (mc:af), link /a/<slug> ---------- */
 const slugDe = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 30);
@@ -65,11 +66,19 @@ async function resumoAfiliados(afs, ds, vendas) {
   }).sort((x, y) => y.faturamento - x.faturamento || y.visitas - x.visitas);
 }
 
+// eventos que já chegam no aviso de vendas (somando todos os webhooks do site)
+async function eventosAtivos() {
+  const b = await abacate("/webhooks/list", { method: "GET" });
+  const arr = Array.isArray(b.data) ? b.data : [];
+  const ev = new Set();
+  arr.filter((w) => String(w.endpoint || "").includes("/api/abacate-webhook")).forEach((w) => (Array.isArray(w.events) && w.events.length ? w.events : ["checkout.completed"]).forEach((e) => ev.add(e)));
+  return ev;
+}
 async function estadoWebhook() {
   try {
-    const b = await abacate("/webhooks/list", { method: "GET" });
-    const arr = Array.isArray(b.data) ? b.data : [];
-    return arr.some((w) => String(w.endpoint || "").includes("/api/abacate-webhook")) ? "ativo" : "inativo";
+    const ev = await eventosAtivos();
+    if (EVENTOS.every((e) => ev.has(e))) return "ativo";
+    return ev.size ? "parcial" : "inativo";
   } catch (e) { return "desconhecido"; }
 }
 
@@ -111,9 +120,13 @@ module.exports = async (req, res) => {
       b = b || {};
 
       if (b.acao === "webhook") {
-        const manual = { endereco: webhookEndereco(), segredo: segredoWebhook(), evento: "checkout.completed" };
+        const manual = { endereco: webhookEndereco(), segredo: segredoWebhook(), evento: EVENTOS.join(" e ") };
         try {
-          await abacate("/webhooks/create", { method: "POST", body: JSON.stringify({ name: "Motion Code · vendas", endpoint: manual.endereco, secret: manual.segredo, events: ["checkout.completed"] }) });
+          // cria só o que falta: quem já tinha o aviso da tela da Abacate ganha o do PIX direto
+          const ativos = await eventosAtivos().catch(() => new Set());
+          const faltam = EVENTOS.filter((e) => !ativos.has(e));
+          if (!faltam.length) return res.status(200).json({ ok: true });
+          await abacate("/webhooks/create", { method: "POST", body: JSON.stringify({ name: "Motion Code · vendas" + (faltam.length < EVENTOS.length ? " (PIX direto)" : ""), endpoint: manual.endereco, secret: manual.segredo, events: faltam }) });
           return res.status(200).json({ ok: true });
         } catch (e) {
           return res.status(200).json({ ok: false, erro: e.message, manual });
@@ -143,7 +156,7 @@ module.exports = async (req, res) => {
       if (b.acao === "meta") {
         const p = String(b.pedido || "");
         if (!/^mc-\d{10,}-[a-z0-9]{1,12}$/.test(p)) return res.status(400).json({ erro: "Pedido inválido." });
-        const ck = (await abacate("/checkouts/get?externalId=" + encodeURIComponent(p), { method: "GET" })).data;
+        const ck = await buscarPedido(p);
         if (!ck || ck.status !== "PAID") return res.status(400).json({ erro: "Esse pedido não está pago." });
         const meta = await enviarCompraMeta(ck, await clienteDo(ck));
         await redis([["SET", "mc:meta:" + p, JSON.stringify({ ok: meta.ok, quando: Date.now(), resposta: meta.resposta, via: "painel" }), "EX", 31536000]]).catch(() => null);
@@ -159,9 +172,11 @@ module.exports = async (req, res) => {
     const ini = ds[0], fim = ds[ds.length - 1];
     const noPeriodo = (iso) => { const d = diaBR(new Date(iso).getTime()); return d >= ini && d <= fim; };
 
+    // PIX direto (página /pagamento) entra junto; o que expirou sem pagar também conta como PIX sem pagamento
+    const pix = (st) => listarPix(st).catch((e) => { console.error("[admin] PIX direto", st, e.message); return []; });
     const [pagos, pendentes, webhook, est, afs] = await Promise.all([
-      listar("PAID"),
-      listar("PENDING").catch(() => []),
+      Promise.all([listar("PAID"), pix("PAID")]).then((x) => x.flat()),
+      Promise.all([listar("PENDING").catch(() => []), pix("PENDING"), pix("EXPIRED")]).then((x) => x.flat()),
       estadoWebhook(),
       estatisticas(ds).catch((e) => { console.error("[admin] redis", e.message); return null; }),
       afiliados().catch(() => ({})),
@@ -191,16 +206,19 @@ module.exports = async (req, res) => {
     }).sort((a, b) => (a.pagoEm < b.pagoEm ? 1 : -1));
 
     // PIX gerados sem pagamento: uma linha por pessoa (a tentativa mais recente). Quem pagou depois fica de fora.
-    const compradores = new Set(pagos.map((c) => c.customerId).filter(Boolean));
+    // No PIX direto não há cliente na Abacate: a pessoa é reconhecida pelo e-mail.
+    const quem = (c) => c.customerId || (c.contato && c.contato.email ? "e:" + String(c.contato.email).toLowerCase() : "");
+    const compradores = new Set(pagos.map(quem).filter(Boolean));
     const emailsPagos = new Set(clientes.filter(Boolean).map((c) => String(c.email || "").toLowerCase()).filter(Boolean));
     const pendPeriodo = pendentes.filter((c) => noPeriodo(c.createdAt)).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
     const vistos = new Map();
     let semDados = 0, pagaramDepois = 0;
     for (const c of pendPeriodo) {
-      if (!c.customerId) { semDados++; continue; }
-      if (compradores.has(c.customerId)) { pagaramDepois++; continue; }
-      if (vistos.has(c.customerId)) { vistos.get(c.customerId).tentativas++; continue; }
-      vistos.set(c.customerId, { ck: c, tentativas: 1 });
+      const q = quem(c);
+      if (!q) { semDados++; continue; }
+      if (compradores.has(q)) { pagaramDepois++; continue; }
+      if (vistos.has(q)) { vistos.get(q).tentativas++; continue; }
+      vistos.set(q, { ck: c, tentativas: 1 });
     }
     const pend = [...vistos.values()].slice(0, 60);
     const clientesPend = await Promise.all(pend.map((p) => clienteDo(p.ck)));

@@ -123,8 +123,78 @@ async function enviarCompraMeta(ck, cliente) {
 // Dados do comprador: vem no webhook ou é buscado na Abacate
 async function clienteDo(ck, doWebhook) {
   if (doWebhook && (doWebhook.email || doWebhook.cellphone || doWebhook.name)) return doWebhook;
+  if (ck.contato) return ck.contato;
   if (!ck.customerId) return null;
   try { return (await abacate("/customers/get?id=" + encodeURIComponent(ck.customerId))).data || null; } catch (e) { return null; }
 }
 
-module.exports = { abacate, redis, redisLigado, segredoWebhook, iguais, diaBR, sha, corta, enviarCompraMeta, clienteDo, PIXEL, SITE };
+// PIX gerado na página /pagamento (checkout transparente da Abacate). Fica no mesmo formato
+// do checkout hospedado para o painel, a entrega e o Meta tratarem os dois do mesmo jeito.
+// O contato vem no metadata: o PIX direto não pede CPF e não cria cliente na Abacate.
+function pixComoCheckout(t) {
+  const m = t.metadata || {};
+  return {
+    ...t,
+    externalId: t.externalId || m.pedido || "",
+    paidAmount: t.status === "PAID" ? t.amount : t.paidAmount,
+    contato: m.nome || m.email || m.tel ? { name: m.nome || "", email: m.email || "", cellphone: m.tel || "" } : null,
+    direto: true,
+  };
+}
+
+async function listarPix(status) {
+  const out = [];
+  let after = "";
+  for (let i = 0; i < 5; i++) {
+    const b = await abacate("/transparents/list?status=" + status + "&limit=100" + (after ? "&after=" + encodeURIComponent(after) : ""), { method: "GET" });
+    const arr = (Array.isArray(b.data) ? b.data : []).map(pixComoCheckout);
+    out.push(...arr.filter((c) => c.externalId.startsWith("mc-")));
+    if (!b.pagination || !b.pagination.hasMore || !b.pagination.next) break;
+    after = b.pagination.next;
+  }
+  return out;
+}
+
+// Pedido pelo código mc-...: o PIX direto (registro guardado no Redis quando é gerado)
+// ou, se não for, o checkout hospedado da Abacate. null quando não existe.
+async function buscarPedido(p) {
+  let reg = null;
+  try { const r = await redis([["GET", "mc:pix:" + p]]); reg = r && r[0] ? JSON.parse(r[0]) : null; } catch (e) { reg = null; }
+  if (reg && reg.id) {
+    const st = (await abacate("/transparents/check?id=" + encodeURIComponent(reg.id), { method: "GET" })).data || {};
+    const pago = st.status === "PAID";
+    return pixComoCheckout({ id: reg.id, status: st.status || "PENDING", amount: reg.valor, createdAt: reg.criado, updatedAt: pago ? new Date().toISOString() : reg.criado, metadata: reg.meta || {} });
+  }
+  try {
+    return (await abacate("/checkouts/get?externalId=" + encodeURIComponent(p), { method: "GET" })).data || null;
+  } catch (e) {
+    // a Abacate responde 400 "Billing not found" quando o checkout não existe
+    if (e.status !== 404 && !/not found/i.test(e.message)) throw e;
+    // sem o registro no Redis: procura o PIX direto na própria Abacate
+    const b = await abacate("/transparents/list?externalId=" + encodeURIComponent(p) + "&limit=5", { method: "GET" }).catch(() => null);
+    const t = b && Array.isArray(b.data) ? b.data.map(pixComoCheckout).find((c) => c.externalId === p) : null;
+    return t || null;
+  }
+}
+
+// Venda confirmada: avisa o Meta e soma no painel, uma vez por pedido.
+// Chamada pelo webhook, pelo obrigado e pela página de pagamento, o que chegar primeiro.
+async function processarVenda(ck, via, clienteWebhook) {
+  const p = ck.externalId;
+  const r0 = await redis([["SET", "mc:venda:" + p, "1", "NX", "EX", 2592000], ["GET", "mc:meta:" + p]]).catch(() => null);
+  if (r0 && r0[0] === null) return { ok: true, repetido: true };
+  let antes = null;
+  try { antes = r0 && r0[1] ? JSON.parse(r0[1]) : null; } catch (e) { antes = null; }
+  if (antes && antes.ok) return { ok: true, repetido: true };
+  const meta = await enviarCompraMeta(ck, await clienteDo(ck, clienteWebhook));
+  if (!meta.ok && meta.temporario) {
+    await redis([["DEL", "mc:venda:" + p]]).catch(() => null);
+    return { ok: false, temporario: true, meta };
+  }
+  const cmds = [["SET", "mc:meta:" + p, JSON.stringify({ ok: meta.ok, quando: Date.now(), resposta: meta.resposta, via }), "EX", 31536000]];
+  if (!antes) cmds.push(["HINCRBY", "mc:d:" + diaBR(), "vendas", 1], ["EXPIRE", "mc:d:" + diaBR(), 34560000]);
+  await redis(cmds).catch(() => null);
+  return { ok: true, meta };
+}
+
+module.exports = { abacate, redis, redisLigado, segredoWebhook, iguais, diaBR, sha, corta, enviarCompraMeta, clienteDo, pixComoCheckout, listarPix, buscarPedido, processarVenda, PIXEL, SITE };

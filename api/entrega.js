@@ -1,9 +1,9 @@
-// Libera os bônus comprados na página de obrigado.
+// Libera os bônus comprados na página de obrigado e diz à página de pagamento quando o PIX caiu.
 // Recebe o código do pedido (?p=), confere na Abacate Pay se o PIX foi pago
 // e devolve os links dos order bumps que estão no pedido.
-// A chave da Abacate Pay precisa da permissão CHECKOUT:READ.
+// Vale para o PIX direto da página /pagamento e para o checkout hospedado da Abacate.
 
-const API = "https://api.abacatepay.com/v2";
+const { buscarPedido, processarVenda, redisLigado } = require("./_comum");
 
 // Páginas de entrega: endereços privados, só aparecem para quem pagou
 const ENTREGAS = {
@@ -18,21 +18,17 @@ module.exports = async (req, res) => {
 
   const p = String((req.query && req.query.p) || "");
   if (!/^mc-\d{10,}-[a-z0-9]{1,12}$/.test(p)) return res.status(400).json({ erro: "Pedido inválido." });
-
-  const key = process.env.ABACATEPAY_API_KEY;
-  if (!key) return res.status(500).json({ erro: "Pagamento ainda não configurado." });
+  if (!process.env.ABACATEPAY_API_KEY) return res.status(500).json({ erro: "Pagamento ainda não configurado." });
 
   try {
-    const r = await fetch(API + "/checkouts/get?externalId=" + encodeURIComponent(p), { headers: { Authorization: "Bearer " + key } });
-    let body = null;
-    try { body = await r.json(); } catch (e) { /* resposta sem JSON */ }
-    // a Abacate Pay responde 400 "Billing not found" quando o pedido não existe
-    if (r.status === 404 || /not found/i.test(String(body && body.error))) return res.status(404).json({ status: "nao-encontrado" });
-    if (!r.ok || !body || body.success === false || !body.data) throw new Error("HTTP " + r.status + " " + JSON.stringify(body && body.error));
-
-    const c = body.data;
+    const c = await buscarPedido(p);
+    if (!c) return res.status(404).json({ status: "nao-encontrado" });
     if (c.status === "PENDING") return res.status(200).json({ status: "pendente" });
+    if (c.status === "EXPIRED" || c.status === "CANCELLED") return res.status(200).json({ status: "expirado" });
     if (c.status !== "PAID" && c.status !== "REDEEMED") return res.status(200).json({ status: "indisponivel" });
+
+    // a compra vai para o Meta mesmo sem o aviso de vendas da Abacate (uma vez por pedido)
+    if (redisLigado()) await processarVenda(c, "site").catch((e) => console.error("[entrega] venda", e.message));
 
     const bumps = String((c.metadata && c.metadata.bumps) || "").split(",").filter((b) => ENTREGAS[b]);
     // valor em centavos, usado pelo evento de compra do pixel no obrigado

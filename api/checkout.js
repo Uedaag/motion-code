@@ -1,9 +1,21 @@
 // Cria a cobrança PIX na Abacate Pay com o ingresso do lote atual + os order bumps escolhidos.
 // O preço é decidido aqui no servidor, pela data, nunca pelo navegador.
+// Com nome, e-mail e telefone (página /pagamento), o PIX sai direto na página, sem CPF
+// (checkout transparente). Se a Abacate recusar, cai no checkout hospedado dela.
 // Variável de ambiente necessária na Vercel: ABACATEPAY_API_KEY
 
 const API = "https://api.abacatepay.com/v2";
 const { redis } = require("./_comum");
+
+// Contato digitado na página /pagamento
+function contato(x) {
+  const nome = String((x && x.nome) || "").trim().replace(/\s+/g, " ").slice(0, 80);
+  const email = String((x && x.email) || "").trim().toLowerCase().slice(0, 120);
+  let tel = String((x && x.telefone) || "").replace(/\D/g, "");
+  if (tel.length > 11 && tel.startsWith("55")) tel = tel.slice(2);
+  if (nome.length < 3 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || !/^\d{10,11}$/.test(tel)) return null;
+  return { nome, email, tel };
+}
 
 // Afiliado que trouxe o comprador: só vale se estiver cadastrado no painel
 async function afiliadoValido(af) {
@@ -95,7 +107,7 @@ module.exports = async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   if (req.method === "GET") {
     const l = loteAtual();
-    return res.status(200).json({ lote: l ? { nome: l.name, preco: l.price } : null, bumps: Object.fromEntries(Object.entries(BUMPS).map(([k, b]) => [k, { nome: b.name, preco: b.price }])) });
+    return res.status(200).json({ lote: l ? { nome: l.name, preco: l.price, ate: l.ate } : null, bumps: Object.fromEntries(Object.entries(BUMPS).map(([k, b]) => [k, { nome: b.name, preco: b.price }])) });
   }
   if (req.method !== "POST") return res.status(405).json({ erro: "Método não permitido" });
 
@@ -108,22 +120,47 @@ module.exports = async (req, res) => {
   let pedido = req.body;
   if (typeof pedido === "string") { try { pedido = JSON.parse(pedido); } catch (e) { pedido = {}; } }
   const escolhidos = Array.isArray(pedido && pedido.bumps) ? [...new Set(pedido.bumps.filter((b) => BUMPS[b]))] : [];
+  const direto = !!(pedido && pedido.modo === "direto");
+  const dados = direto ? contato(pedido) : null;
+  if (direto && !dados) return res.status(400).json({ erro: "Confira seu nome, e-mail e telefone com DDD." });
+
+  const pedidoId = "mc-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+  const rastro = rastreio(req, pedido);
+  const af = await afiliadoValido(pedido && pedido.af);
+
+  if (dados) {
+    const valor = lote.price + escolhidos.reduce((t, b) => t + BUMPS[b].price, 0);
+    const descricao = [lote.name].concat(escolhidos.map((b) => BUMPS[b].name)).join(" + ");
+    const essencial = { pedido: pedidoId, lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum", nome: dados.nome, email: dados.email, tel: dados.tel, ...(af ? { af } : {}) };
+    const cria = (metadata) => api("/transparents/create", key, { method: "POST", body: JSON.stringify({ method: "PIX", data: { amount: valor, description: descricao, expiresIn: 3600, externalId: pedidoId, metadata } }) });
+    try {
+      let meta = { ...rastro, ...essencial }, b;
+      try { b = await cria(meta); }
+      catch (e) { console.error("[checkout] PIX direto com metadata completo recusado:", e.message); meta = essencial; b = await cria(meta); }
+      const d = b.data || {};
+      if (!d.id || !d.brCode) throw new Error("PIX direto sem código: " + JSON.stringify(d).slice(0, 200));
+      // registro do pedido: a entrega, o webhook e o painel acham o PIX direto por aqui
+      await redis([["SET", "mc:pix:" + pedidoId, JSON.stringify({ id: d.id, valor, criado: d.createdAt || new Date().toISOString(), meta }), "EX", 2592000]]).catch((e) => console.error("[checkout] redis", e.message));
+      return res.status(200).json({ pedido: pedidoId, valor, pix: { codigo: d.brCode, imagem: d.brCodeBase64 || "", expira: d.expiresAt || "" } });
+    } catch (e) {
+      // sem o PIX direto (permissão da chave ou instabilidade), a venda segue pela tela da Abacate
+      console.error("[checkout] PIX direto falhou, usando o checkout hospedado:", e.message);
+    }
+  }
 
   try {
     const itens = [{ id: await idDoProduto(lote, key), quantity: 1 }];
     for (const b of escolhidos) itens.push({ id: await idDoProduto(BUMPS[b], key), quantity: 1 });
     const site = origem(req);
     // O código do pedido volta na página de obrigado, que consulta o pagamento para liberar os bônus comprados
-    const pedidoId = "mc-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
     const corpo = {
       items: itens,
       methods: ["PIX"],
       returnUrl: site + "/#lotes",
       completionUrl: site + "/obrigado?p=" + pedidoId,
       externalId: pedidoId,
-      metadata: { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum", ...rastreio(req, pedido) },
+      metadata: { lote: lote.externalId, bumps: escolhidos.join(",") || "nenhum", ...rastro },
     };
-    const af = await afiliadoValido(pedido && pedido.af);
     if (af) corpo.metadata.af = af;
     let b;
     try { b = await api("/checkouts/create", key, { method: "POST", body: JSON.stringify(corpo) }); }

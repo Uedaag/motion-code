@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0F0D13">
+<title>Inscrição · Motion Code</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preload" as="image" href="assets/personagem-tablet.webp">
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0D13;--card:#1C1823;--card2:#241F2D;--ink:#F3EEE4;--ink2:#CBC3D6;--mut:#8E879A;--line:#2A2632;--acc:#FD6725;--painel:#141118;--erro:#F0857D}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:17px/1.6 "Instrument Sans",system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit}
+[hidden]{display:none!important}
+.pular{position:absolute;left:16px;top:-60px;background:var(--acc);color:#140A05;padding:10px 14px;border-radius:10px;font-weight:700;z-index:10;text-decoration:none}
+.pular:focus{top:12px}
+
+/* topo */
+.topo{width:min(1180px,100%);margin:0 auto;padding:22px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:2}
+.topo .logo{display:block;height:32px;width:auto}
+.status{display:inline-flex;align-items:center;gap:9px;font:500 12px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);background:rgba(28,24,35,.8);border:1px solid var(--line);border-radius:99px;padding:8px 14px 8px 12px;white-space:nowrap}
+.status svg{width:14px;height:14px;color:var(--acc)}
+
+/* zona */
+.zona{position:relative;width:min(1180px,100%);margin:0 auto;padding:6px 16px 40px}
+.ambs{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.amb{position:absolute;border-radius:50%}
+.amb.um{width:620px;height:620px;left:-180px;top:-120px;background:radial-gradient(closest-side,rgba(253,103,37,.16),transparent);animation:deriva 14s ease-in-out infinite}
+.amb.dois{width:520px;height:520px;right:-160px;bottom:-60px;background:radial-gradient(closest-side,rgba(253,103,37,.1),transparent);animation:deriva 18s ease-in-out infinite reverse}
+@keyframes deriva{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
+
+/* cartão em duas colunas: personagem à esquerda, pedido à direita */
+.cartao{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);grid-template-areas:"retrato inicio" "retrato resto";background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:0 50px 100px -50px #000}
+.inicio{grid-area:inicio;padding:46px 48px 0}
+.resto{grid-area:resto;padding:0 48px 46px}
+
+/* retrato */
+.retrato{grid-area:retrato;position:sticky;top:20px;align-self:start;height:min(820px,calc(100vh - 40px));min-height:560px;margin:14px 0 14px 14px;border-radius:20px;overflow:hidden;background:var(--painel);isolation:isolate}
+.retrato video,.retrato .poster{position:absolute;left:50%;bottom:0;height:69%;width:auto;max-width:100%;transform:translateX(-50%);object-fit:contain;object-position:50% 100%;z-index:1}
+.retrato .poster{z-index:0}
+.retrato .luz{position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(42% 34% at 50% 66%,rgba(253,103,37,.30),transparent 70%),radial-gradient(38% 6% at 50% 97%,rgba(253,103,37,.35),transparent 70%)}
+.retrato .grade{position:absolute;inset:0;z-index:0;background:linear-gradient(rgba(243,238,228,.035) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,rgba(243,238,228,.035) 1px,transparent 1px) 0 0/44px 44px;-webkit-mask:linear-gradient(#000 0,#000 30%,transparent 62%);mask:linear-gradient(#000 0,#000 30%,transparent 62%)}
+.retrato .fala{position:absolute;left:30px;right:30px;top:30px;z-index:3}
+.retrato .fala span{display:block;font:500 clamp(40px,4.2vw,58px)/.92 "Handjet",sans-serif;color:var(--ink)}
+.retrato .fala p{margin:6px 0 0;font:500 clamp(40px,4.2vw,58px)/.92 "Handjet",sans-serif;color:var(--acc)}
+.retrato .fala strong{display:block;margin-top:18px;font:700 13px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase}
+.retrato .fala small{display:block;font-size:13.5px;color:var(--mut)}
+.chip{position:absolute;z-index:3;display:inline-flex;align-items:center;gap:7px;font:700 12px "JetBrains Mono",monospace;color:var(--ink);background:rgba(28,24,35,.86);border:1px solid var(--line);border-radius:12px;padding:8px 11px;box-shadow:0 14px 30px -14px #000;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.chip b{color:var(--acc);font-weight:700}
+.chip.c1{right:7%;top:44%;animation:flutua 5s ease-in-out infinite}
+.chip.c2{left:6%;top:58%;animation:flutua 6s ease-in-out infinite .8s}
+.chip.c3{right:9%;bottom:9%;animation:flutua 5.5s ease-in-out infinite 1.6s}
+@keyframes flutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* cabeçalho do pedido */
+.k{font:500 12px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:0}
+h1{font:500 clamp(54px,6.4vw,92px)/.9 "Handjet",sans-serif;margin:10px 0 16px}
+h1 em{font-style:normal;color:var(--acc)}
+.lead{color:var(--ink2);margin:0 0 26px;max-width:46ch}
+.passo{font:500 12px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:30px 0 10px;display:flex;align-items:center;gap:10px}
+.passo b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(253,103,37,.14);color:var(--acc);font-weight:700;letter-spacing:0}
+
+/* ingresso */
+.ingresso{border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:18px 20px}
+.ingresso .linha{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.ingresso .linha span{font-weight:600}
+.ingresso .linha strong{font:600 30px/1 "Handjet",sans-serif;color:var(--ink)}
+.ingresso ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--ink2)}
+.ingresso li::before{content:"✓ ";color:var(--acc);font-weight:700}
+
+/* extras */
+.bump{display:flex;gap:12px;align-items:flex-start;margin-top:10px;padding:14px 16px;border:1px dashed rgba(253,103,37,.5);border-radius:14px;background:rgba(253,103,37,.06);cursor:pointer;transition:background .2s,border-color .2s}
+.bump:hover{background:rgba(253,103,37,.1)}
+.bump:has(input:checked){border-style:solid;border-color:var(--acc);background:rgba(253,103,37,.12)}
+.bump input{appearance:none;-webkit-appearance:none;width:22px;height:22px;flex:none;border:2px solid var(--acc);border-radius:6px;margin:2px 0 0;display:grid;place-items:center;cursor:pointer;background:transparent}
+.bump input:checked{background:var(--acc)}
+.bump input:checked::after{content:"✓";color:#140A05;font-weight:800;font-size:14px;line-height:1}
+.bump input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.bump .bt{font:700 15px/1.3 "JetBrains Mono",monospace;letter-spacing:-.02em}
+.bump .bt em{font-style:normal;color:var(--acc);white-space:nowrap}
+.bump p{margin:4px 0 0;font-size:13.5px;color:var(--ink2);line-height:1.45}
+
+/* dados */
+.campos{display:grid;gap:12px}
+.campo label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.campo input{width:100%;font:500 16px "Instrument Sans",sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:15px 16px;transition:border-color .2s,box-shadow .2s}
+.campo input::placeholder{color:#5F5869}
+.campo input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(253,103,37,.18)}
+.campo input[aria-invalid="true"]{border-color:var(--erro)}
+.campo small{display:block;margin-top:5px;font-size:12.5px;color:var(--mut)}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* total e botão */
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:26px 0 14px;padding-top:18px;border-top:1px solid var(--line)}
+.total span{color:var(--ink2);font-size:15px}
+.total b{font:600 52px/1 "Handjet",sans-serif;color:var(--acc)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 17px "Instrument Sans",sans-serif;padding:18px 24px;border-radius:14px;border:0;text-decoration:none;cursor:pointer;transition:transform .2s,filter .2s,border-color .2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.btn.pri{width:100%;background:var(--acc);color:#140A05;box-shadow:0 18px 40px -18px rgba(253,103,37,.7)}
+.btn.pri[disabled]{opacity:.65;pointer-events:none}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line);padding:13px 18px;font-size:15px}
+.btn.sec:hover{border-color:var(--acc)}
+.erro{margin-top:12px;padding:11px 14px;border-radius:12px;background:rgba(214,69,61,.14);color:#FFC9C4;font-size:14px}
+.seguro{display:flex;justify-content:center;align-items:center;gap:8px;margin:14px 0 0;font-size:12.5px;color:var(--mut);text-align:center}
+.seguro svg{flex:none;width:14px;height:14px}
+
+/* PIX gerado */
+.pix{margin-top:8px;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"qr como" "codigo codigo";gap:20px 24px;align-items:start}
+.qr{grid-area:qr;width:212px;padding:12px;background:#fff;border-radius:18px;box-shadow:0 24px 50px -28px rgba(253,103,37,.7)}
+.qr img{display:block;width:100%;height:auto;image-rendering:pixelated}
+.como{grid-area:como}
+.como h2{font:500 40px/.95 "Handjet",sans-serif;margin:0 0 6px}
+.como h2 em{font-style:normal;color:var(--acc)}
+.como ol{margin:10px 0 0;padding-left:20px;color:var(--ink2);font-size:15px}
+.como li+li{margin-top:4px}
+.codigo{grid-area:codigo}
+.codigo .cx{font:500 12.5px/1.5 "JetBrains Mono",monospace;color:var(--ink2);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;word-break:break-all;max-height:72px;overflow:hidden;position:relative;margin-bottom:10px;user-select:all}
+.espera{display:flex;align-items:center;gap:12px;margin-top:20px;padding:14px 16px;border-radius:14px;background:rgba(253,103,37,.06);border-left:3px solid var(--acc)}
+.espera i{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid rgba(253,103,37,.3);border-top-color:var(--acc);animation:gira 1s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+.espera p{margin:0;font-size:14.5px;color:var(--ink2)}
+.espera p b{color:var(--ink)}
+.expirou{margin-top:20px;padding:16px;border-radius:14px;border:1px solid var(--line);background:var(--bg)}
+.expirou p{margin:0 0 12px;color:var(--ink2);font-size:15px}
+.voltar{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13.5px;color:var(--mut)}
+.encerrado{padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--bg)}
+.encerrado p{margin:0 0 14px;color:var(--ink2)}
+footer{width:min(1180px,100%);margin:0 auto;padding:10px 16px 40px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mut)}
+
+/* entrada animada */
+.js [data-entra]{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
+.js .retrato[data-entra]{transform:translateX(-30px) scale(.98)}
+.js .topo[data-entra]{transform:translateY(-12px)}
+.js .pronto [data-entra]{opacity:1;transform:none}
+
+@media (max-width:900px){
+ .cartao{grid-template-columns:1fr;grid-template-areas:"inicio" "resto" "retrato";border-radius:24px}
+ .inicio{padding:30px 22px 0}
+ .resto{padding:0 22px 26px}
+ .retrato{position:relative;top:auto;height:440px;min-height:0;margin:0 14px 14px}
+ .retrato video,.retrato .poster{height:70%}
+ .retrato .fala{left:22px;right:22px;top:22px}
+ .retrato .fala span,.retrato .fala p{font-size:36px}
+ h1{font-size:58px}
+ .lead{margin-bottom:6px}
+}
+@media (max-width:560px){
+ .topo .logo{height:26px}
+ .status{font-size:10px;padding:7px 11px 7px 10px;letter-spacing:.1em}
+ .retrato .fala span,.retrato .fala p{font-size:31px}
+ .chip.c2{display:none}
+ .duas{grid-template-columns:1fr}
+ .total b{font-size:46px}
+ /* no celular a pessoa paga no próprio aparelho: o copia e cola vem antes do QR */
+ .pix{grid-template-columns:1fr;grid-template-areas:"como" "codigo" "qr"}
+ .qr{width:180px;justify-self:center}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important}
+ .js [data-entra]{opacity:1;transform:none}
+}
+</style>
+<script>document.documentElement.className='js'</script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1432467972410871');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1432467972410871&ev=PageView&noscript=1" alt=""></noscript>
+<a class="pular" href="#conteudo">Pular para o pagamento</a>
+
+<header class="topo" data-entra>
+ <a href="/" aria-label="Motion Code, voltar para a página do workshop"><img class="logo" src="assets/logo-horizontal.png" alt="Motion Code" width="156" height="32"></a>
+ <span class="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Pagamento seguro</span>
+</header>
+
+<main class="zona" id="conteudo">
+ <div class="ambs" aria-hidden="true"><span class="amb um"></span><span class="amb dois"></span></div>
+
+ <section class="cartao" aria-labelledby="titulo">
+  <aside class="retrato" data-entra style="--d:120ms" aria-label="Personagem do Motion Code criando um vídeo no tablet">
+   <span class="grade" aria-hidden="true"></span>
+   <img class="poster" src="assets/personagem-tablet.webp" alt="" width="600" height="976" aria-hidden="true">
+   <video id="personagem" muted playsinline loop preload="auto" aria-hidden="true"></video>
+   <span class="luz" aria-hidden="true"></span>
+   <div class="fala" data-entra style="--d:420ms">
+    <span>Falta só o PIX.</span>
+    <p>Dia 29 a gente cria junto.</p>
+    <strong>Motion Code</strong>
+    <small>Workshop ao vivo · 29/10 · 20h</small>
+   </div>
+   <span class="chip c1" aria-hidden="true"><b>PIX</b> na hora</span>
+   <span class="chip c2" aria-hidden="true"><b>7</b> dias de garantia</span>
+   <span class="chip c3" aria-hidden="true"><b>✓</b> ao vivo com a Magda</span>
+  </aside>
+
+  <div class="inicio">
+   <p class="k" data-entra style="--d:80ms" id="kLote">Sua inscrição</p>
+   <h1 id="titulo" data-entra style="--d:140ms">Garanta sua <em>vaga.</em></h1>
+   <p class="lead" data-entra style="--d:200ms" id="lead">Escolha os extras, coloque seus dados e pague com PIX. A confirmação chega na hora.</p>
+  </div>
+
+  <div class="resto" data-entra style="--d:260ms">
+   <!-- vendas encerradas -->
+   <div class="encerrado" id="encerrado" hidden>
+    <p>As vendas do Motion Code foram encerradas. Obrigado pelo interesse.</p>
+    <a class="btn sec" href="/">Voltar para a página do workshop</a>
+   </div>
+
+   <!-- passo 1: pedido e dados -->
+   <form id="fCompra" novalidate>
+    <p class="passo"><b>1</b>Seu ingresso</p>
+    <div class="ingresso">
+     <div class="linha"><span>Ingresso <span id="nLote">Lote 2</span> + 4 bônus</span><strong id="pLote">R$ 47</strong></div>
+     <ul><li>Ao vivo 29/10, 20h</li><li>Replay por 72 horas</li><li>Garantia de 7 dias</li></ul>
+    </div>
+
+    <p class="passo"><b>2</b>Quer levar junto? <span style="text-transform:none;letter-spacing:0;font-family:'Instrument Sans',sans-serif">(opcional)</span></p>
+    <label class="bump"><input type="checkbox" value="aula"><div><div class="bt">Aula Gravada <em>+ R$ 19,90</em></div><p>O replay gratuito sai do ar em 72 horas. Com a aula gravada, você guarda o workshop completo e revê cada passo no seu ritmo.</p></div></label>
+    <label class="bump"><input type="checkbox" value="moldes"><div><div class="bt">Biblioteca de Moldes <em>+ R$ 47</em></div><p>12 moldes de anúncio em motion (9:16, 1:1 e 16:9) prontos para trocar o texto e usar. Você já sai do workshop com criativos na mão.</p></div></label>
+    <label class="bump"><input type="checkbox" value="estilos"><div><div class="bt">Mesa de Estilos <em>+ R$ 27</em></div><p>30 estilos visuais com o prompt de cada um, para seus vídeos nunca terem cara de template.</p></div></label>
+
+    <p class="passo"><b>3</b>Seus dados</p>
+    <div class="campos">
+     <div class="campo"><label for="nome">Nome completo</label><input id="nome" name="nome" autocomplete="name" placeholder="Seu nome e sobrenome" maxlength="80" required></div>
+     <div class="duas">
+      <div class="campo"><label for="email">E-mail</label><input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" maxlength="120" required></div>
+      <div class="campo"><label for="telefone">WhatsApp com DDD</label><input id="telefone" name="telefone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" maxlength="16" required></div>
+     </div>
+    </div>
+    <p class="campo"><small>É por esses contatos que chegam o acesso e os lembretes do workshop.</small></p>
+
+    <div class="total"><span>Total</span><b id="tot">R$ 47</b></div>
+    <button class="btn pri" type="submit" id="gerar">Gerar PIX</button>
+    <div class="erro" id="erro" role="alert" hidden></div>
+    <p class="seguro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Pagamento pela Abacate Pay · PIX aprovado na hora · Garantia de 7 dias</p>
+   </form>
+
+   <!-- passo 2: PIX gerado -->
+   <section id="passoPix" hidden aria-labelledby="tPix">
+    <p class="passo"><b>✓</b>PIX gerado</p>
+    <div class="pix">
+     <div class="qr"><img id="qrImg" alt="QR Code do PIX" width="188" height="188"></div>
+     <div class="como">
+      <h2 id="tPix">Pague <em id="pixValor">R$ 47</em> no PIX</h2>
+      <ol>
+       <li>Abra o app do seu banco e entre em PIX.</li>
+       <li>Escolha <b>Pagar com QR Code</b> ou <b>PIX Copia e Cola</b>.</li>
+       <li>Confira o valor e confirme.</li>
+      </ol>
+     </div>
+     <div class="codigo">
+      <div class="cx" id="pixCodigo"></div>
+      <button class="btn pri" type="button" id="copiar">Copiar código PIX</button>
+     </div>
+    </div>
+    <div class="espera" id="espera" aria-live="polite"><i aria-hidden="true"></i><p><b>Aguardando o pagamento.</b> Assim que o PIX cair, você vai direto para a confirmação. <span id="validade"></span></p></div>
+    <div class="expirou" id="expirou" hidden><p>Este PIX expirou sem pagamento. Gere um novo para garantir sua vaga.</p><button class="btn pri" type="button" id="novoPix">Gerar um novo PIX</button></div>
+    <div class="voltar"><button class="btn sec" type="button" id="alterar">Alterar o pedido</button><span>Pagou e não mudou de tela? Aguarde alguns segundos.</span></div>
+   </section>
+  </div>
+ </section>
+</main>
+
+<footer><span>Motion Code · Ueda Agency</span><span>Você descreve. O Claude escreve o vídeo.</span></footer>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var form = $('fCompra'), gerar = $('gerar'), erro = $('erro'), tot = $('tot');
+  var PRECO = { aula: 1990, moldes: 4700, estilos: 2700 }; /* em centavos; o servidor confere */
+  var base = 4700, pedido = null, timer = null, enviando = false;
+  function brl(c){ return 'R$ ' + (c % 100 ? (c / 100).toFixed(2).replace('.', ',') : c / 100); }
+  function ler(k, store){ try { return JSON.parse((store || localStorage).getItem(k) || 'null'); } catch (e) { return null; } }
+  function grava(k, v, store){ try { (store || localStorage).setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  /* visitante, origem e afiliado: os mesmos da página de vendas */
+  var vid = null;
+  try { vid = localStorage.getItem('mc-vid'); if (!vid) { vid = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('mc-vid', vid); } } catch (e) { vid = 's' + Math.random().toString(36).slice(2); }
+  var ss = ler('mc-sessao', sessionStorage) || {}, q = new URLSearchParams(location.search);
+  if (!ss.o || /(^|&)(utm_[a-z]+|fbclid)=/.test(location.search.slice(1))) {
+    ss.o = { src: q.get('utm_source') || (q.get('fbclid') ? 'facebook' : ''), med: q.get('utm_medium') || '', camp: q.get('utm_campaign') || '', cont: q.get('utm_content') || '', ref: '', fbclid: q.get('fbclid') || '' };
+  }
+  var afG = ler('mc-af'), af = afG && afG.s && Date.now() - afG.t < 30 * 864e5 ? afG.s : '';
+  function ev(t, x){
+    try { var o = { t: t, v: vid }; for (var k in x) o[k] = x[k]; var b = JSON.stringify(o);
+      if (!(navigator.sendBeacon && navigator.sendBeacon('/api/evento', b))) fetch('/api/evento', { method: 'POST', body: b, keepalive: true }); } catch (e) {}
+  }
+  /* chegada à página de pagamento: etapa "janela de compra" do funil e InitiateCheckout, uma vez por visita */
+  if (!ss.pg) { ss.pg = 1; ev('modal'); if (window.fbq) fbq('track', 'InitiateCheckout', { value: base / 100, currency: 'BRL' }); }
+  grava('mc-sessao', ss, sessionStorage);
+
+  /* total */
+  function marcados(){ return [].slice.call(form.querySelectorAll('.bump input:checked')).map(function(i){ return i.value; }); }
+  function total(){ return marcados().reduce(function(t, b){ return t + PRECO[b]; }, base); }
+  function soma(){ var t = total(); tot.textContent = brl(t); gerar.textContent = 'Gerar PIX de ' + brl(t); }
+  form.querySelectorAll('.bump input').forEach(function(i){ i.addEventListener('change', soma); });
+  var pre = (q.get('b') || '').split(','); /* ?b=aula,moldes já deixa marcado */
+  form.querySelectorAll('.bump input').forEach(function(i){ if (pre.indexOf(i.value) > -1) i.checked = true; });
+
+  /* lote aberto e preços: vêm do servidor */
+  fetch('/api/checkout').then(function(r){ return r.json(); }).then(function(j){
+    if (!j.lote) { form.hidden = true; $('encerrado').hidden = false; $('lead').textContent = 'As inscrições foram encerradas.'; return; }
+    base = j.lote.preco;
+    var n = (j.lote.nome.match(/Lote \d+/) || ['Ingresso'])[0];
+    $('nLote').textContent = n; $('pLote').textContent = brl(base); $('kLote').textContent = 'Inscrição · ' + n;
+    for (var k in j.bumps) if (PRECO[k] !== undefined) PRECO[k] = j.bumps[k].preco;
+    soma();
+  }).catch(function(){ soma(); });
+  soma();
+
+  /* dados: telefone com máscara e lembrados para a próxima vez */
+  var tel = $('telefone');
+  function mascara(v){ var d = v.replace(/\D/g, ''); if (d.length > 11 && d.indexOf('55') === 0) d = d.slice(2); d = d.slice(0, 11);
+    if (d.length < 3) return d.length ? '(' + d : ''; if (d.length < 7) return '(' + d.slice(0, 2) + ') ' + d.slice(2);
+    return '(' + d.slice(0, 2) + ') ' + d.slice(2, d.length - 4) + '-' + d.slice(-4); }
+  tel.addEventListener('input', function(){ tel.value = mascara(tel.value); });
+  var dados = ler('mc-dados');
+  if (dados) { $('nome').value = dados.nome || ''; $('email').value = dados.email || ''; tel.value = mascara(dados.tel || ''); }
+
+  function confere(){
+    var ok = true, nome = $('nome').value.trim().replace(/\s+/g, ' '), email = $('email').value.trim(), d = tel.value.replace(/\D/g, '');
+    var regras = [[$('nome'), nome.length >= 3, 'Digite seu nome completo.'], [$('email'), /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email), 'Confira o seu e-mail.'], [tel, d.length === 10 || d.length === 11, 'Digite o WhatsApp com DDD.']];
+    var msg = '';
+    regras.forEach(function(r){ r[0].setAttribute('aria-invalid', r[1] ? 'false' : 'true'); if (!r[1] && ok) { ok = false; msg = r[2]; r[0].focus(); } });
+    return ok ? { nome: nome, email: email, telefone: d } : (mostraErro(msg), null);
+  }
+  function mostraErro(m){ erro.textContent = m; erro.hidden = false; }
+
+  /* gerar o PIX */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (enviando) return;
+    erro.hidden = true;
+    var d = confere(); if (!d) return;
+    var bumps = marcados(), t = total();
+    grava('mc-dados', { nome: d.nome, email: d.email, tel: d.telefone });
+    if (window.fbq) fbq('track', 'AddPaymentInfo', { value: t / 100, currency: 'BRL', num_items: 1 + bumps.length });
+    ev('pix');
+    enviando = true; gerar.disabled = true; gerar.textContent = 'Gerando o seu PIX...';
+    fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ modo: 'direto', bumps: bumps, nome: d.nome, email: d.email, telefone: d.telefone, vid: vid, origem: ss.o || {}, af: af }) })
+      .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(x){
+        if (x.ok && x.j.pix) {
+          var g = { p: x.j.pedido, u: '/pagamento', t: Date.now(), valor: x.j.valor, br: x.j.pix.codigo, img: x.j.pix.imagem, exp: x.j.pix.expira };
+          grava('mc-pix', g); mostraPix(g); return;
+        }
+        if (x.ok && x.j.url) { grava('mc-pix', { p: x.j.pedido, u: x.j.url, t: Date.now() }); location.href = x.j.url; return; }
+        throw new Error(x.j.erro || 'Erro');
+      })
+      .catch(function(e){
+        mostraErro(e.message && e.message !== 'Failed to fetch' && e.message !== 'Erro' ? e.message : 'Não foi possível gerar o PIX agora. Verifique sua conexão e tente de novo.');
+      })
+      .then(function(){ enviando = false; gerar.disabled = false; soma(); });
+  });
+
+  /* PIX na tela, conferindo o pagamento a cada 3 segundos */
+  function mostraPix(g){
+    pedido = g.p;
+    form.hidden = true; $('passoPix').hidden = false; $('expirou').hidden = true; $('espera').hidden = false;
+    $('qrImg').src = g.img || ''; $('qrImg').parentNode.hidden = !g.img;
+    $('pixCodigo').textContent = g.br; $('pixValor').textContent = brl(g.valor || total());
+    var fim = g.exp ? new Date(g.exp) : new Date(g.t + 3600e3);
+    $('validade').textContent = 'Este PIX vale até ' + String(fim.getHours()).padStart(2, '0') + 'h' + String(fim.getMinutes()).padStart(2, '0') + '.';
+    $('titulo').innerHTML = 'Agora é só <em>pagar.</em>';
+    $('lead').textContent = 'Use o QR Code ou o código copia e cola. A vaga fica garantida assim que o PIX cair.';
+    if (window.innerWidth < 900) $('passoPix').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    clearTimeout(timer); verifica();
+  }
+  function verifica(){
+    if (!pedido) return;
+    clearTimeout(timer);
+    fetch('/api/entrega?p=' + encodeURIComponent(pedido)).then(function(r){ return r.json(); }).then(function(j){
+      if (j.status === 'pago') { location.href = '/obrigado?p=' + encodeURIComponent(pedido); return; }
+      if (j.status === 'expirado') { $('espera').hidden = true; $('expirou').hidden = false; try { localStorage.removeItem('mc-pix'); } catch (e) {} return; }
+      timer = setTimeout(verifica, document.hidden ? 8000 : 3000);
+    }).catch(function(){ timer = setTimeout(verifica, 5000); });
+  }
+  /* quem volta do app do banco: confere na hora */
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden && pedido) verifica(); });
+
+  $('copiar').addEventListener('click', function(){
+    var b = this, txt = $('pixCodigo').textContent;
+    function ok(){ b.textContent = 'Código copiado ✓'; setTimeout(function(){ b.textContent = 'Copiar código PIX'; }, 2500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, velho); else velho();
+    function velho(){ var r = document.createRange(); r.selectNodeContents($('pixCodigo')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); try { document.execCommand('copy'); ok(); } catch (e) {} }
+  });
+  function voltaAoPedido(){
+    clearTimeout(timer); pedido = null;
+    try { localStorage.removeItem('mc-pix'); } catch (e) {}
+    $('passoPix').hidden = true; form.hidden = false;
+    $('titulo').innerHTML = 'Garanta sua <em>vaga.</em>';
+    $('lead').textContent = 'Escolha os extras, coloque seus dados e pague com PIX. A confirmação chega na hora.';
+    soma();
+  }
+  $('alterar').addEventListener('click', voltaAoPedido);
+  $('novoPix').addEventListener('click', function(){ voltaAoPedido(); form.requestSubmit ? form.requestSubmit() : gerar.click(); });
+
+  /* PIX gerado há menos de 55 minutos e ainda não pago: volta direto para ele */
+  var g0 = ler('mc-pix');
+  if (g0 && g0.br && Date.now() - g0.t < 55 * 6e4) mostraPix(g0);
+})();
+
+/* personagem: webm com transparência; Safari usa a versão com o fundo do painel já aplicado */
+(function(){
+  var v = document.getElementById('personagem'), ua = navigator.userAgent;
+  var safari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(ua) || /iPhone|iPad|iPod/.test(ua);
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return; // fica a imagem parada
+  v.src = safari ? 'assets/personagem-tablet.mp4' : 'assets/personagem-tablet.webm';
+  v.addEventListener('playing', function(){ document.querySelector('.retrato .poster').style.visibility = 'hidden'; }, { once: true });
+  var pr = v.play(); if (pr && pr.catch) pr.catch(function(){});
+})();
+
+/* entrada */
+(function(){
+  function pronto(){ document.body.classList.add('pronto'); }
+  requestAnimationFrame(function(){ requestAnimationFrame(pronto); });
+  setTimeout(pronto, 400);
+})();
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 const crypto = require("crypto");
 
 const ABACATE = "https://api.abacatepay.com/v2";
-const PIXEL = "1312882030998403";
+const PIXEL = "1432467972410871";
 const GRAPH = "https://graph.facebook.com/v23.0";
 const SITE = "https://workshopcode.uedaagency.com.br";
 
@@ -69,7 +69,8 @@ const corta = (s, n) => String(s == null ? "" : s).slice(0, n);
 // Compra para o Meta pela API de Conversões. event_id = código do pedido,
 // o mesmo do pixel no obrigado, para o Meta não contar duas vezes.
 async function enviarCompraMeta(ck, cliente) {
-  const token = process.env.META_CAPI_TOKEN;
+  // tira espaço, quebra de linha, aspas ou "Bearer" que venham colados junto com o token
+  const token = String(process.env.META_CAPI_TOKEN || "").trim().replace(/^["']+|["']+$/g, "").replace(/^bearer\s+/i, "").trim();
   // sem token, o webhook responde erro e a Abacate tenta de novo por até ~18 h
   if (!token) return { ok: false, temporario: true, resposta: "META_CAPI_TOKEN não configurado" };
   const m = ck.metadata || {};

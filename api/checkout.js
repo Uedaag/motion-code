@@ -87,7 +87,7 @@ function rastreio(req, pedido) {
     fbc: c(fbc, 260),
     ip: c(String(req.headers["x-forwarded-for"] || "").split(",")[0].trim(), 45),
     ua: c(req.headers["user-agent"], 220),
-    src: c(o.src, 60), med: c(o.med, 60), camp: c(o.camp, 90), cont: c(o.cont, 90),
+    src: c(o.src, 60), med: c(o.med, 60), camp: c(o.camp, 90), cont: c(o.cont, 90), ref: c(o.ref, 60),
   };
 }
 

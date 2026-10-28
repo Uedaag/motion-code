@@ -182,7 +182,7 @@ module.exports = async (req, res) => {
         valor: (c.paidAmount || c.amount || 0) / 100,
         lote: String(m.lote || "").replace("mc-ingresso-", "").replace("-", " "),
         bumps: String(m.bumps || "").split(",").filter((b) => b && b !== "nenhum"),
-        origem: { src: m.src || "", camp: m.camp || "", cont: m.cont || "" },
+        origem: { src: m.src || "", camp: m.camp || "", cont: m.cont || "", ref: m.ref || "" },
         afiliado: m.af ? { slug: m.af, nome: (afs[m.af] && afs[m.af].nome) || m.af } : null,
         cliente: cli ? { nome: cli.name || "", email: cli.email || "", fone: cli.cellphone || "" } : null,
         meta,
@@ -215,7 +215,7 @@ module.exports = async (req, res) => {
         tentativas: p.tentativas,
         lote: String(m.lote || "").replace("mc-ingresso-", "").replace("-", " "),
         bumps: String(m.bumps || "").split(",").filter((b) => b && b !== "nenhum"),
-        origem: { src: m.src || "", camp: m.camp || "", cont: m.cont || "" },
+        origem: { src: m.src || "", camp: m.camp || "", cont: m.cont || "", ref: m.ref || "" },
         afiliado: m.af ? { slug: m.af, nome: (afs[m.af] && afs[m.af].nome) || m.af } : null,
         cliente: cli ? { nome: cli.name || "", email: cli.email || "", fone: cli.cellphone || "" } : null,
       });

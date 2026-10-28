@@ -69,6 +69,17 @@ td small{display:block;color:var(--mut);font-size:12.5px}
 td .tag{display:inline-block;font:600 11.5px "Instrument Sans";padding:2px 8px;border-radius:99px;background:var(--card2);border:1px solid var(--line);margin:2px 4px 0 0}
 td .tag.bump{border-color:rgba(253,103,37,.5);color:var(--ink)}
 td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);color:var(--ink);margin:0 0 4px}
+.dia-tab td,.dia-tab th{text-align:right}
+.dia-tab td:first-child,.dia-tab th:first-child{text-align:left;white-space:nowrap}
+.dia-tab tr.tot td{font-weight:700;border-top:2px solid var(--line)}
+.dia-tab td.zero{color:var(--mut)}
+.dia-tab .cv{display:inline-block;min-width:54px;padding:2px 8px;border-radius:99px;background:var(--card2)}
+.dia-tab .cv.bom{background:rgba(61,214,140,.16);color:var(--ok)}
+.pix-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.pix-top button{flex:none}
+.zap{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#06210f;font:700 13px "Instrument Sans",sans-serif;padding:7px 11px;border-radius:9px;text-decoration:none;white-space:nowrap}
+.zap svg{width:15px;height:15px}
+.mail{display:inline-block;margin-top:6px;font-size:12.5px;color:var(--ink2)}
 .af-form{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
 .af-form label{display:block;font:500 11px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
 .af-form input{display:block;margin-top:6px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:500 15px "Instrument Sans",sans-serif;padding:10px 12px;outline:none;width:240px;text-transform:none;letter-spacing:0}
@@ -138,6 +149,18 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
   <p class="sub">Direto da Abacate Pay. A coluna Meta mostra se a compra já foi avisada à campanha.</p>
   <div class="tab"><table><thead><tr><th>Pago em</th><th>Cliente</th><th>Itens</th><th>Valor</th><th>Origem</th><th>Meta</th></tr></thead><tbody id="tVendas"></tbody></table></div>
  </section>
+ <section class="bloco" id="blocoDia">
+  <h2>Desempenho por dia</h2>
+  <p class="sub">Cada dia do período, do mais recente para o mais antigo. Pessoas = visitantes diferentes; as etapas contam cada pessoa uma vez por dia.</p>
+  <div class="tab"><table class="dia-tab"><thead><tr><th>Dia</th><th>Pessoas</th><th>Viram a VSL</th><th>Ligaram o som</th><th>Clicaram comprar</th><th>Pagar com PIX</th><th>PIX gerados</th><th>Vendas</th><th>Faturamento</th><th>Conversão</th></tr></thead><tbody id="tDia"></tbody></table></div>
+ </section>
+ <section class="bloco" id="blocoPix">
+  <div class="pix-top"><div><h2>PIX gerados sem pagamento</h2>
+  <p class="sub">Quem preencheu os dados e gerou o PIX, mas não pagou. Uma linha por pessoa; quem pagou depois sai da lista. Use só para lembrar da compra e pare se a pessoa pedir.</p></div>
+  <button type="button" id="bPixCsv">Baixar planilha</button></div>
+  <p class="sub" id="pixResumo"></p>
+  <div class="tab"><table><thead><tr><th>Gerado em</th><th>Pessoa</th><th>Itens</th><th>Valor</th><th>Origem</th><th>Chamar</th></tr></thead><tbody id="tPix"></tbody></table></div>
+ </section>
  <section class="bloco" id="blocoAf">
   <h2>Afiliados</h2>
   <p class="sub">Cadastre o afiliado e mande o link para ele. Quem entra pelo link fica marcado por 30 dias, e toda compra dessa pessoa aparece aqui no nome dele.</p>
@@ -176,7 +199,7 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
   var brl = function(v){ return 'R$ ' + Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
   var num = function(v){ return Number(v || 0).toLocaleString('pt-BR'); };
   var pct = function(a, b){ return b ? Math.round(a / b * 1000) / 10 : 0; };
-  var SECOES = [['vsl','VSL: viu o vídeo no topo'],['vslplay','VSL: ligou o som'],['vsl25','VSL: assistiu 25%'],['vsl50','VSL: assistiu 50%'],['vsl75','VSL: assistiu 75%'],['vsl100','VSL: assistiu até o fim'],['palco','Vídeo de abertura'],['apresentacao','Apresentação e preço'],['cliques','Poucos cliques'],['portfolio','Vídeos por nicho'],['feitos','Feito com Motion Code'],['muda','O que muda'],['calculadora','Calculadora'],['virada','A virada'],['metodo','Método 3 Takes'],['comecar','Antes de começar'],['programa','Programa'],['paraquem','Para quem é'],['conduz','Quem conduz'],['aovivo','Ao vivo × gravado'],['lotes','Ingressos'],['duvidas','Perguntas frequentes'],['final','Chamada final']];
+  var SECOES = [['retoma','Voltou com PIX pendente (viu o aviso)'],['vsl','VSL: viu o vídeo no topo'],['vslplay','VSL: ligou o som'],['vsl25','VSL: assistiu 25%'],['vsl50','VSL: assistiu 50%'],['vsl75','VSL: assistiu 75%'],['vsl100','VSL: assistiu até o fim'],['palco','Vídeo de abertura'],['apresentacao','Apresentação e preço'],['cliques','Poucos cliques'],['portfolio','Vídeos por nicho'],['feitos','Feito com Motion Code'],['muda','O que muda'],['calculadora','Calculadora'],['virada','A virada'],['metodo','Método 3 Takes'],['comecar','Antes de começar'],['programa','Programa'],['paraquem','Para quem é'],['conduz','Quem conduz'],['aovivo','Ao vivo × gravado'],['lotes','Ingressos'],['duvidas','Perguntas frequentes'],['final','Chamada final']];
   var BUMPS = { aula: 'Aula gravada', moldes: 'Biblioteca de Moldes', estilos: 'Mesa de Estilos' };
   var senha = '', periodo = '7', dados = null, tTimer = 0;
   try { senha = sessionStorage.getItem('mc-adm') || ''; periodo = localStorage.getItem('mc-adm-per') || '7'; } catch (e) {}
@@ -270,6 +293,8 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
     }).join('') : '<tr><td colspan="6" class="vazio">Nenhuma venda paga neste período.</td></tr>';
     [].forEach.call(document.querySelectorAll('[data-meta]'), function(b){ b.addEventListener('click', function(){ enviarMeta(b); }); });
     desenharAfiliados(j.afiliados);
+    desenharPix(j.abandonos || [], j.abandonoResumo || {});
+    desenharDias(j);
 
     // bônus
     var cont = { aula: 0, moldes: 0, estilos: 0 };
@@ -305,6 +330,56 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
     }).catch(function(e){ b.disabled = false; b.textContent = 'Ligar aviso de vendas'; if (e.message !== '401') toast(e.message); });
   }
   // afiliados: tabela, copiar link, remover e cadastrar
+  // desempenho por dia: uma linha por dia + total do período
+  function desenharDias(j){
+    var est = j.estat, porDia = est ? est.porDia : (j.vendasPorDia || []).map(function(d){ return { dia: d.dia, vendas: d.vendas, faturamento: d.faturamento, pixGerados: d.pixGerados }; });
+    var cel = function(v, f){ return '<td class="num' + (v ? '' : ' zero') + '">' + (v == null ? '—' : (f ? f(v) : num(v))) + '</td>'; };
+    var conv = function(vd, ps){ if (!ps) return '<td class="num zero">—</td>'; var p = pct(vd, ps); return '<td class="num"><span class="cv' + (p >= 1 ? ' bom' : '') + '">' + String(p).replace('.', ',') + '%</span></td>'; };
+    var t = { pessoas: 0, vsl: 0, vslplay: 0, cta: 0, pix: 0, pixGerados: 0, vendas: 0, faturamento: 0 };
+    var linhas = porDia.slice().reverse().map(function(d){
+      Object.keys(t).forEach(function(k){ t[k] += d[k] || 0; });
+      var dt = new Date(d.dia + 'T12:00:00'), nome = dt.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+      return '<tr><td>' + esc(nome) + '</td>' + (est ? cel(d.pessoas) + cel(d.vsl) + cel(d.vslplay) + cel(d.cta) + cel(d.pix) : '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
+        + cel(d.pixGerados) + cel(d.vendas) + cel(d.faturamento, brl) + conv(d.vendas || 0, est ? d.pessoas : 0) + '</tr>';
+    });
+    var pessoasTot = est ? est.pessoas : 0;
+    linhas.push('<tr class="tot"><td>Período</td>' + (est ? cel(pessoasTot) + cel(t.vsl) + cel(t.vslplay) + cel(t.cta) + cel(t.pix) : '<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
+      + cel(t.pixGerados) + cel(t.vendas) + cel(t.faturamento, brl) + conv(t.vendas, pessoasTot) + '</tr>');
+    $('tDia').innerHTML = porDia.length ? linhas.join('') : '<tr><td colspan="10" class="vazio">Sem dados no período.</td></tr>';
+  }
+  // recuperação de PIX: WhatsApp e e-mail com a mensagem pronta (a pessoa revisa antes de enviar)
+  var SITE_LOTES = 'https://workshopcode.uedaagency.com.br/#lotes';
+  function msgPix(nome){ var n = String(nome || '').trim().split(/\s+/)[0]; return 'Oi' + (n ? ', ' + n : '') + '! Tudo bem? Aqui é do Motion Code, o workshop da Magda. Vi que você chegou a gerar o PIX da sua vaga, mas o pagamento não foi concluído. Ficou alguma dúvida? Se ainda quiser participar, é só gerar um novo PIX aqui: ' + SITE_LOTES; }
+  function foneZap(f){ var d = String(f || '').replace(/\D/g, ''); if (!d) return ''; if (d.length <= 11) d = '55' + d; return d; }
+  function desenharPix(lista, r){
+    var partes = [];
+    partes.push(num(lista.length) + (lista.length === 1 ? ' pessoa para chamar' : ' pessoas para chamar'));
+    if (r.pagaramDepois) partes.push(num(r.pagaramDepois) + (r.pagaramDepois > 1 ? ' geraram PIX e pagaram depois' : ' gerou PIX e pagou depois') + ' (fora da lista)');
+    if (r.semDados) partes.push(num(r.semDados) + ' sem dados (fecharam antes de preencher)');
+    $('pixResumo').textContent = partes.join(' · ');
+    $('tPix').innerHTML = lista.length ? lista.map(function(x){
+      var cli = x.cliente || {}, z = foneZap(cli.fone), msg = msgPix(cli.nome);
+      var pessoa = '<b>' + esc(cli.nome || '—') + '</b><small>' + esc(cli.email || '') + '</small>' + (cli.fone ? '<small>' + esc(cli.fone) + '</small>' : '');
+      var itens = '<span class="tag">Ingresso ' + esc(x.lote || '') + '</span>' + x.bumps.map(function(b){ return '<span class="tag bump">' + esc(BUMPS[b] || b) + '</span>'; }).join('') + (x.tentativas > 1 ? '<small>' + x.tentativas + ' tentativas</small>' : '');
+      var o = x.origem || {}, origem = o.src || o.camp || o.cont ? esc(o.src || '—') + (o.camp ? '<small>' + esc(o.camp) + '</small>' : '') + (o.cont ? '<small>' + esc(o.cont) + '</small>' : '') : '<small>sem UTM</small>';
+      if (x.afiliado) origem = '<span class="tag af">Afiliado · ' + esc(x.afiliado.nome) + '</span>' + origem;
+      var chamar = (z ? '<a class="zap" href="https://wa.me/' + z + '?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2c0 1.3.9 2.5 1 2.7.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.6-.3z"/></svg>WhatsApp</a>' : '<small>sem celular</small>')
+        + (cli.email ? '<div><a class="mail" href="mailto:' + esc(cli.email) + '?subject=' + encodeURIComponent('Sua vaga no Motion Code') + '&body=' + encodeURIComponent(msg) + '">e-mail</a></div>' : '');
+      var d = new Date(x.geradoEm);
+      return '<tr><td class="num">' + d.toLocaleDateString('pt-BR') + '<small>' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '</small></td><td>' + pessoa + '</td><td>' + itens + '</td><td class="num"><b>' + brl(x.valor) + '</b></td><td>' + origem + '</td><td>' + chamar + '</td></tr>';
+    }).join('') : '<tr><td colspan="6" class="vazio">Ninguém com PIX pendente neste período.</td></tr>';
+    $('bPixCsv').onclick = function(){
+      if (!lista.length) { toast('Nenhum contato no período.'); return; }
+      var cel = function(s){ return '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"'; };
+      var linhas = [['Gerado em', 'Nome', 'E-mail', 'Celular', 'Valor', 'Itens', 'Origem'].map(cel).join(';')].concat(lista.map(function(x){
+        var c = x.cliente || {}, o = x.origem || {};
+        return [new Date(x.geradoEm).toLocaleString('pt-BR'), c.nome, c.email, c.fone, String(x.valor.toFixed(2)).replace('.', ','), ['Ingresso ' + x.lote].concat(x.bumps.map(function(b){ return BUMPS[b] || b; })).join(' + '), [o.src, o.camp, o.cont].filter(Boolean).join(' | ')].map(cel).join(';');
+      }));
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob(['\ufeff' + linhas.join('\r\n')], { type: 'text/csv;charset=utf-8' }));
+      a.download = 'pix-sem-pagamento.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    };
+  }
   function copiar(txt){ (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){ toast('Link copiado.'); }, function(){ window.prompt('Copie o link:', txt); }); }
   function desenharAfiliados(lista){
     var t = $('tAf'), f = $('fAf');

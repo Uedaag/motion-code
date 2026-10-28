@@ -397,6 +397,12 @@ body{margin:0;background:#0F0D13}
 #mc .vsl-cta{margin-top:20px;width:min(100%,420px)}
 #mc .vsl-cta .btn{width:100%;justify-content:center;font-size:18px;padding:18px 24px}
 #mc .vsl-cta p{margin-top:10px;font-size:14px;color:var(--mut)}
+#mc .vsl-cta .mcFecha:not(:empty){display:block;color:var(--acc);font-weight:600;margin-bottom:2px}
+#mc .retoma{width:min(100%,560px);display:flex;align-items:center;justify-content:space-between;gap:14px;text-align:left;background:rgba(253,103,37,.1);border:1px solid rgba(253,103,37,.55);border-radius:14px;padding:12px 12px 12px 16px;margin-bottom:16px}
+#mc .retoma[hidden]{display:none}
+#mc .retoma b{display:block;font-size:15px;color:var(--ink)}
+#mc .retoma span{display:block;font-size:13px;color:var(--ink2)}
+#mc .retoma .btn{flex:none}
 @media (prefers-reduced-motion:reduce){#mc .vsl-som span{animation:none}}
 </style>
 <!-- Meta Pixel - Workshop -->
@@ -425,6 +431,7 @@ fbq('track', 'PageView');
 
 <!-- VSL: vídeo de vendas no topo, com barra de progresso e o botão de compra embaixo -->
 <section class="vsl" id="mcVsl"><div class="wrap">
+ <div class="retoma" id="mcRetoma" hidden><div><b>Seu PIX ainda está esperando o pagamento.</b><span>A vaga só fica garantida quando o pagamento cai.</span></div><a class="btn sm" id="mcRetomaBtn" href="#lotes">Concluir pagamento</a></div>
  <div class="vsl-k">Assista antes de garantir <b>sua vaga</b></div>
  <div class="vsl-box" id="mcVslBox">
   <video id="mcVslVid" src="assets/vsl.mp4" poster="assets/vsl-poster.jpg" muted playsinline autoplay preload="auto" aria-label="Vídeo de apresentação do Motion Code"></video>
@@ -432,7 +439,7 @@ fbq('track', 'PageView');
   <div class="vsl-pausa" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="rgba(253,103,37,.95)"/><path d="M10 8l6 4-6 4z" fill="#140A05"/></svg></div>
   <div class="vsl-bar"><i id="mcVslBar"></i></div>
  </div>
- <div class="vsl-cta"><a href="#lotes" class="btn">Garantir minha vaga · <span class="mcPreco">R$ 37</span></a><p>Ao vivo com a Magda · garantia de 7 dias</p></div>
+ <div class="vsl-cta"><a href="#lotes" class="btn">Garantir minha vaga · <span class="mcPreco">R$ 37</span></a><p><span class="mcFecha"></span>Ao vivo com a Magda · garantia de 7 dias</p></div>
 </div></section>
 
 <!-- PALCO: os 3 takes acontecendo no scroll -->
@@ -823,7 +830,7 @@ fbq('track', 'PageView');
   <p class="buy-note">Pagamento seguro pela Abacate Pay · PIX com aprovação na hora · Garantia de 7 dias</p>
  </div>
 </div>
-<div class="sticky" id="mcSticky"><span>Motion Code · 29/10 · <b class="mcPreco">R$ 37</b></span><a href="#lotes" class="btn sm">Garantir vaga</a></div>
+<div class="sticky" id="mcSticky"><span><span class="mcFecha">Motion Code · 29/10</span> · <b class="mcPreco">R$ 37</b></span><a href="#lotes" class="btn sm">Garantir vaga</a></div>
 </div>
 
 <script>
@@ -845,6 +852,12 @@ document.querySelectorAll('#mc .lote').forEach(function(l){
   else if(!ativo){ativo=l;l.classList.add('on');l.querySelector('.st').textContent='LOTE '+l.dataset.lote+' · ABERTO';}
   else{l.classList.add('next');a.textContent='Em breve';}
 });
+/* contagem real até o fim do lote aberto (data do próprio lote) */
+if(ativo){var fimLote=new Date(ativo.dataset.ate).getTime(),nLote=ativo.dataset.lote;
+  var fecha=function(){var ms=fimLote-Date.now();if(ms<=0){location.reload();return}var m=Math.floor(ms/6e4),h=Math.floor(m/60),d=Math.floor(h/24),txt;
+    if(d>=1)txt=d+(d>1?' dias':' dia')+(h%24?' e '+(h%24)+'h':'');else if(h>=1)txt=h+'h '+String(m%60).padStart(2,'0')+'min';else txt=m+' min';
+    document.querySelectorAll('#mc .mcFecha').forEach(function(e){e.textContent='Lote '+nLote+' fecha em '+txt})};
+  fecha();setInterval(fecha,30000)}
 if(ativo){var p='R$ '+ativo.querySelector('.pr').textContent.replace('R$','').trim();document.querySelectorAll('#mc .mcPreco').forEach(function(e){e.textContent=p});
   var lk=CHECKOUT[ativo.querySelector('a').dataset.link];if(lk)document.querySelectorAll('#mc a[href="#lotes"]').forEach(function(a){a.href=lk})}
 
@@ -988,7 +1001,7 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
     go.disabled=true;go.textContent='Abrindo o pagamento...';err.style.display='none';
     fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bumps:bumps,vid:window.mcVid||'',origem:window.mcOrigem||{},af:window.mcAfiliado||''})})
       .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
-      .then(function(x){if(x.ok&&x.j.url){location.href=x.j.url}else{throw new Error(x.j.erro||'Erro')}})
+      .then(function(x){if(x.ok&&x.j.url){try{localStorage.setItem('mc-pix',JSON.stringify({p:x.j.pedido,u:x.j.url,t:Date.now()}))}catch(e){}location.href=x.j.url}else{throw new Error(x.j.erro||'Erro')}})
       .catch(function(e){err.textContent=e.message&&e.message!=='Failed to fetch'?e.message:'Não foi possível abrir o pagamento. Verifique sua conexão e tente de novo.';err.style.display='block';go.disabled=false;go.textContent='Pagar com PIX'});
   });
 })();
@@ -1046,6 +1059,19 @@ if(!reduce)(function pf(){var y=scrollY;vel+=((y-lastY)-vel)*.12;lastY=y;var sk=
   c.querySelectorAll('input[type=range]').forEach(function(i){i.addEventListener('input',conta)});
   conta();
 })();
+})();
+</script>
+<script>
+/* quem gerou PIX e voltou sem pagar: aviso no topo com o caminho de volta ao pagamento */
+(function(){
+  var box=document.getElementById('mcRetoma'),btn=document.getElementById('mcRetomaBtn'),g=null;
+  try{g=JSON.parse(localStorage.getItem('mc-pix')||'null')}catch(e){}
+  if(!box||!g||!g.p||Date.now()-g.t>36*36e5){try{localStorage.removeItem('mc-pix')}catch(e){}return}
+  fetch('/api/entrega?p='+encodeURIComponent(g.p)).then(function(r){return r.json()}).then(function(j){
+    if(j.status!=='pendente'){try{localStorage.removeItem('mc-pix')}catch(e){}return}
+    if(g.u&&Date.now()-g.t<2*36e5)btn.href=g.u; /* até 2h volta para o mesmo PIX; depois gera um novo */
+    box.hidden=false;if(window.mcEvento)window.mcEvento('secao',{s:'retoma'});
+  }).catch(function(){});
 })();
 </script>
 <script>

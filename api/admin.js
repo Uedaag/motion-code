@@ -79,18 +79,20 @@ async function estatisticas(ds) {
   ds.forEach((d) => {
     ["d", "s", "o", "c", "dev", "p"].forEach((k) => cmds.push(["HGETALL", "mc:" + k + ":" + d]));
     cmds.push(["PFCOUNT", "mc:uv:" + d]);
+    ["cta", "modal", "pix"].forEach((f) => cmds.push(["PFCOUNT", "mc:f:" + d + ":" + f]));  // pessoas em cada etapa, no dia
   });
   cmds.push(["PFCOUNT", ...ds.map((d) => "mc:uv:" + d)]);
   ["lotes", "cta", "modal", "pix"].forEach((f) => cmds.push(["PFCOUNT", ...ds.map((d) => "mc:f:" + d + ":" + f)]));
   const r = await redis(cmds);
   const est = { porDia: [], tot: {}, secoes: {}, origens: {}, campanhas: {}, dispositivos: {}, perfis: {}, pessoas: 0, funil: {} };
   ds.forEach((d, i) => {
-    const b = i * 7, dd = hash(r[b]);
-    somaEm(est.tot, dd); somaEm(est.secoes, hash(r[b + 1])); somaEm(est.origens, hash(r[b + 2]));
+    const b = i * 10, dd = hash(r[b]), sd = hash(r[b + 1]);
+    somaEm(est.tot, dd); somaEm(est.secoes, sd); somaEm(est.origens, hash(r[b + 2]));
     somaEm(est.campanhas, hash(r[b + 3])); somaEm(est.dispositivos, hash(r[b + 4])); somaEm(est.perfis, hash(r[b + 5]));
-    est.porDia.push({ dia: d, visitas: dd.visitas || 0, pessoas: r[b + 6] || 0 });
+    est.porDia.push({ dia: d, visitas: dd.visitas || 0, pessoas: r[b + 6] || 0, cta: r[b + 7] || 0, modal: r[b + 8] || 0, pix: r[b + 9] || 0,
+      vsl: sd.vsl || 0, vslplay: sd.vslplay || 0, vsl50: sd.vsl50 || 0 });
   });
-  const f = ds.length * 7;
+  const f = ds.length * 10;
   est.pessoas = r[f] || 0;
   est.funil = { lotes: r[f + 1] || 0, cta: r[f + 2] || 0, modal: r[f + 3] || 0, pix: r[f + 4] || 0 };
   return est;
@@ -188,9 +190,41 @@ module.exports = async (req, res) => {
       };
     }).sort((a, b) => (a.pagoEm < b.pagoEm ? 1 : -1));
 
-    const vendasPorDia = {};
-    vendas.forEach((v) => { const d = diaBR(new Date(v.pagoEm).getTime()); vendasPorDia[d] = (vendasPorDia[d] || 0) + 1; });
-    if (est) est.porDia.forEach((x) => { x.vendas = vendasPorDia[x.dia] || 0; });
+    // PIX gerados sem pagamento: uma linha por pessoa (a tentativa mais recente). Quem pagou depois fica de fora.
+    const compradores = new Set(pagos.map((c) => c.customerId).filter(Boolean));
+    const emailsPagos = new Set(clientes.filter(Boolean).map((c) => String(c.email || "").toLowerCase()).filter(Boolean));
+    const pendPeriodo = pendentes.filter((c) => noPeriodo(c.createdAt)).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+    const vistos = new Map();
+    let semDados = 0, pagaramDepois = 0;
+    for (const c of pendPeriodo) {
+      if (!c.customerId) { semDados++; continue; }
+      if (compradores.has(c.customerId)) { pagaramDepois++; continue; }
+      if (vistos.has(c.customerId)) { vistos.get(c.customerId).tentativas++; continue; }
+      vistos.set(c.customerId, { ck: c, tentativas: 1 });
+    }
+    const pend = [...vistos.values()].slice(0, 60);
+    const clientesPend = await Promise.all(pend.map((p) => clienteDo(p.ck)));
+    const abandonos = [];
+    pend.forEach((p, i) => {
+      const c = p.ck, m = c.metadata || {}, cli = clientesPend[i];
+      if (cli && cli.email && emailsPagos.has(String(cli.email).toLowerCase())) { pagaramDepois++; return; }
+      abandonos.push({
+        pedido: c.externalId,
+        geradoEm: c.createdAt,
+        valor: (c.amount || 0) / 100,
+        tentativas: p.tentativas,
+        lote: String(m.lote || "").replace("mc-ingresso-", "").replace("-", " "),
+        bumps: String(m.bumps || "").split(",").filter((b) => b && b !== "nenhum"),
+        origem: { src: m.src || "", camp: m.camp || "", cont: m.cont || "" },
+        afiliado: m.af ? { slug: m.af, nome: (afs[m.af] && afs[m.af].nome) || m.af } : null,
+        cliente: cli ? { nome: cli.name || "", email: cli.email || "", fone: cli.cellphone || "" } : null,
+      });
+    });
+
+    const vendasPorDia = {}, fatPorDia = {}, pixPorDia = {};
+    vendas.forEach((v) => { const d = diaBR(new Date(v.pagoEm).getTime()); vendasPorDia[d] = (vendasPorDia[d] || 0) + 1; fatPorDia[d] = (fatPorDia[d] || 0) + v.valor; });
+    pagos.concat(pendentes).forEach((c) => { const d = diaBR(new Date(c.createdAt).getTime()); pixPorDia[d] = (pixPorDia[d] || 0) + 1; });
+    if (est) est.porDia.forEach((x) => { x.vendas = vendasPorDia[x.dia] || 0; x.faturamento = fatPorDia[x.dia] || 0; x.pixGerados = pixPorDia[x.dia] || 0; });
 
     return res.status(200).json({
       periodo, inicio: ini, fim,
@@ -198,7 +232,8 @@ module.exports = async (req, res) => {
       vendas,
       afiliados: redisLigado() ? await resumoAfiliados(afs, ds, vendas).catch((e) => { console.error("[admin] afiliados", e.message); return []; }) : null,
       pixGerados: pendentes.filter((c) => noPeriodo(c.createdAt)).length,
-      vendasPorDia: ds.map((d) => ({ dia: d, vendas: vendasPorDia[d] || 0 })),
+      abandonos, abandonoResumo: { semDados, pagaramDepois },
+      vendasPorDia: ds.map((d) => ({ dia: d, vendas: vendasPorDia[d] || 0, faturamento: fatPorDia[d] || 0, pixGerados: pixPorDia[d] || 0 })),
       estat: est,
     });
   } catch (e) {

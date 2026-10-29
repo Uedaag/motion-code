@@ -299,7 +299,7 @@ td .tag.af{background:rgba(253,103,37,.14);border-color:rgba(253,103,37,.6);colo
       var itensHtml = '<span class="tag">Ingresso ' + esc(x.lote || '') + '</span>' + x.bumps.map(function(b){ return '<span class="tag bump">' + esc(BUMPS[b] || b) + '</span>'; }).join('');
       var o = x.origem || {}, origem = o.src || o.camp || o.cont ? esc(o.src || '—') + (o.camp ? '<small>' + esc(o.camp) + '</small>' : '') + (o.cont ? '<small>' + esc(o.cont) + '</small>' : '') : o.ref ? '<small>sem UTM</small><small>veio de ' + esc(o.ref) + '</small>' : '<small>sem UTM</small>';
       if (x.afiliado) origem = '<span class="tag af">Afiliado · ' + esc(x.afiliado.nome) + '</span>' + origem;
-      var meta = x.meta && x.meta.ok ? '<span class="st ok">✓ enviada</span><small>' + esc(x.meta.via === 'webhook' ? 'automática' : 'pelo painel') + '</small>'
+      var meta = x.meta && x.meta.ok ? '<span class="st ok">✓ enviada</span><small>' + esc(x.meta.via === 'painel' ? 'pelo painel' : 'automática') + '</small>'
         : (x.meta ? '<span class="st no">! falhou</span><small>' + esc(x.meta.resposta || '') + '</small>' : '<span class="st no">não confirmada</span>');
       if (!(x.meta && x.meta.ok) && x.podeMeta) meta += '<div><button type="button" data-meta="' + esc(x.pedido) + '" style="margin-top:6px">Enviar ao Meta</button></div>';
       if (!(x.meta && x.meta.ok) && !x.podeMeta) meta += '<small>mais de 7 dias: o Meta não aceita</small>';

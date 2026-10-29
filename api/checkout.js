@@ -27,7 +27,7 @@ async function afiliadoValido(af) {
 // Lotes: válidos até a data indicada (horário de Brasília)
 const LOTES = [
   { externalId: "mc-ingresso-lote-1", name: "Workshop Motion Code (Lote 1)", price: 3700, ate: "2026-10-25T23:59:59-03:00" },
-  { externalId: "mc-ingresso-lote-2", name: "Workshop Motion Code (Lote 2)", price: 4700, ate: "2026-10-29T18:00:00-03:00" },
+  { externalId: "mc-ingresso-lote-2", name: "Workshop Motion Code (Lote 2)", price: 4700, ate: "2026-10-29T20:00:00-03:00" },
 ];
 
 const BUMPS = {

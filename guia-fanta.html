@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0F0D13">
+<title>Guia do vídeo Fanta · Motion Code</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0D13;--card:#1C1823;--card2:#241F2D;--ink:#F3EEE4;--ink2:#CBC3D6;--mut:#8E879A;--line:#2A2632;--acc:#FD6725;--ok:#3DDC84}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Instrument Sans",system-ui,sans-serif;overflow-x:hidden}
+a{color:var(--acc)}
+.pular{position:absolute;left:16px;top:-60px;background:var(--acc);color:#140A05;padding:10px 14px;border-radius:10px;font-weight:700;z-index:10;text-decoration:none}
+.pular:focus{top:12px}
+.amb{position:fixed;width:640px;height:640px;left:-200px;top:-160px;border-radius:50%;background:radial-gradient(closest-side,rgba(253,103,37,.14),transparent);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;width:min(880px,100%);margin:0 auto;padding:0 16px}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.topo img{height:30px;width:auto;display:block}
+.selo{font:500 12px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);border:1px solid var(--line);border-radius:99px;padding:7px 13px;background:rgba(28,24,35,.8);white-space:nowrap}
+
+/* topo do guia */
+.hero{padding:34px 0 10px}
+.k{font:500 12px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:0}
+h1{font:500 clamp(52px,8vw,96px)/.9 "Handjet",sans-serif;margin:12px 0 18px}
+h1 em,h2 em{font-style:normal;color:var(--acc)}
+.lead{color:var(--ink2);font-size:19px;max-width:52ch;margin:0}
+.indice{display:flex;flex-wrap:wrap;gap:8px;margin:30px 0 8px;padding:0;list-style:none}
+.indice a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-size:14.5px;font-weight:600;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 14px;transition:border-color .2s}
+.indice a:hover{border-color:var(--acc)}
+.indice b{font:600 18px/1 "Handjet",sans-serif;color:var(--acc)}
+
+/* seções */
+section{padding:46px 0 6px;border-top:1px solid var(--line);margin-top:40px}
+h2{font:500 clamp(40px,6vw,62px)/.95 "Handjet",sans-serif;margin:8px 0 14px}
+h3{font:700 16px/1.35 "JetBrains Mono",monospace;letter-spacing:-.01em;margin:26px 0 8px}
+p{margin:0 0 14px}
+.sub{color:var(--ink2);max-width:60ch}
+ul.lista{margin:0 0 14px;padding-left:0;list-style:none}
+ul.lista li{position:relative;padding-left:28px;margin:8px 0;color:var(--ink2)}
+ul.lista li::before{content:"";position:absolute;left:4px;top:.62em;width:10px;height:10px;border-radius:3px;background:var(--acc)}
+ul.lista b{color:var(--ink)}
+.caixa{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin:16px 0}
+.caixa.aviso{border-left:3px solid var(--acc);border-radius:0 18px 18px 0;background:rgba(253,103,37,.06)}
+.caixa.aviso p:last-child{margin:0}
+.passos{counter-reset:p;list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px}
+.passos li{counter-increment:p;display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.passos li::before{content:counter(p,decimal-leading-zero);font:600 30px/1 "Handjet",sans-serif;color:var(--acc);flex:none;width:34px}
+.passos p{margin:0;color:var(--ink2)}
+.passos b{color:var(--ink)}
+
+/* prompts */
+.prompt{margin:16px 0 22px;border:1px solid rgba(253,103,37,.45);border-radius:18px;background:#0B0A0E;overflow:hidden}
+.prompt .cab{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px 12px 18px;background:rgba(253,103,37,.08);border-bottom:1px solid rgba(253,103,37,.25)}
+.prompt .cab span{font:700 13px "JetBrains Mono",monospace;letter-spacing:.02em}
+.prompt .cab span i{font-style:normal;color:var(--acc)}
+.prompt button{font:700 14px "Instrument Sans",sans-serif;color:#140A05;background:var(--acc);border:0;border-radius:10px;padding:9px 14px;cursor:pointer;white-space:nowrap}
+.prompt button.ok{background:var(--ok)}
+.prompt pre{margin:0;padding:18px;font:500 14px/1.6 "JetBrains Mono",monospace;color:#E8E1D6;white-space:pre-wrap;word-break:break-word}
+.prompt pre mark{background:rgba(253,103,37,.18);color:#FFB089;border-radius:4px;padding:0 3px}
+
+/* fórmula */
+.formula{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:10px;margin:22px 0}
+.formula div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.formula div.top{border-color:var(--acc);background:rgba(253,103,37,.08)}
+.formula b{display:block;font:600 34px/1 "Handjet",sans-serif;color:var(--acc);margin-bottom:6px}
+.formula span{font-size:14.5px;color:var(--ink2);line-height:1.45;display:block}
+.formula i{align-self:center;font:600 34px/1 "Handjet",sans-serif;color:var(--mut);font-style:normal}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duas .caixa{margin:0}
+.ruim{color:#F0857D;font-weight:700}
+.bom{color:var(--ok);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0 18px;font-size:15px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+td:first-child{font-weight:600;white-space:nowrap}
+td{color:var(--ink2)}
+.check{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px}
+.check label{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 16px;cursor:pointer;color:var(--ink2)}
+.check input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--acc);border-radius:6px;margin:1px 0 0;display:grid;place-items:center;cursor:pointer}
+.check input:checked{background:var(--acc)}
+.check input:checked::after{content:"✓";color:#140A05;font-weight:800;font-size:14px;line-height:1}
+.check label:has(input:checked){color:var(--ink);border-color:rgba(253,103,37,.5)}
+.check b{color:var(--ink)}
+.fim{margin:56px 0 30px;padding:28px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.fim div{flex:1 1 300px}
+.fim h2{margin-top:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 16px "Instrument Sans",sans-serif;padding:15px 22px;border-radius:14px;text-decoration:none;background:#25D366;color:#06210F}
+footer{padding:10px 0 40px;font-size:13px;color:var(--mut);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+@media (max-width:700px){
+ .formula{grid-template-columns:1fr}
+ .formula i{justify-self:center;line-height:.6}
+ .duas{grid-template-columns:1fr}
+ td:first-child{white-space:normal}
+ .prompt pre{font-size:13px;padding:14px}
+}
+@media print{
+ body{background:#fff;color:#111}
+ .amb,.indice,.prompt button,.fim .btn{display:none}
+ .prompt,.caixa,.passos li,.formula div,.check label{background:#fff;border-color:#ccc;color:#111}
+ .prompt pre{color:#111}
+ section{page-break-inside:avoid}
+}
+.tira{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:22px 0 6px}
+.tira img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}
+.tira img.lata{border-color:var(--acc)}
+@media (max-width:700px){.tira{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<a class="pular" href="#roteiro">Pular para o roteiro</a>
+<span class="amb" aria-hidden="true"></span>
+<div class="wrap">
+ <header class="topo"><a href="/" aria-label="Motion Code"><img src="assets/logo-horizontal.png" alt="Motion Code" width="146" height="30"></a><span class="selo">Guia do vídeo da aula</span></header>
+
+ <div class="hero">
+  <p class="k">Workshop Motion Code · o vídeo da aula</p>
+  <h1>Fanta Halloween, <em>do roteiro ao MP4.</em></h1>
+  <p class="lead">Como a gente fez o anúncio "Sessão da Meia-Noite": 32 segundos, sem locução, com uma personagem criada no Flow e o motion feito no HyperFrames. Cada etapa tem o prompt pronto para copiar.</p>
+  <div class="tira">
+   <img src="assets/guia-fanta/00-nina-personagem.jpg" alt="A personagem Nina">
+   <img src="assets/guia-fanta/02-olhar-ombro.jpg" alt="Nina olhando para trás">
+   <img src="assets/guia-fanta/07-vampiro-capa.jpg" alt="O vampiro">
+   <img src="assets/guia-fanta/10-golpe.jpg" alt="Nina avançando com a estaca">
+   <img src="assets/guia-fanta/11-lata-fanta.jpg" alt="Nina com a lata de Fanta">
+   <img class="lata" src="assets/guia-fanta/lata-fanta-dracula.jpg" alt="A lata real da Fanta Halloween">
+  </div>
+  <ul class="indice">
+   <li><a href="#ideia"><b>1</b> A ideia</a></li>
+   <li><a href="#roteiro"><b>2</b> Roteiro</a></li>
+   <li><a href="#personagem"><b>3</b> Personagem</a></li>
+   <li><a href="#cenas"><b>4</b> Cenas</a></li>
+   <li><a href="#motion"><b>5</b> Motion</a></li>
+   <li><a href="#som"><b>6</b> Som</a></li>
+   <li><a href="#ajustes"><b>7</b> Ajustes</a></li>
+   <li><a href="#cuidados"><b>8</b> Cuidados</a></li>
+   <li><a href="/guia"><b>←</b> Guia do aluno</a></li>
+  </ul>
+ </div>
+
+ <section id="ideia">
+  <p class="k">Etapa 1</p>
+  <h2>A ideia <em>em uma linha.</em></h2>
+  <p class="sub">Antes de abrir qualquer ferramenta: uma garota é perseguida por um vampiro na noite de Halloween, enfrenta o medo, vence e comemora com a Fanta que estava com ela o tempo todo.</p>
+  <div class="formula">
+   <div><b>Tema</b><span>Enfrente seu maior medo com seu parceiro de sempre.</span></div><i>+</i>
+   <div><b>Referência</b><span>Terror adolescente dos anos 90 (tipo <i>Buffy</i>, 1992). Só o clima, nunca a cópia.</span></div><i>+</i>
+   <div class="top"><b>Marca</b><span>Fanta Halloween 2026 ("Fanta leva você ao cinema"), com a lata e o logo reais.</span></div>
+  </div>
+  <div class="caixa aviso"><p><b>Por que vampiro?</b> A campanha da Fanta deste ano fala de filmes de terror e tem o Drácula entre os personagens da lata. A ideia nasceu de olhar a página oficial da marca antes de escrever.</p></div>
+ </section>
+
+ <section id="roteiro">
+  <p class="k">Etapa 2</p>
+  <h2>O roteiro <em>sem locução.</em></h2>
+  <p class="sub">Sem voz, quem conta a história é a imagem. O teste é simples: tampe os textos e veja se ainda dá para entender.</p>
+  <div class="prompt"><div class="cab"><span>Prompt · <i>roteiro</i></span><button type="button">Copiar</button></div><pre>Escreva o roteiro de um anúncio de 30 segundos, 9:16, sem locução, para a marca [MARCA].
+Tema: [TEMA].
+Referência de estilo: [FILME OU ANÚNCIO QUE VOCÊ GOSTA]. Use só o clima, com personagens originais.
+Divida em 6 a 8 cenas. Em cada uma: tempo, o que a gente vê, texto na tela (no máximo 6 palavras) e som.
+A história tem que ser entendida sem ler nada.
+Mostre o produto logo no começo, escondido na cena, e faça ele voltar no final como recompensa.</pre></div>
+  <table>
+   <tr><th>Tempo</th><th>Cena</th><th>O que acontece</th></tr>
+   <tr><td>0–3 s</td><td>A noite</td><td>Lua cheia, Nina sozinha na rua, a lata no bolso da mochila.</td></tr>
+   <tr><td>3–7 s</td><td>Alguém atrás</td><td>Os postes apagam, uma sombra de capa passa no muro.</td></tr>
+   <tr><td>7–12 s</td><td>Corre</td><td>Olhos vermelhos no escuro, a fuga e uma revoada de morcegos.</td></tr>
+   <tr><td>12–16 s</td><td>Sem saída</td><td>Portão trancado. O vampiro pousa na frente dela.</td></tr>
+   <tr><td>16–20 s</td><td>O medo</td><td>Ela puxa a estaca. Olho no olho. "MEDO?"</td></tr>
+   <tr><td>20–23 s</td><td>O golpe</td><td>Clarão laranja, e o vampiro vira poeira.</td></tr>
+   <tr><td>23–26 s</td><td>A parceira</td><td>Ela abre a Fanta e sorri. A câmera entra na lua.</td></tr>
+   <tr><td>26–32 s</td><td>Assinatura</td><td>"Enfrente seu maior medo / com seu parceiro de sempre" e a lata.</td></tr>
+  </table>
+ </section>
+
+ <section id="personagem">
+  <p class="k">Etapa 3</p>
+  <h2>A personagem <em>no Flow.</em></h2>
+  <ol class="passos">
+   <li><p><b>Gere em dois estilos</b> (3D de animação e cinema 35mm) e escolha com a cabeça do cliente. Para refrigerante, o 3D ficou mais leve e manteve o rosto igual em todas as cenas.</p></li>
+   <li><p><b>Peça corpo inteiro, de frente, com fundo liso.</b> É essa imagem que vira a referência das próximas.</p></li>
+   <li><p><b>Envie a escolhida ao Flow com um nome curto</b>, como <b>nina</b>. Daqui pra frente, todo pedido começa com {nina}.</p></li>
+  </ol>
+  <div class="prompt"><div class="cab"><span>Prompt · <i>personagem</i></span><button type="button">Copiar</button></div><pre>Personagem original para um anúncio de Halloween: Nina, estudante brasileira do ensino médio nos anos 90 que é caçadora de vampiros. Pele morena clara, cabelo cacheado volumoso castanho-escuro preso num rabo de cavalo alto com scrunchie laranja, sobrancelhas marcadas, olhar confiante e um meio sorriso. Roupa: jaqueta jeans oversized com patches, camiseta laranja, saia plissada xadrez preta e roxa, meia-calça preta, coturno preto, mochila escura com chaveiros num ombro. Segura uma estaca de madeira na mão direita, apontada para baixo. Corpo inteiro, de frente, em pé no centro da imagem. Fundo liso cinza-escuro de estúdio. Estilo: animação 3D de longa-metragem de estúdio, iluminação cinematográfica com luz fria azulada de lua vinda da esquerda e contraluz laranja quente. Sem texto, sem logotipo.</pre></div>
+  <div class="caixa aviso"><p>O laranja da camiseta e do scrunchie não é por acaso: a personagem já carrega a cor da marca.</p></div>
+ </section>
+
+ <section id="cenas">
+  <p class="k">Etapa 4</p>
+  <h2>As cenas, <em>sempre com a mesma Nina.</em></h2>
+  <p class="sub">Uma imagem por momento do roteiro. O segredo da consistência é repetir o fim do prompt em todas.</p>
+  <div class="prompt"><div class="cab"><span>Prompt · <i>modelo de cena</i></span><button type="button">Copiar</button></div><pre>[O QUE ACONTECE NA CENA, com {nina} e o enquadramento: plano aberto, close, de baixo para cima...]
+Estilo: animação 3D de longa-metragem de estúdio, mesma personagem {nina} (mesmo rosto, cabelo, roupa). Luz fria azulada da lua e contraluz laranja quente, clima de filme de terror adolescente dos anos 90. Sem texto, sem logotipo.</pre></div>
+  <h3>As 11 cenas do vídeo</h3>
+  <ul class="lista">
+   <li><b>01</b> Rua vazia, lua enorme, Nina caminhando pequena no canto.</li>
+   <li><b>02</b> Close dela olhando por cima do ombro, assustada.</li>
+   <li><b>03</b> Só a sombra de um vampiro de capa no muro de tijolos.</li>
+   <li><b>04</b> Dois olhos vermelhos no escuro.</li>
+   <li><b>05</b> Nina correndo em direção à câmera.</li>
+   <li><b>06</b> Nina encostada no portão trancado do cemitério.</li>
+   <li><b>07</b> O vampiro pousando com a capa aberta, visto de baixo.</li>
+   <li><b>08</b> Close da mão puxando a estaca.</li>
+   <li><b>09</b> Close extremo dos olhos dela, decididos.</li>
+   <li><b>10</b> Nina avançando com a estaca, explosão laranja atrás.</li>
+   <li><b>11</b> Nina sentada no muro com a lata de Fanta na mão.</li>
+  </ul>
+  <h3>A lata de verdade</h3>
+  <p class="sub">Não peça para a IA "inventar" a lata: ela erra o logo. Baixe a foto oficial do produto, envie ao Flow como <b>lata</b> e use {lata} no pedido.</p>
+  <div class="prompt"><div class="cab"><span>Prompt · <i>cena com o produto</i></span><button type="button">Copiar</button></div><pre>{nina} sentada no muro baixo de pedra do cemitério à noite, aliviada e sorrindo, segurando na mão direita a lata de refrigerante {lata} perto do rosto, com o rótulo de frente para a câmera e bem visível, a lata acabou de ser aberta e solta um pouco de gás. Lua cheia grande atrás. Plano médio. Estilo: animação 3D de longa-metragem de estúdio, mesma personagem {nina} e a lata igual à {lata}. Luz fria azulada da lua e contraluz laranja quente. Sem outros textos.</pre></div>
+ </section>
+
+ <section id="motion">
+  <p class="k">Etapa 5</p>
+  <h2>O motion <em>no HyperFrames.</em></h2>
+  <p class="sub">Ainda não instalou o HyperFrames? Comece pelo <a href="/guia#instalar">guia do aluno</a>. Aqui as imagens paradas viram filme: a câmera desce da lua, aperta no susto, treme no impacto, e os morcegos fazem o corte.</p>
+  <ol class="passos">
+   <li><p>Abra o Claude, aba <b>Code</b>, numa pasta fora do OneDrive (ex.: <b>C:\HyperFrames</b>).</p></li>
+   <li><p>Cole o prompt abaixo e <b>arraste as 11 cenas, a foto da lata e o logo</b> para o chat.</p></li>
+   <li><p>Ele mostra 3 quadros antes de renderizar. Aprove ou peça o ajuste ali mesmo.</p></li>
+  </ol>
+  <div class="prompt"><div class="cab"><span>Prompt · <i>motion</i></span><button type="button">Copiar</button></div><pre>Crie um vídeo motion com o HyperFrames, numa pasta nova chamada fanta-halloween.
+
+TEMA: anúncio de Halloween da Fanta, sem locução. A Nina foge de um vampiro, vence o medo e comemora com uma Fanta.
+REFERÊNCIA: terror adolescente dos anos 90: cortes rápidos, câmera que aperta no susto, texto gigante.
+MATERIAL: as 11 cenas anexadas, na ordem, mais a lata e o logo da Fanta.
+MARCA: noite azulada; laranja #FF7A00 só nos momentos-chave. FORMATO: 9:16 · 32 segundos.
+TEXTOS: "31 DE OUTUBRO · 23:58" → "CORRE." → "MEDO?" → "ENFRENTE SEU MAIOR MEDO" → "COM SEU PARCEIRO DE SEMPRE"
+SOM: graves, coração, impactos e a lata abrindo. FINAL: a câmera entra na lua, ela fica laranja e vira a assinatura com o logo e a lata.
+Antes de renderizar, me mostre 3 quadros. Depois renderize em MP4.</pre></div>
+  <table>
+   <tr><th>Movimento</th><th>Onde aparece</th></tr>
+   <tr><td>Câmera que desce</td><td>Abre na lua e desce até a rua.</td></tr>
+   <tr><td>Luz piscando</td><td>Os postes apagando enquanto ela olha para trás.</td></tr>
+   <tr><td>Tremida no ritmo</td><td>A corrida, em cada batida do coração.</td></tr>
+   <tr><td>Revoada</td><td>Os morcegos cobrem a tela e escondem o corte.</td></tr>
+   <tr><td>Quadro de impacto</td><td>Clarão, linhas de ação e a câmera tremendo no golpe.</td></tr>
+   <tr><td>Corte pela forma</td><td>A câmera entra na lua, que fica laranja e vira a assinatura.</td></tr>
+  </table>
+ </section>
+
+ <section id="som">
+  <p class="k">Etapa 6</p>
+  <h2>O som <em>conta metade.</em></h2>
+  <ul class="lista">
+   <li><b>Grave contínuo</b> desde o primeiro segundo: é ele que cria o suspense.</li>
+   <li><b>Estalo</b> em cada poste que apaga e <b>coração</b> acelerando na corrida.</li>
+   <li><b>Silêncio de repente</b> no portão, antes do vampiro pousar.</li>
+   <li><b>Impacto</b> no golpe e <b>a lata abrindo</b> como o som mais alto do filme.</li>
+  </ul>
+  <div class="caixa aviso"><p>Quer trilha? Peça "coloque uma trilha de suspense por baixo, que pare no portão e volte no golpe". Use só música que você tem direito de usar.</p></div>
+ </section>
+
+ <section id="ajustes">
+  <p class="k">Etapa 7</p>
+  <h2>Ajustar <em>conversando.</em></h2>
+  <ul class="lista">
+   <li>"A corrida está lenta, deixe 20% mais rápida."</li>
+   <li>"Segure a frase final 1 segundo a mais."</li>
+   <li>"Os morcegos estão pequenos, quero que cubram a tela toda."</li>
+   <li>"Faça uma versão 4:5 para o feed."</li>
+   <li>"Troque a lata pela de laranja."</li>
+  </ul>
+ </section>
+
+ <section id="cuidados">
+  <p class="k">Etapa 8</p>
+  <h2>Os cuidados <em>que ninguém conta.</em></h2>
+  <ul class="lista">
+   <li><b>Referência é clima, não cópia.</b> A Nina e o vampiro são originais: nada de nome, rosto ou roupa do filme.</li>
+   <li><b>Logo e produto reais</b>, da página oficial da marca. A IA não desenha logo direito.</li>
+   <li><b>Marca de terceiro é exercício.</b> Para veicular como anúncio da Fanta, precisa de autorização da Coca-Cola. Para o seu portfólio, deixe claro que é um projeto de estudo.</li>
+  </ul>
+ </section>
+
+ <footer><span>Motion Code · Ueda Agency</span><span>Você descreve. O Claude escreve o vídeo.</span></footer>
+</div>
+
+<script>
+/* copiar prompt: só o texto, sem as marcações */
+document.querySelectorAll('.prompt button').forEach(function(b){
+  b.addEventListener('click', function(){
+    var txt = b.closest('.prompt').querySelector('pre').innerText;
+    function ok(){ b.textContent = 'Copiado ✓'; b.classList.add('ok'); setTimeout(function(){ b.textContent = 'Copiar'; b.classList.remove('ok'); }, 2200); }
+    function velho(){ var t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); ok(); } catch (e) {} t.remove(); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, velho); else velho();
+  });
+});
+</script>
+</body>
+</html>

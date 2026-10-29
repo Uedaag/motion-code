@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0F0D13">
+<title>Guia do aluno · Motion Code</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Handjet:wght@500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0D13;--card:#1C1823;--card2:#241F2D;--ink:#F3EEE4;--ink2:#CBC3D6;--mut:#8E879A;--line:#2A2632;--acc:#FD6725;--ok:#3DDC84}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Instrument Sans",system-ui,sans-serif;overflow-x:hidden}
+a{color:var(--acc)}
+.pular{position:absolute;left:16px;top:-60px;background:var(--acc);color:#140A05;padding:10px 14px;border-radius:10px;font-weight:700;z-index:10;text-decoration:none}
+.pular:focus{top:12px}
+.amb{position:fixed;width:640px;height:640px;left:-200px;top:-160px;border-radius:50%;background:radial-gradient(closest-side,rgba(253,103,37,.14),transparent);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;width:min(880px,100%);margin:0 auto;padding:0 16px}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+.topo img{height:30px;width:auto;display:block}
+.selo{font:500 12px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);border:1px solid var(--line);border-radius:99px;padding:7px 13px;background:rgba(28,24,35,.8);white-space:nowrap}
+
+/* topo do guia */
+.hero{padding:34px 0 10px}
+.k{font:500 12px "JetBrains Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:0}
+h1{font:500 clamp(52px,8vw,96px)/.9 "Handjet",sans-serif;margin:12px 0 18px}
+h1 em,h2 em{font-style:normal;color:var(--acc)}
+.lead{color:var(--ink2);font-size:19px;max-width:52ch;margin:0}
+.indice{display:flex;flex-wrap:wrap;gap:8px;margin:30px 0 8px;padding:0;list-style:none}
+.indice a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-size:14.5px;font-weight:600;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 14px;transition:border-color .2s}
+.indice a:hover{border-color:var(--acc)}
+.indice b{font:600 18px/1 "Handjet",sans-serif;color:var(--acc)}
+
+/* seções */
+section{padding:46px 0 6px;border-top:1px solid var(--line);margin-top:40px}
+h2{font:500 clamp(40px,6vw,62px)/.95 "Handjet",sans-serif;margin:8px 0 14px}
+h3{font:700 16px/1.35 "JetBrains Mono",monospace;letter-spacing:-.01em;margin:26px 0 8px}
+p{margin:0 0 14px}
+.sub{color:var(--ink2);max-width:60ch}
+ul.lista{margin:0 0 14px;padding-left:0;list-style:none}
+ul.lista li{position:relative;padding-left:28px;margin:8px 0;color:var(--ink2)}
+ul.lista li::before{content:"";position:absolute;left:4px;top:.62em;width:10px;height:10px;border-radius:3px;background:var(--acc)}
+ul.lista b{color:var(--ink)}
+.caixa{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin:16px 0}
+.caixa.aviso{border-left:3px solid var(--acc);border-radius:0 18px 18px 0;background:rgba(253,103,37,.06)}
+.caixa.aviso p:last-child{margin:0}
+.passos{counter-reset:p;list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px}
+.passos li{counter-increment:p;display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.passos li::before{content:counter(p,decimal-leading-zero);font:600 30px/1 "Handjet",sans-serif;color:var(--acc);flex:none;width:34px}
+.passos p{margin:0;color:var(--ink2)}
+.passos b{color:var(--ink)}
+
+/* prompts */
+.prompt{margin:16px 0 22px;border:1px solid rgba(253,103,37,.45);border-radius:18px;background:#0B0A0E;overflow:hidden}
+.prompt .cab{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px 12px 18px;background:rgba(253,103,37,.08);border-bottom:1px solid rgba(253,103,37,.25)}
+.prompt .cab span{font:700 13px "JetBrains Mono",monospace;letter-spacing:.02em}
+.prompt .cab span i{font-style:normal;color:var(--acc)}
+.prompt button{font:700 14px "Instrument Sans",sans-serif;color:#140A05;background:var(--acc);border:0;border-radius:10px;padding:9px 14px;cursor:pointer;white-space:nowrap}
+.prompt button.ok{background:var(--ok)}
+.prompt pre{margin:0;padding:18px;font:500 14px/1.6 "JetBrains Mono",monospace;color:#E8E1D6;white-space:pre-wrap;word-break:break-word}
+.prompt pre mark{background:rgba(253,103,37,.18);color:#FFB089;border-radius:4px;padding:0 3px}
+
+/* fórmula */
+.formula{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:10px;margin:22px 0}
+.formula div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.formula div.top{border-color:var(--acc);background:rgba(253,103,37,.08)}
+.formula b{display:block;font:600 34px/1 "Handjet",sans-serif;color:var(--acc);margin-bottom:6px}
+.formula span{font-size:14.5px;color:var(--ink2);line-height:1.45;display:block}
+.formula i{align-self:center;font:600 34px/1 "Handjet",sans-serif;color:var(--mut);font-style:normal}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duas .caixa{margin:0}
+.ruim{color:#F0857D;font-weight:700}
+.bom{color:var(--ok);font-weight:700}
+table{width:100%;border-collapse:collapse;margin:12px 0 18px;font-size:15px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+td:first-child{font-weight:600;white-space:nowrap}
+td{color:var(--ink2)}
+.check{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px}
+.check label{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 16px;cursor:pointer;color:var(--ink2)}
+.check input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--acc);border-radius:6px;margin:1px 0 0;display:grid;place-items:center;cursor:pointer}
+.check input:checked{background:var(--acc)}
+.check input:checked::after{content:"✓";color:#140A05;font-weight:800;font-size:14px;line-height:1}
+.check label:has(input:checked){color:var(--ink);border-color:rgba(253,103,37,.5)}
+.check b{color:var(--ink)}
+.fim{margin:56px 0 30px;padding:28px;border-radius:24px;background:var(--card);border:1px solid var(--line);display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.fim div{flex:1 1 300px}
+.fim h2{margin-top:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 16px "Instrument Sans",sans-serif;padding:15px 22px;border-radius:14px;text-decoration:none;background:#25D366;color:#06210F}
+footer{padding:10px 0 40px;font-size:13px;color:var(--mut);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+@media (max-width:700px){
+ .formula{grid-template-columns:1fr}
+ .formula i{justify-self:center;line-height:.6}
+ .duas{grid-template-columns:1fr}
+ td:first-child{white-space:normal}
+ .prompt pre{font-size:13px;padding:14px}
+}
+@media print{
+ body{background:#fff;color:#111}
+ .amb,.indice,.prompt button,.fim .btn{display:none}
+ .prompt,.caixa,.passos li,.formula div,.check label{background:#fff;border-color:#ccc;color:#111}
+ .prompt pre{color:#111}
+ section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<a class="pular" href="#instalar">Pular para a instalação</a>
+<span class="amb" aria-hidden="true"></span>
+<div class="wrap">
+ <header class="topo"><a href="/" aria-label="Motion Code"><img src="assets/logo-horizontal.png" alt="Motion Code" width="146" height="30"></a><span class="selo">Guia do aluno</span></header>
+
+ <div class="hero">
+  <p class="k">Workshop Motion Code · com a Magda</p>
+  <h1>Seu primeiro vídeo motion, <em>passo a passo.</em></h1>
+  <p class="lead">Tudo o que a gente fez ao vivo, para você repetir em casa: instalar, pedir o vídeo do jeito certo, ajustar e subir o anúncio. É só copiar e colar.</p>
+  <ul class="indice">
+   <li><a href="#antes"><b>1</b>Antes de começar</a></li>
+   <li><a href="#instalar"><b>2</b>Instalar o HyperFrames</a></li>
+   <li><a href="#regra"><b>3</b>Tema + referência</a></li>
+   <li><a href="#marca"><b>4</b>Sua marca</a></li>
+   <li><a href="#pedir"><b>5</b>Pedir o vídeo</a></li>
+   <li><a href="#ajustar"><b>6</b>Ajustar</a></li>
+   <li><a href="#checklist"><b>7</b>Checklist</a></li>
+   <li><a href="#problemas"><b>8</b>Se algo der errado</a></li>
+  </ul>
+ </div>
+
+ <!-- 1 -->
+ <section id="antes">
+  <p class="k">Passo 1</p>
+  <h2>Antes de <em>começar.</em></h2>
+  <ul class="lista">
+   <li><b>Computador Windows 10/11 ou Mac.</b> Pelo celular não dá para instalar.</li>
+   <li><b>Claude com plano pago (Pro ou Max).</b> O Claude Code, que é quem cria os vídeos, vem junto.</li>
+   <li><b>Uns 5 GB livres</b> e internet boa na hora de instalar.</li>
+   <li><b>30 minutos na primeira vez.</b> Depois disso, cada vídeo é só pedir.</li>
+  </ul>
+  <h3>Abra o Claude Code</h3>
+  <ol class="passos">
+   <li><p><b>Baixe o app do Claude</b> em <a href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> e entre com a sua conta.</p></li>
+   <li><p><b>Crie uma pasta</b> para os seus vídeos, por exemplo <b>Documentos › Videos Motion</b>.</p></li>
+   <li><p>No app, abra a aba <b>Code</b>, escolha essa pasta e comece uma conversa. É nessa conversa que você cola os prompts deste guia.</p></li>
+  </ol>
+  <div class="caixa aviso"><p><b>Quando o Claude pedir permissão</b> para rodar um comando ou instalar algo, leia o que ele vai fazer e aprove. É assim que ele instala tudo por você.</p></div>
+ </section>
+
+ <!-- 2 -->
+ <section id="instalar">
+  <p class="k">Passo 2</p>
+  <h2>Instalar o HyperFrames em <em>3 prompts.</em></h2>
+  <p class="sub">O HyperFrames é o programa que transforma o que o Claude escreve em vídeo MP4. Cole um prompt por vez e espere o Claude terminar antes de mandar o próximo.</p>
+
+  <div class="prompt"><div class="cab"><span><i>Prompt 1</i> · Preparar o computador</span><button type="button">Copiar</button></div><pre>Quero criar vídeos com o HyperFrames neste computador. Eu não sou programador(a): faça tudo por mim e me explique em português simples, um passo de cada vez.
+
+1. Descubra se este computador é Windows ou Mac.
+2. Confira se o Node.js 22 ou mais novo está instalado (node -v). Se não estiver, instale a versão LTS:
+   - Windows: winget install OpenJS.NodeJS.LTS
+   - Mac: brew install node (se o Mac não tiver o Homebrew, instale o Homebrew antes)
+3. Confira se o FFmpeg está instalado (ffmpeg -version). Se não estiver, instale:
+   - Windows: winget install Gyan.FFmpeg
+   - Mac: brew install ffmpeg
+4. Se algum programa só funcionar depois de reiniciar o terminal ou o app, me avise e diga exatamente o que eu preciso fazer.
+
+No fim, me mostre uma lista com ✓ ou ✗ para Node.js e FFmpeg, com a versão de cada um.</pre></div>
+
+  <div class="prompt"><div class="cab"><span><i>Prompt 2</i> · Instalar o HyperFrames e as skills</span><button type="button">Copiar</button></div><pre>Agora instale o HyperFrames:
+
+1. Rode npx hyperframes doctor e me diga em português se está tudo certo. Se ele apontar algo faltando (por exemplo o navegador que faz o render), corrija seguindo a linha "Fix" que ele mostrar e rode o doctor de novo.
+2. Instale as skills do HyperFrames, para você saber criar e conferir os vídeos: npx hyperframes skills
+   Se esse comando não funcionar, use: npx skills add heygen-com/hyperframes --all
+3. Me diga quais skills foram instaladas e se eu preciso abrir uma conversa nova para você passar a usar.</pre></div>
+
+  <div class="caixa aviso"><p><b>Abra uma conversa nova</b> depois do Prompt 2 (na mesma pasta). É assim que o Claude passa a enxergar as skills que acabaram de ser instaladas.</p></div>
+
+  <div class="prompt"><div class="cab"><span><i>Prompt 3</i> · Teste: o primeiro vídeo</span><button type="button">Copiar</button></div><pre>Vamos testar se está tudo funcionando.
+
+1. Crie um projeto do HyperFrames numa pasta chamada teste-motion, dentro desta pasta: npx hyperframes init teste-motion
+2. Faça um vídeo vertical 9:16 de 5 segundos, fundo preto, com o texto "Meu primeiro motion" entrando com animação em laranja (#FD6725).
+3. Confira com npx hyperframes check e corrija o que aparecer.
+4. Renderize com npx hyperframes render --quality draft --output teste.mp4
+5. Me diga onde ficou o arquivo teste.mp4.</pre></div>
+  <p>Abriu o <b>teste.mp4</b> e ele tocou? <b>Está tudo pronto.</b> Se travou em algum ponto, vá direto para <a href="#problemas">Se algo der errado</a>.</p>
+ </section>
+
+ <!-- 3 -->
+ <section id="regra">
+  <p class="k">Passo 3 · a regra de ouro</p>
+  <h2>Todo vídeo tem um <em>tema</em> e uma <em>referência.</em></h2>
+  <p class="sub">É isso que separa um vídeo com cara de agência de um vídeo com cara de template. Sem tema, o vídeo fica genérico. Sem referência, o Claude escolhe o visual por você.</p>
+  <div class="formula" role="group" aria-label="Tema mais referência mais marca">
+   <div><b>Tema</b><span>Do que é o vídeo, para quem e o que a pessoa deve fazer depois.</span></div><i aria-hidden="true">+</i>
+   <div><b>Referência</b><span>Como ele deve parecer: um vídeo, print ou link que mostre o ritmo, as cores e as animações.</span></div><i aria-hidden="true">+</i>
+   <div class="top"><b>Marca</b><span>Suas cores, fonte e logo. Fica salva uma vez só (passo 4).</span></div>
+  </div>
+
+  <h3>Tema: seja específico</h3>
+  <div class="duas">
+   <div class="caixa"><p class="ruim">Fraco</p><p>"Um vídeo para a minha hamburgueria."</p></div>
+   <div class="caixa"><p class="bom">Forte</p><p>"Promoção de terça: 2 smash burgers por R$ 39, para quem mora no bairro. No fim, chamar no WhatsApp."</p></div>
+  </div>
+
+  <h3>Referência: onde achar</h3>
+  <ul class="lista">
+   <li><b>Pinterest:</b> pesquise "motion graphics ad", "kinetic typography" ou o seu nicho + "motion".</li>
+   <li><b>Biblioteca de Anúncios do Meta</b> (facebook.com/ads/library): veja o que marcas grandes do seu nicho estão rodando.</li>
+   <li><b>Instagram e TikTok</b> de marcas que você admira.</li>
+   <li><b>Os moldes e estilos do workshop</b> e os vídeos de exemplo da aula.</li>
+  </ul>
+  <h3>Como passar a referência para o Claude</h3>
+  <ul class="lista">
+   <li><b>Arraste o print</b> (ou vários prints de partes do vídeo) para dentro da conversa.</li>
+   <li>Ou <b>cole o link</b> e descreva o que você gosta nele.</li>
+   <li>Diga <b>o que copiar</b>: "quero o ritmo rápido e o texto gigante desta referência, mas nas minhas cores".</li>
+  </ul>
+  <div class="caixa aviso"><p>O Claude enxerga imagens, mas não assiste vídeo. Por isso, <b>tire 2 ou 3 prints</b> da referência (começo, meio e fim) e mande junto.</p></div>
+ </section>
+
+ <!-- 4 -->
+ <section id="marca">
+  <p class="k">Passo 4 · seu arquivo de marca</p>
+  <h2>Salve a sua marca <em>uma vez só.</em></h2>
+  <p class="sub">O Claude Code lê sozinho um arquivo chamado <b>CLAUDE.md</b> sempre que você abre uma conversa na pasta. Coloque a sua marca nele e todo vídeo já sai no seu padrão.</p>
+  <div class="prompt"><div class="cab"><span><i>Prompt</i> · Criar o arquivo da marca</span><button type="button">Copiar</button></div><pre>Crie nesta pasta um arquivo CLAUDE.md com a identidade da minha marca, para usar em todos os vídeos:
+
+- Nome da marca: <mark>[escreva]</mark>
+- O que eu vendo e para quem: <mark>[escreva]</mark>
+- Cores (com o código, se souber): <mark>[ex.: preto #111111, laranja #FD6725]</mark>
+- Fontes: <mark>[ex.: uma fonte bem grossa para títulos]</mark>
+- Logo: <mark>[arraste o arquivo da logo para a conversa]</mark>
+- Tom: <mark>[ex.: direto, divertido, sofisticado]</mark>
+- Nunca usar: <mark>[ex.: emojis, fundo branco, letras finas]</mark>
+
+Escreva também a regra: antes de criar qualquer vídeo, siga este arquivo e me peça TEMA e REFERÊNCIA se eu não tiver mandado.</pre></div>
+ </section>
+
+ <!-- 5 -->
+ <section id="pedir">
+  <p class="k">Passo 5</p>
+  <h2>Pedir o vídeo <em>do jeito certo.</em></h2>
+  <p class="sub">Use este modelo toda vez. Troque o que está marcado e mande junto os prints da referência.</p>
+  <div class="prompt"><div class="cab"><span><i>Modelo</i> · Pedir um vídeo</span><button type="button">Copiar</button></div><pre>Crie um vídeo motion com o HyperFrames, numa pasta nova com o nome do vídeo.
+
+TEMA: <mark>[do que é o vídeo e para quem]</mark>
+OBJETIVO: <mark>[vender / divulgar / explicar / levar para o WhatsApp]</mark>
+REFERÊNCIA: <mark>[prints anexados ou link]</mark>. O que eu gosto nela: <mark>[ritmo, cores, tipo de animação]</mark>
+FORMATO: <mark>9:16 (Reels e Stories)</mark> · DURAÇÃO: <mark>15 segundos</mark>
+TEXTOS: gancho "<mark>[ ]</mark>", meio "<mark>[ ]</mark>", chamada final "<mark>[ ]</mark>"
+MATERIAL: <mark>[fotos, vídeos ou logo que vou anexar, se tiver]</mark>
+
+Uma ideia por cena, texto grande para ler no celular. Antes de renderizar, me mostre 3 quadros (começo, meio e fim) para eu aprovar. Depois renderize em MP4 e me diga onde salvou.</pre></div>
+
+  <h3>O vídeo que fizemos juntos na aula</h3>
+  <div class="prompt"><div class="cab"><span><i>Aula</i> · Brasa Burger, promoção de terça</span><button type="button">Copiar</button></div><pre>Crie um vídeo motion com o HyperFrames, numa pasta nova chamada brasa-burger.
+
+TEMA: promoção de terça da hamburgueria Brasa Burger: 2 smash burgers por R$ 39, só às terças. Para quem mora perto e quer jantar bem gastando pouco.
+OBJETIVO: levar a pessoa a pedir pelo WhatsApp.
+REFERÊNCIA: os prints anexados. Quero o fundo escuro, o produto grande no centro, o texto enorme entrando no ritmo e cortes rápidos.
+MARCA: preto #121212, amarelo mostarda #FFC23C e vermelho #E63946. Fonte bem grossa, em caixa alta.
+FORMATO: 9:16 · DURAÇÃO: 15 segundos
+TEXTOS: "TERÇA TEM?" → "2 SMASH BURGERS" → "POR R$ 39" → "SÓ ÀS TERÇAS" → "PEÇA NO WHATSAPP"
+MATERIAL: use o vídeo do hambúrguer anexado como imagem principal.
+
+Antes de renderizar, me mostre 3 quadros (começo, meio e fim). Depois renderize em MP4.</pre></div>
+ </section>
+
+ <!-- 6 -->
+ <section id="ajustar">
+  <p class="k">Passo 6 · roteiro de movimento</p>
+  <h2>Ajustar é <em>conversar.</em></h2>
+  <p class="sub">Você não precisa saber programar para mudar o vídeo. Diga o que quer, com o segundo exato, como diria para um editor.</p>
+  <h3>Palavras que o Claude entende bem</h3>
+  <table>
+   <thead><tr><th>Você quer</th><th>Diga assim</th></tr></thead>
+   <tbody>
+    <tr><td>Entrada</td><td>"entra deslizando da direita", "cresce do centro", "aparece letra por letra", "cai de cima e quica"</td></tr>
+    <tr><td>Saída</td><td>"sai para a esquerda", "some em fade", "explode em partículas", "corte seco"</td></tr>
+    <tr><td>Câmera</td><td>"a câmera aproxima devagar", "gira em volta do produto", "tremidinha no impacto"</td></tr>
+    <tr><td>Tempo</td><td>"o logo aparece no segundo 12 e fica até o fim", "cada cena com 2 segundos"</td></tr>
+    <tr><td>Ritmo</td><td>"cortes no ritmo da música", "mais respiro entre as frases", "começo explosivo"</td></tr>
+   </tbody>
+  </table>
+  <h3>Ajustes prontos para copiar</h3>
+  <ul class="lista">
+   <li>"Deixe o vídeo 20% mais rápido."</li>
+   <li>"O texto está pequeno no celular: aumente e deixe só 4 palavras por tela."</li>
+   <li>"Troque o laranja por #E63946 em tudo."</li>
+   <li>"Tire a cena 3 e estique a cena 2."</li>
+   <li>"Coloque a minha logo no fim, por 2 segundos."</li>
+   <li>"Use este áudio (anexo) e faça as cenas entrarem no tempo da fala."</li>
+   <li>"Coloque sons de transição (whoosh) e um impacto no preço."</li>
+   <li>"Faça versões 1:1 e 4:5 deste mesmo vídeo para o feed."</li>
+  </ul>
+ </section>
+
+ <!-- 7 -->
+ <section id="checklist">
+  <p class="k">Passo 7</p>
+  <h2>Checklist antes de <em>subir o anúncio.</em></h2>
+  <p class="sub">Marque cada item assistindo ao vídeo inteiro no celular.</p>
+  <div class="check">
+   <label><input type="checkbox"><span><b>Gancho nos 2 primeiros segundos.</b> Quem rola o feed entende do que é o vídeo antes de passar.</span></label>
+   <label><input type="checkbox"><span><b>Texto grande e curto.</b> Até 6 palavras por tela, legível sem dar zoom.</span></label>
+   <label><input type="checkbox"><span><b>Nada importante nas bordas.</b> No Reels e no Stories, deixe livres o topo e a parte de baixo, onde ficam o nome e os botões.</span></label>
+   <label><input type="checkbox"><span><b>Funciona sem som.</b> O texto conta a história sozinho.</span></label>
+   <label><input type="checkbox"><span><b>A marca aparece.</b> Cores certas e logo pelo menos no fim.</span></label>
+   <label><input type="checkbox"><span><b>Uma chamada só no fim</b>, clara: "Peça no WhatsApp", "Garanta sua vaga".</span></label>
+   <label><input type="checkbox"><span><b>Formato certo:</b> 9:16 para Reels e Stories, 4:5 ou 1:1 para o feed.</span></label>
+   <label><input type="checkbox"><span><b>Duração de 10 a 30 segundos</b> para anúncio.</span></label>
+  </div>
+ </section>
+
+ <!-- 8 -->
+ <section id="problemas">
+  <p class="k">Passo 8</p>
+  <h2>Se algo der <em>errado.</em></h2>
+  <table>
+   <thead><tr><th>Apareceu</th><th>O que fazer</th></tr></thead>
+   <tbody>
+    <tr><td>"npx não é reconhecido"</td><td>O Node.js acabou de ser instalado e o app ainda não percebeu. Feche e abra o app do Claude e tente de novo. Se continuar, peça: "reinstale o Node.js LTS e confira o PATH".</td></tr>
+    <tr><td>"ffmpeg not found"</td><td>Peça: "instale o FFmpeg e coloque no PATH". No Windows, depois feche e abra o app.</td></tr>
+    <tr><td>Erro no render</td><td>Peça: "rode npx hyperframes doctor e corrija o que aparecer". Depois renderize de novo em qualidade draft.</td></tr>
+    <tr><td>Render muito lento</td><td>Renderize em <b>draft</b> enquanto ajusta e só faça a versão final no fim. Feche programas pesados.</td></tr>
+    <tr><td>Saiu diferente do pedido</td><td>Mande os prints da referência de novo e aponte o segundo: "no segundo 4 o texto está cortado na direita".</td></tr>
+   </tbody>
+  </table>
+  <div class="prompt"><div class="cab"><span><i>Prompt</i> · Conserta para mim</span><button type="button">Copiar</button></div><pre>Deu este erro: <mark>[cole o erro ou descreva o que aconteceu]</mark>.
+Descubra a causa, conserte e me explique em português simples o que era. Se precisar que eu faça algo (reiniciar, aprovar uma instalação), me diga exatamente o quê.</pre></div>
+ </section>
+
+ <div class="fim">
+  <div>
+   <p class="k">Ficou com dúvida?</p>
+   <h2>Chama a gente <em>no grupo.</em></h2>
+   <p class="sub">Mande o print do erro ou do vídeo que a gente te ajuda.</p>
+  </div>
+  <a class="btn" id="grupo" href="https://chat.whatsapp.com/D6TkHflvDQaEMyeuqjltUh" target="_blank" rel="noopener">Abrir o grupo do WhatsApp</a>
+ </div>
+
+ <footer><span>Motion Code · Ueda Agency</span><span>Você descreve. O Claude escreve o vídeo.</span></footer>
+</div>
+
+<script>
+/* copiar prompt: só o texto, sem as marcações */
+document.querySelectorAll('.prompt button').forEach(function(b){
+  b.addEventListener('click', function(){
+    var txt = b.closest('.prompt').querySelector('pre').innerText;
+    function ok(){ b.textContent = 'Copiado ✓'; b.classList.add('ok'); setTimeout(function(){ b.textContent = 'Copiar'; b.classList.remove('ok'); }, 2200); }
+    function velho(){ var t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); ok(); } catch (e) {} t.remove(); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, velho); else velho();
+  });
+});
+/* checklist lembrado neste aparelho */
+(function(){
+  var cx = [].slice.call(document.querySelectorAll('.check input')), k = 'mc-guia-check', s = [];
+  try { s = JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) {}
+  cx.forEach(function(c, i){ c.checked = !!s[i]; c.addEventListener('change', function(){ try { localStorage.setItem(k, JSON.stringify(cx.map(function(x){ return x.checked; }))); } catch (e) {} }); });
+})();
+</script>
+</body>
+</html>

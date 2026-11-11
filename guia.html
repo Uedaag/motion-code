@@ -185,6 +185,24 @@ No fim, me mostre uma lista com ✓ ou ✗ para Node.js e FFmpeg, com a versão 
 4. Renderize com npx hyperframes render --quality draft --output teste.mp4
 5. Me diga onde ficou o arquivo teste.mp4.</pre></div>
   <p>Abriu o <b>teste.mp4</b> e ele tocou? <b>Está tudo pronto.</b> Se travou em algum ponto, vá direto para <a href="#problemas">Se algo der errado</a>.</p>
+
+  <h3 id="remotion">Opção avançada: usar Remotion em cenas mais animadas</h3>
+  <p>O HyperFrames continua sendo o padrão para montar o vídeo. Se uma cena pedir uma animação mais elaborada, gráficos ou elementos que você pretende reutilizar em outros vídeos, peça ao Claude para avaliar o <b>Remotion</b>.</p>
+  <p>No fluxo combinado, o Claude cria e renderiza essa cena no Remotion como um arquivo MP4. Depois, você importa o MP4 no projeto HyperFrames e faz a montagem final, com os outros clipes, textos, logo, legendas e áudio. Os projetos continuam separados: o trecho importado funciona como vídeo, não como uma composição Remotion editável dentro do HyperFrames.</p>
+  <div class="caixa aviso"><p>Use o <b>mesmo formato, resolução e taxa de quadros</b> nos dois projetos. Se a animação não justificar uma etapa extra, fique só no HyperFrames.</p></div>
+  <p>Ainda não tem o Remotion? Ele não precisa de instalador: usa o mesmo Node.js do Prompt 1 e é baixado na hora em que o Claude cria o primeiro projeto. Mande este prompt uma vez só.</p>
+  <div class="prompt"><div class="cab"><span><i>Prompt</i> · Instalar o Remotion e testar</span><button type="button">Copiar</button></div><pre>Quero usar o Remotion neste computador para cenas mais animadas, junto com o HyperFrames. Eu não sou programador(a): faça tudo por mim e me explique em português simples.
+
+1. Confira se o Node.js está instalado (node -v). Se não estiver, instale a versão LTS antes de continuar.
+2. Crie um projeto do Remotion numa pasta chamada teste-remotion, dentro desta pasta: npx create-video --yes --blank teste-remotion
+3. Entre na pasta teste-remotion, instale as dependências (npm install) e instale as skills do Remotion: npx remotion skills add
+   Se esse comando não funcionar, use: npx skills add remotion-dev/skills
+4. Faça uma cena vertical 9:16 (1080x1920), 30 quadros por segundo, de 5 segundos, fundo preto, com o texto "Meu primeiro Remotion" entrando com animação em laranja (#FD6725).
+5. Renderize a cena em MP4 com npx remotion render e me diga onde ficou o arquivo.
+6. Me diga se eu preciso abrir uma conversa nova para você passar a usar as skills do Remotion.</pre></div>
+  <div class="caixa aviso"><p>O Remotion é <b>gratuito para uso individual e para empresas pequenas</b>. Empresas maiores precisam de licença paga: confira as regras em remotion.dev/license antes de usar em equipe.</p></div>
+
+  <div class="prompt"><div class="cab"><span><i>Regra</i> · Adicionar ao CLAUDE.md</span><button type="button">Copiar</button></div><pre>Use o HyperFrames como padrão. Se o vídeo pedir animações especialmente elaboradas, gráficos ou elementos reutilizáveis, avalie se o Remotion ajuda e explique o motivo antes de usá-lo. No fluxo combinado, renderize a cena do Remotion como MP4 e importe-a no HyperFrames para a montagem final. Mantenha os projetos-fonte separados e combine o formato, a resolução e a taxa de quadros.</pre></div>
  </section>
 
  <!-- 3 -->
